@@ -197,6 +197,23 @@
             margin-top: 20px;
         }
         
+        .ad-btn {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: all 0.2s;
+        }
+        
+        .ad-btn:active {
+            transform: scale(0.97);
+        }
+        
         .hidden {
             display: none;
         }
@@ -225,6 +242,8 @@
             }
         }
     </style>
+    <!-- Adsgram SDK -->
+    <script async src="https://adsgram.ai/js/adsgram.js"></script>
 </head>
 <body>
     <div class="game-container" id="app">
@@ -263,13 +282,13 @@
                     <div class="game-name">Дартс</div>
                 </div>
             </div>
+            <button class="ad-btn" id="earn-coins-btn">📺 Заработать монеты (50 💎)</button>
         </div>
         
         <div id="game-area" class="hidden">
             <div class="game-area">
                 <div class="game-title" id="game-title">🎰 СЛОТЫ</div>
                 
-                <!-- Общая панель выбора ставки -->
                 <div class="bet-buttons" id="global-bet-buttons">
                     <button class="bet-option" data-bet="10">💰 10</button>
                     <button class="bet-option" data-bet="50">💰 50</button>
@@ -277,7 +296,6 @@
                     <button class="bet-option" data-bet="250">💰 250</button>
                 </div>
                 
-                <!-- Слоты -->
                 <div id="slots-game">
                     <div class="slot-reels">
                         <div class="reel" id="reel1">🍒</div>
@@ -289,7 +307,6 @@
                     </div>
                 </div>
                 
-                <!-- Рулетка -->
                 <div id="roulette-game" class="hidden">
                     <div class="roulette-number" id="roulette-result">?</div>
                     <div class="bet-buttons" id="roulette-bets">
@@ -304,7 +321,6 @@
                     </div>
                 </div>
                 
-                <!-- Кости -->
                 <div id="dice-game" class="hidden">
                     <div style="display: flex; justify-content: center; gap: 20px; margin: 20px;">
                         <div style="font-size: 48px;" id="dice1">⚀</div>
@@ -319,7 +335,6 @@
                     </div>
                 </div>
                 
-                <!-- Блэкджек -->
                 <div id="blackjack-game" class="hidden">
                     <div style="margin: 15px 0;">
                         <div>🃏 Ваши карты: <span id="player-cards">—</span> (<span id="player-sum">0</span>)</div>
@@ -334,7 +349,6 @@
                     </div>
                 </div>
                 
-                <!-- Боулинг -->
                 <div id="bowling-game" class="hidden">
                     <div style="font-size: 72px; margin: 20px;">🎳</div>
                     <div class="bet-buttons" id="bowling-bets">
@@ -346,7 +360,6 @@
                     </div>
                 </div>
                 
-                <!-- Дартс -->
                 <div id="darts-game" class="hidden">
                     <div style="font-size: 72px; margin: 20px;">🎯</div>
                     <div class="bet-buttons" id="darts-bets">
@@ -366,12 +379,14 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Инициализация Telegram WebApp
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
         
         const BOT_API_URL = 'https://game-bar-bot.onrender.com';
+        
+        // Adsgram Block ID
+        const ADSGRAM_BLOCK_ID = '29418';
         
         const webAppUser = tg.initDataUnsafe?.user;
         
@@ -379,6 +394,7 @@
         let currentBet = 100;
         let balance = 0;
         let isLoading = false;
+        let isWatchingAd = false;
         
         function getUserId() {
             if (webAppUser && webAppUser.id) {
@@ -402,7 +418,6 @@
         
         const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
         
-        // Инициализация кнопок выбора ставки
         function initBetButtons() {
             const betButtons = document.querySelectorAll('.bet-option[data-bet]');
             betButtons.forEach(btn => {
@@ -412,7 +427,6 @@
                     btn.classList.add('selected');
                 });
             });
-            // Выбрать ставку по умолчанию
             const defaultBetBtn = document.querySelector('.bet-option[data-bet="100"]');
             if (defaultBetBtn) defaultBetBtn.classList.add('selected');
         }
@@ -469,6 +483,73 @@
                 console.error('Ошибка отправки результата:', e);
             } finally {
                 isLoading = false;
+            }
+        }
+        
+        async function claimAdReward() {
+            if (!userId) return false;
+            
+            try {
+                const response = await fetch(`${BOT_API_URL}/api/claim_ad_reward`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    balance = data.new_balance;
+                    document.getElementById('balance').innerText = balance;
+                    return true;
+                } else if (data.error === 'cooldown') {
+                    tg.showAlert(`⏳ Вы уже получали бонус за рекламу!\nПодождите ${Math.ceil(data.remaining / 60)} минут.`);
+                    return false;
+                }
+                return false;
+            } catch (e) {
+                console.error('Ошибка начисления бонуса:', e);
+                return false;
+            }
+        }
+        
+        async function watchAd() {
+            if (isWatchingAd) {
+                tg.showAlert('⏳ Подождите, реклама уже загружается...');
+                return;
+            }
+            
+            isWatchingAd = true;
+            
+            try {
+                tg.showAlert('🎬 Загружаем рекламу...', () => {});
+                
+                const adController = Adsgram.showRewardedVideo({
+                    blockId: ADSGRAM_BLOCK_ID,
+                    onReward: async (event) => {
+                        console.log('Ad reward earned!', event);
+                        const success = await claimAdReward();
+                        if (success) {
+                            tg.showAlert('🎉 Спасибо за просмотр! Вы получили 50 💎');
+                        } else {
+                            tg.showAlert('❌ Не удалось получить бонус. Попробуйте позже.');
+                        }
+                        isWatchingAd = false;
+                    },
+                    onError: (error) => {
+                        console.error('Ad error:', error);
+                        tg.showAlert('❌ Ошибка загрузки рекламы. Попробуйте позже.');
+                        isWatchingAd = false;
+                    },
+                    onClose: () => {
+                        console.log('Ad closed without reward');
+                        isWatchingAd = false;
+                    }
+                });
+                
+                await adController.show();
+            } catch (error) {
+                console.error('Failed to show ad:', error);
+                tg.showAlert('❌ Не удалось показать рекламу. Попробуйте позже.');
+                isWatchingAd = false;
             }
         }
         
@@ -798,7 +879,6 @@
         
         document.getElementById('back-to-menu').addEventListener('click', backToMenu);
         
-        // Кнопки выбора ставок для рулетки
         document.querySelectorAll('[data-roulette]').forEach(btn => {
             btn.addEventListener('click', () => {
                 currentRouletteBet = btn.dataset.roulette;
@@ -831,6 +911,7 @@
             });
         });
         
+        document.getElementById('earn-coins-btn').addEventListener('click', () => watchAd());
         document.getElementById('spin-btn').addEventListener('click', () => spinSlots());
         document.getElementById('roulette-spin-btn').addEventListener('click', () => spinRoulette());
         document.getElementById('dice-spin-btn').addEventListener('click', () => rollDice());
@@ -840,10 +921,7 @@
         document.getElementById('bowling-spin-btn').addEventListener('click', () => playBowling());
         document.getElementById('darts-spin-btn').addEventListener('click', () => playDarts());
         
-        // Инициализация кнопок ставок
         initBetButtons();
-        
-        // Загружаем баланс
         loadBalance();
         
         tg.ready();
