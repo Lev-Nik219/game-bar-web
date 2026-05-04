@@ -384,32 +384,36 @@
         tg.expand();
         tg.enableClosingConfirmation();
         
-        // ===== ОТЛАДКА =====
-        console.log('Telegram WebApp initialized');
-        console.log('initDataUnsafe:', tg.initDataUnsafe);
-        console.log('User:', tg.initDataUnsafe?.user);
-        
-        // Получаем данные пользователя
-        const webAppUser = tg.initDataUnsafe?.user;
-        const BOT_API_URL = 'https://game-bar-bot.onrender.com';
-        
-        let currentGame = null;
-        let currentBet = 100;
-        let balance = 0;
-        let isLoading = false;
-        
-        // Функция получения user_id
-        function getUserId() {
-            if (webAppUser && webAppUser.id) {
-                console.log('User ID from Telegram:', webAppUser.id);
-                return webAppUser.id;
-            }
+        // ПОЛУЧАЕМ USER_ID ИЗ URL (ПЕРЕДАННЫЙ БОТОМ)
+        function getUserIdFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const userIdParam = urlParams.get('user_id');
             if (userIdParam) {
                 console.log('User ID from URL:', userIdParam);
                 return parseInt(userIdParam);
             }
+            return null;
+        }
+        
+        // ПОЛУЧАЕМ USER_ID ИЗ TELEGRAM
+        function getUserIdFromTelegram() {
+            if (tg.initDataUnsafe?.user?.id) {
+                console.log('User ID from Telegram:', tg.initDataUnsafe.user.id);
+                return tg.initDataUnsafe.user.id;
+            }
+            return null;
+        }
+        
+        // ОСНОВНАЯ ФУНКЦИЯ ПОЛУЧЕНИЯ USER_ID
+        function getUserId() {
+            // Сначала пробуем из URL (передан ботом)
+            let userId = getUserIdFromUrl();
+            if (userId) return userId;
+            
+            // Потом из Telegram
+            userId = getUserIdFromTelegram();
+            if (userId) return userId;
+            
             console.error('Не удалось получить user_id');
             return null;
         }
@@ -417,15 +421,22 @@
         const userId = getUserId();
         console.log('Final userId:', userId);
         
-        const username = webAppUser?.username || webAppUser?.first_name || 'Игрок';
+        const BOT_API_URL = 'https://game-bar-bot.onrender.com';
+        
+        let currentGame = null;
+        let currentBet = 100;
+        let balance = 0;
+        let isLoading = false;
+        
+        const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
+        
+        // Устанавливаем имя пользователя
+        const username = tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || 'Игрок';
         document.getElementById('username').innerText = username;
         
         if (!userId) {
-            document.getElementById('balance').innerText = 'Нет ID';
+            document.getElementById('balance').innerText = 'Ошибка ID';
         }
-        
-        // Символы для слотов
-        const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
         
         // Загрузка баланса
         async function loadBalance() {
