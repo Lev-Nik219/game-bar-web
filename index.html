@@ -384,36 +384,29 @@
         tg.expand();
         tg.enableClosingConfirmation();
         
-        // ПОЛУЧАЕМ USER_ID ИЗ URL (ПЕРЕДАННЫЙ БОТОМ)
-        function getUserIdFromUrl() {
+        // ===== API URL (обновлено) =====
+        const BOT_API_URL = 'https://game-bar-bot.onrender.com';
+        
+        // Получаем данные пользователя
+        const webAppUser = tg.initDataUnsafe?.user;
+        
+        let currentGame = null;
+        let currentBet = 100;
+        let balance = 0;
+        let isLoading = false;
+        
+        // Функция получения user_id
+        function getUserId() {
+            if (webAppUser && webAppUser.id) {
+                console.log('User ID from Telegram:', webAppUser.id);
+                return webAppUser.id;
+            }
             const urlParams = new URLSearchParams(window.location.search);
             const userIdParam = urlParams.get('user_id');
             if (userIdParam) {
                 console.log('User ID from URL:', userIdParam);
                 return parseInt(userIdParam);
             }
-            return null;
-        }
-        
-        // ПОЛУЧАЕМ USER_ID ИЗ TELEGRAM
-        function getUserIdFromTelegram() {
-            if (tg.initDataUnsafe?.user?.id) {
-                console.log('User ID from Telegram:', tg.initDataUnsafe.user.id);
-                return tg.initDataUnsafe.user.id;
-            }
-            return null;
-        }
-        
-        // ОСНОВНАЯ ФУНКЦИЯ ПОЛУЧЕНИЯ USER_ID
-        function getUserId() {
-            // Сначала пробуем из URL (передан ботом)
-            let userId = getUserIdFromUrl();
-            if (userId) return userId;
-            
-            // Потом из Telegram
-            userId = getUserIdFromTelegram();
-            if (userId) return userId;
-            
             console.error('Не удалось получить user_id');
             return null;
         }
@@ -421,57 +414,39 @@
         const userId = getUserId();
         console.log('Final userId:', userId);
         
-        const BOT_API_URL = 'https://game-bar-bot.onrender.com:8000';
-        
-        let currentGame = null;
-        let currentBet = 100;
-        let balance = 0;
-        let isLoading = false;
-        
-        const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
-        
-        // Устанавливаем имя пользователя
-        const username = tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || 'Игрок';
+        const username = webAppUser?.username || webAppUser?.first_name || 'Игрок';
         document.getElementById('username').innerText = username;
         
         if (!userId) {
-            document.getElementById('balance').innerText = 'Ошибка ID';
+            document.getElementById('balance').innerText = 'Нет ID';
         }
+        
+        // Символы для слотов
+        const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
         
         // Загрузка баланса
         async function loadBalance() {
             if (!userId) {
-                console.error('No userId in loadBalance');
                 document.getElementById('balance').innerText = 'Ошибка ID';
                 return;
             }
             
-            console.log('Loading balance for userId:', userId);
-            
             try {
                 const response = await fetch(`${BOT_API_URL}/api/get_balance`, {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: userId })
                 });
-                
-                console.log('Response status:', response.status);
                 const data = await response.json();
-                console.log('Response data:', data);
-                
                 if (data.success) {
                     balance = data.balance;
                     document.getElementById('balance').innerText = balance;
-                    console.log('Balance updated to:', balance);
                 } else {
-                    console.error('Error from server:', data.error);
-                    document.getElementById('balance').innerText = 'Ошибка сервера';
+                    console.error('Ошибка загрузки баланса:', data.error);
+                    document.getElementById('balance').innerText = 'Ошибка';
                 }
             } catch (e) {
-                console.error('Network error:', e);
+                console.error('Ошибка загрузки баланса:', e);
                 document.getElementById('balance').innerText = 'Ошибка сети';
             }
         }
