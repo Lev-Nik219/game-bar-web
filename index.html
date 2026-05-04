@@ -58,7 +58,7 @@
         }
         
         .balance-amount {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
         }
         
@@ -147,18 +147,6 @@
             transform: scale(0.97);
         }
         
-        .bet-input {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 40px;
-            color: white;
-            font-size: 16px;
-            width: 120px;
-            text-align: center;
-            margin: 10px 0;
-        }
-        
         .result-message {
             font-size: 18px;
             margin-top: 15px;
@@ -206,20 +194,6 @@
             border-radius: 40px;
             cursor: pointer;
             margin-top: 20px;
-        }
-        
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
         
         .hidden {
@@ -384,10 +358,8 @@
         tg.expand();
         tg.enableClosingConfirmation();
         
-        // ===== API URL (обновлено) =====
         const BOT_API_URL = 'https://game-bar-bot.onrender.com';
         
-        // Получаем данные пользователя
         const webAppUser = tg.initDataUnsafe?.user;
         
         let currentGame = null;
@@ -395,25 +367,19 @@
         let balance = 0;
         let isLoading = false;
         
-        // Функция получения user_id
         function getUserId() {
             if (webAppUser && webAppUser.id) {
-                console.log('User ID from Telegram:', webAppUser.id);
                 return webAppUser.id;
             }
             const urlParams = new URLSearchParams(window.location.search);
             const userIdParam = urlParams.get('user_id');
             if (userIdParam) {
-                console.log('User ID from URL:', userIdParam);
                 return parseInt(userIdParam);
             }
-            console.error('Не удалось получить user_id');
             return null;
         }
         
         const userId = getUserId();
-        console.log('Final userId:', userId);
-        
         const username = webAppUser?.username || webAppUser?.first_name || 'Игрок';
         document.getElementById('username').innerText = username;
         
@@ -421,10 +387,8 @@
             document.getElementById('balance').innerText = 'Нет ID';
         }
         
-        // Символы для слотов
         const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
         
-        // Загрузка баланса
         async function loadBalance() {
             if (!userId) {
                 document.getElementById('balance').innerText = 'Ошибка ID';
@@ -442,7 +406,6 @@
                     balance = data.balance;
                     document.getElementById('balance').innerText = balance;
                 } else {
-                    console.error('Ошибка загрузки баланса:', data.error);
                     document.getElementById('balance').innerText = 'Ошибка';
                 }
             } catch (e) {
@@ -451,7 +414,6 @@
             }
         }
         
-        // Отправка результата игры
         async function sendGameResult(game, bet, win, winAmount, details) {
             if (isLoading) return;
             isLoading = true;
@@ -480,6 +442,11 @@
             } finally {
                 isLoading = false;
             }
+        }
+        
+        async function afterGame() {
+            await loadBalance();
+            backToMenu();
         }
         
         // Слоты
@@ -530,13 +497,14 @@
                 resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
                 
                 await sendGameResult('slots', currentBet, win, winAmount, { reel1, reel2, reel3 });
+                await afterGame();
             }, 1100);
         }
         
         // Рулетка
         let currentRouletteBet = null;
         
-        function spinRoulette() {
+        async function spinRoulette() {
             if (!currentRouletteBet) {
                 document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
                 return;
@@ -574,13 +542,14 @@
             resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${number})`;
             resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
             
-            sendGameResult('roulette', currentBet, win, winAmount, { number, bet: currentRouletteBet });
+            await sendGameResult('roulette', currentBet, win, winAmount, { number, bet: currentRouletteBet });
+            await afterGame();
         }
         
         // Кости
         let currentDiceBet = null;
         
-        function rollDice() {
+        async function rollDice() {
             if (!currentDiceBet) {
                 document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
                 return;
@@ -613,7 +582,8 @@
             resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${total})`;
             resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
             
-            sendGameResult('dice', currentBet, win, winAmount, { dice1, dice2, total, bet: currentDiceBet });
+            await sendGameResult('dice', currentBet, win, winAmount, { dice1, dice2, total, bet: currentDiceBet });
+            await afterGame();
         }
         
         // Блэкджек
@@ -652,6 +622,7 @@
             document.getElementById('result-message').innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ`;
             document.getElementById('result-message').className = `result-message ${win ? 'win' : 'lose'}`;
             await sendGameResult('blackjack', currentBet, win, winAmount, { playerHand, dealerHand });
+            await afterGame();
         }
         
         function blackjackHit() {
@@ -699,7 +670,7 @@
         // Боулинг
         let currentBowlingBet = null;
         
-        function playBowling() {
+        async function playBowling() {
             if (!currentBowlingBet) {
                 document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
                 return;
@@ -723,13 +694,14 @@
             resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${value})`;
             resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
             
-            sendGameResult('bowling', currentBet, win, winAmount, { result: value, bet: currentBowlingBet });
+            await sendGameResult('bowling', currentBet, win, winAmount, { result: value, bet: currentBowlingBet });
+            await afterGame();
         }
         
         // Дартс
         let currentDartsBet = null;
         
-        function playDarts() {
+        async function playDarts() {
             if (!currentDartsBet) {
                 document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
                 return;
@@ -754,10 +726,10 @@
             resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${value})`;
             resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
             
-            sendGameResult('darts', currentBet, win, winAmount, { result: value, bet: currentDartsBet });
+            await sendGameResult('darts', currentBet, win, winAmount, { result: value, bet: currentDartsBet });
+            await afterGame();
         }
         
-        // Навигация
         function showGame(game) {
             currentGame = game;
             document.getElementById('games-menu').classList.add('hidden');
@@ -791,7 +763,6 @@
             currentGame = null;
         }
         
-        // Обработчики событий
         document.querySelectorAll('.game-card').forEach(card => {
             card.addEventListener('click', () => showGame(card.dataset.game));
         });
@@ -848,13 +819,9 @@
         });
         document.getElementById('darts-spin-btn').addEventListener('click', () => playDarts());
         
-        // Выбираем ставку по умолчанию
         document.querySelector('.bet-option[data-bet="100"]').classList.add('selected');
         
-        // Загружаем баланс
         loadBalance();
-        
-        // Сообщаем Telegram, что приложение готово
         tg.ready();
     </script>
 </body>
