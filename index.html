@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Game Bar — Играй и выигрывай</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Основной контейнер игры */
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Шапка с балансом */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .balance {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 16px;
+            border-radius: 30px;
+        }
+        
+        .balance-icon {
+            font-size: 24px;
+        }
+        
+        .balance-amount {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .username {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* Меню игр */
+        .games-menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .game-card {
+            background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+            border-radius: 20px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .game-card:active {
+            transform: scale(0.95);
+        }
+        
+        .game-emoji {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .game-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* Игровая область */
+        .game-area {
+            background: rgba(0,0,0,0.3);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .game-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .slot-reels {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .reel {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            transition: all 0.3s;
+        }
+        
+        .spin-btn, .bet-btn {
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            border: none;
+            color: #1a1a2e;
+            font-weight: bold;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.2s;
+        }
+        
+        .spin-btn:active, .bet-btn:active {
+            transform: scale(0.97);
+        }
+        
+        .bet-input {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            color: white;
+            font-size: 16px;
+            width: 120px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .result-message {
+            font-size: 18px;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.4);
+        }
+        
+        .win {
+            color: #ffd700;
+        }
+        
+        .lose {
+            color: #ff6b6b;
+        }
+        
+        /* Кнопки ставок */
+        .bet-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .bet-option {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .bet-option.selected {
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+        }
+        
+        /* Кнопка "Назад в меню" */
+        .back-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        /* Анимация загрузки */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Скрытие элементов */
+        .hidden {
+            display: none;
+        }
+        
+        /* Адаптация */
+        @media (max-width: 450px) {
+            .games-menu {
+                gap: 10px;
+            }
+            .game-emoji {
+                font-size: 36px;
+            }
+            .reel {
+                width: 60px;
+                height: 60px;
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="app">
+        <!-- Шапка с балансом -->
+        <div class="header">
+            <div class="balance">
+                <span class="balance-icon">💎</span>
+                <span class="balance-amount" id="balance">0</span>
+            </div>
+            <div class="username" id="username"></div>
+        </div>
+        
+        <!-- Меню игр -->
+        <div id="games-menu">
+            <div class="games-menu">
+                <div class="game-card" data-game="slots">
+                    <div class="game-emoji">🎰</div>
+                    <div class="game-name">Слоты</div>
+                </div>
+                <div class="game-card" data-game="roulette">
+                    <div class="game-emoji">🎡</div>
+                    <div class="game-name">Рулетка</div>
+                </div>
+                <div class="game-card" data-game="dice">
+                    <div class="game-emoji">🎲</div>
+                    <div class="game-name">Кости</div>
+                </div>
+                <div class="game-card" data-game="blackjack">
+                    <div class="game-emoji">🃏</div>
+                    <div class="game-name">Блэкджек</div>
+                </div>
+                <div class="game-card" data-game="bowling">
+                    <div class="game-emoji">🎳</div>
+                    <div class="game-name">Боулинг</div>
+                </div>
+                <div class="game-card" data-game="darts">
+                    <div class="game-emoji">🎯</div>
+                    <div class="game-name">Дартс</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Игровая область (изначально скрыта) -->
+        <div id="game-area" class="hidden">
+            <div class="game-area">
+                <div class="game-title" id="game-title">🎰 СЛОТЫ</div>
+                
+                <!-- Слоты -->
+                <div id="slots-game">
+                    <div class="slot-reels">
+                        <div class="reel" id="reel1">🍒</div>
+                        <div class="reel" id="reel2">🍒</div>
+                        <div class="reel" id="reel3">🍒</div>
+                    </div>
+                    <div class="bet-buttons" id="bet-buttons">
+                        <button class="bet-option" data-bet="10">10</button>
+                        <button class="bet-option" data-bet="50">50</button>
+                        <button class="bet-option" data-bet="100">100</button>
+                        <button class="bet-option" data-bet="500">500</button>
+                    </div>
+                    <div>
+                        <button class="spin-btn" id="spin-btn">🎰 КРУТИТЬ</button>
+                    </div>
+                </div>
+                
+                <!-- Рулетка (скрыта по умолчанию) -->
+                <div id="roulette-game" class="hidden">
+                    <div class="roulette-number" id="roulette-result" style="font-size: 48px; margin: 20px;">?</div>
+                    <div class="bet-buttons" id="roulette-bets">
+                        <button class="bet-option" data-roulette="red">🔴 Красное</button>
+                        <button class="bet-option" data-roulette="black">⚫ Чёрное</button>
+                        <button class="bet-option" data-roulette="green">🟢 Зелёное (0)</button>
+                        <button class="bet-option" data-roulette="even">🟡 Чётное</button>
+                        <button class="bet-option" data-roulette="odd">🔵 Нечётное</button>
+                    </div>
+                    <div>
+                        <button class="spin-btn" id="roulette-spin-btn">🎡 КРУТИТЬ</button>
+                    </div>
+                </div>
+                
+                <!-- Кости (скрыты по умолчанию) -->
+                <div id="dice-game" class="hidden">
+                    <div style="display: flex; justify-content: center; gap: 20px; margin: 20px;">
+                        <div style="font-size: 48px;" id="dice1">⚀</div>
+                        <div style="font-size: 48px;" id="dice2">⚀</div>
+                    </div>
+                    <div class="bet-buttons" id="dice-bets">
+                        <button class="bet-option" data-dice="over">⬆️ Больше 7</button>
+                        <button class="bet-option" data-dice="under">⬇️ Меньше 7</button>
+                    </div>
+                    <div>
+                        <button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button>
+                    </div>
+                </div>
+                
+                <!-- Блэкджек -->
+                <div id="blackjack-game" class="hidden">
+                    <div style="margin: 15px 0;">
+                        <div>🃏 Ваши карты: <span id="player-cards">—</span> (<span id="player-sum">0</span>)</div>
+                        <div>🤖 Карты дилера: <span id="dealer-cards">—</span> (<span id="dealer-sum">0</span>)</div>
+                    </div>
+                    <div class="bet-buttons" id="blackjack-actions">
+                        <button class="bet-option" id="bj-hit">🎯 Взять карту</button>
+                        <button class="bet-option" id="bj-stand">✋ Хватит</button>
+                    </div>
+                    <div>
+                        <button class="spin-btn" id="bj-start-btn">🃏 НАЧАТЬ</button>
+                    </div>
+                </div>
+                
+                <!-- Боулинг -->
+                <div id="bowling-game" class="hidden">
+                    <div style="font-size: 72px; margin: 20px;">🎳</div>
+                    <div class="bet-buttons" id="bowling-bets">
+                        <button class="bet-option" data-bowling="over">⬆️ Больше 3</button>
+                        <button class="bet-option" data-bowling="under">⬇️ Меньше 4</button>
+                    </div>
+                    <div>
+                        <button class="spin-btn" id="bowling-spin-btn">🎳 БРОСИТЬ</button>
+                    </div>
+                </div>
+                
+                <!-- Дартс -->
+                <div id="darts-game" class="hidden">
+                    <div style="font-size: 72px; margin: 20px;">🎯</div>
+                    <div class="bet-buttons" id="darts-bets">
+                        <button class="bet-option" data-darts="even">🟡 Чётное</button>
+                        <button class="bet-option" data-darts="odd">🔵 Нечётное</button>
+                    </div>
+                    <div>
+                        <button class="spin-btn" id="darts-spin-btn">🎯 БРОСИТЬ</button>
+                    </div>
+                </div>
+                
+                <div id="result-message" class="result-message"></div>
+                <button class="back-btn" id="back-to-menu">🔙 Назад в меню</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем на весь экран
+        tg.enableClosingConfirmation(); // Подтверждение при закрытии
+        
+        // Получаем данные пользователя
+        const user = tg.initDataUnsafe?.user;
+        const userId = user?.id;
+        const username = user?.username || user?.first_name || 'Игрок';
+        
+        // Показываем имя пользователя
+        document.getElementById('username').innerText = username;
+        
+        // Состояние игры
+        let currentGame = null;
+        let currentBet = 100;
+        let balance = 0;
+        let isLoading = false;
+        
+        // Символы для слотов
+        const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
+        
+        // Загрузка баланса с сервера
+        async function loadBalance() {
+            try {
+                const response = await fetch('/api/get_balance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    balance = data.balance;
+                    document.getElementById('balance').innerText = balance;
+                }
+            } catch (e) {
+                console.error('Ошибка загрузки баланса:', e);
+            }
+        }
+        
+        // Отправка результата игры в бота
+        async function sendGameResult(game, bet, win, winAmount, details) {
+            if (isLoading) return;
+            isLoading = true;
+            
+            try {
+                const response = await fetch('/api/game_result', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        game: game,
+                        bet: bet,
+                        win: win,
+                        win_amount: winAmount,
+                        details: details
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    balance = data.new_balance;
+                    document.getElementById('balance').innerText = balance;
+                }
+                return data;
+            } catch (e) {
+                console.error('Ошибка отправки результата:', e);
+            } finally {
+                isLoading = false;
+            }
+        }
+        
+        // === ИГРА: СЛОТЫ ===
+        function spinSlots() {
+            const reel1El = document.getElementById('reel1');
+            const reel2El = document.getElementById('reel2');
+            const reel3El = document.getElementById('reel3');
+            const resultDiv = document.getElementById('result-message');
+            
+            // Анимация
+            let spins = 0;
+            const interval = setInterval(() => {
+                reel1El.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                reel2El.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                reel3El.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                spins++;
+                if (spins > 10) clearInterval(interval);
+            }, 100);
+            
+            setTimeout(async () => {
+                const reel1 = symbols[Math.floor(Math.random() * symbols.length)];
+                const reel2 = symbols[Math.floor(Math.random() * symbols.length)];
+                const reel3 = symbols[Math.floor(Math.random() * symbols.length)];
+                
+                reel1El.innerText = reel1;
+                reel2El.innerText = reel2;
+                reel3El.innerText = reel3;
+                
+                // Расчёт выигрыша
+                let multiplier = 0;
+                if (reel1 === reel2 && reel2 === reel3) {
+                    if (reel1 === '7️⃣') multiplier = 10;
+                    else if (reel1 === '💎') multiplier = 5;
+                    else if (reel1 === 'BAR') multiplier = 3;
+                    else multiplier = 2;
+                } else if (reel1 === reel2 || reel1 === reel3 || reel2 === reel3) {
+                    multiplier = 1.5;
+                }
+                
+                const winAmount = Math.floor(currentBet * multiplier);
+                const win = winAmount > 0;
+                
+                resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : '😞 ПРОИГРЫШ';
+                resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
+                
+                await sendGameResult('slots', currentBet, win, winAmount, { reel1, reel2, reel3 });
+            }, 1100);
+        }
+        
+        // === ИГРА: РУЛЕТКА ===
+        let currentRouletteBet = null;
+        
+        function spinRoulette() {
+            if (!currentRouletteBet) {
+                document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
+                return;
+            }
+            
+            const resultDiv = document.getElementById('result-message');
+            const number = Math.floor(Math.random() * 37);
+            
+            let color = '';
+            if (number === 0) color = 'green';
+            else if ([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(number)) color = 'red';
+            else color = 'black';
+            
+            const parity = number !== 0 && number % 2 === 0 ? 'even' : 'odd';
+            
+            document.getElementById('roulette-result').innerHTML = number;
+            
+            let win = false;
+            let multiplier = 0;
+            
+            if (currentRouletteBet === 'red' && color === 'red') { win = true; multiplier = 2; }
+            else if (currentRouletteBet === 'black' && color === 'black') { win = true; multiplier = 2; }
+            else if (currentRouletteBet === 'green' && number === 0) { win = true; multiplier = 35; }
+            else if (currentRouletteBet === 'even' && parity === 'even') { win = true; multiplier = 2; }
+            else if (currentRouletteBet === 'odd' && parity === 'odd') { win = true; multiplier = 2; }
+            
+            const winAmount = win ? Math.floor(currentBet * multiplier) : 0;
+            
+            resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${number})`;
+            resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
+            
+            sendGameResult('roulette', currentBet, win, winAmount, { number, bet: currentRouletteBet });
+        }
+        
+        // === ИГРА: КОСТИ ===
+        let currentDiceBet = null;
+        
+        function rollDice() {
+            if (!currentDiceBet) {
+                document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
+                return;
+            }
+            
+            const dice1El = document.getElementById('dice1');
+            const dice2El = document.getElementById('dice2');
+            const resultDiv = document.getElementById('result-message');
+            
+            const dice1 = Math.floor(Math.random() * 6) + 1;
+            const dice2 = Math.floor(Math.random() * 6) + 1;
+            const total = dice1 + dice2;
+            
+            const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+            dice1El.innerHTML = diceFaces[dice1 - 1];
+            dice2El.innerHTML = diceFaces[dice2 - 1];
+            
+            let win = false;
+            if (currentDiceBet === 'over' && total > 7) win = true;
+            if (currentDiceBet === 'under' && total < 7) win = true;
+            
+            const winAmount = win ? Math.floor(currentBet * 2) : 0;
+            
+            resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${total})`;
+            resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
+            
+            sendGameResult('dice', currentBet, win, winAmount, { dice1, dice2, total, bet: currentDiceBet });
+        }
+        
+        // === ИГРА: БЛЭКДЖЕК (упрощённая) ===
+        let blackjackDeck = [];
+        let playerHand = [];
+        let dealerHand = [];
+        let gameActive = false;
+        
+        function initBlackjackDeck() {
+            const deck = [];
+            for (let i = 0; i < 4; i++) {
+                for (let v of [2,3,4,5,6,7,8,9,10,10,10,10,11]) {
+                    deck.push(v);
+                }
+            }
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            return deck;
+        }
+        
+        function updateBlackjackUI() {
+            const playerSum = playerHand.reduce((a,b) => a + b, 0);
+            const dealerSum = dealerHand.reduce((a,b) => a + b, 0);
+            document.getElementById('player-cards').innerHTML = playerHand.join(', ');
+            document.getElementById('player-sum').innerHTML = playerSum;
+            document.getElementById('dealer-cards').innerHTML = dealerHand.join(', ');
+            document.getElementById('dealer-sum').innerHTML = dealerSum;
+            
+            if (playerSum > 21) endBlackjack(false);
+        }
+        
+        async function endBlackjack(win) {
+            if (!gameActive) return;
+            gameActive = false;
+            const winAmount = win ? Math.floor(currentBet * 2) : 0;
+            document.getElementById('result-message').innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ`;
+            document.getElementById('result-message').className = `result-message ${win ? 'win' : 'lose'}`;
+            await sendGameResult('blackjack', currentBet, win, winAmount, { playerHand, dealerHand });
+        }
+        
+        function blackjackHit() {
+            if (!gameActive) return;
+            const newCard = blackjackDeck.pop();
+            playerHand.push(newCard);
+            updateBlackjackUI();
+            const sum = playerHand.reduce((a,b) => a + b, 0);
+            if (sum > 21) endBlackjack(false);
+        }
+        
+        async function blackjackStand() {
+            if (!gameActive) return;
+            let dealerSum = dealerHand.reduce((a,b) => a + b, 0);
+            while (dealerSum < 17) {
+                blackjackDeck.push(dealerHand.pop());
+                dealerHand.push(blackjackDeck.pop());
+                dealerSum = dealerHand.reduce((a,b) => a + b, 0);
+                updateBlackjackUI();
+                await new Promise(r => setTimeout(r, 500));
+            }
+            const playerSum = playerHand.reduce((a,b) => a + b, 0);
+            if (dealerSum > 21 || playerSum > dealerSum) endBlackjack(true);
+            else endBlackjack(false);
+        }
+        
+        function startBlackjack() {
+            blackjackDeck = initBlackjackDeck();
+            playerHand = [blackjackDeck.pop(), blackjackDeck.pop()];
+            dealerHand = [blackjackDeck.pop()];
+            gameActive = true;
+            updateBlackjackUI();
+            document.getElementById('result-message').innerHTML = '';
+        }
+        
+        // === Боулинг ===
+        let currentBowlingBet = null;
+        
+        function playBowling() {
+            if (!currentBowlingBet) {
+                document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
+                return;
+            }
+            const value = Math.floor(Math.random() * 6) + 1;
+            const resultDiv = document.getElementById('result-message');
+            
+            let win = false;
+            if (currentBowlingBet === 'over' && value > 3) win = true;
+            if (currentBowlingBet === 'under' && value < 4) win = true;
+            
+            const winAmount = win ? Math.floor(currentBet * 2) : 0;
+            
+            resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${value})`;
+            resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
+            
+            sendGameResult('bowling', currentBet, win, winAmount, { result: value, bet: currentBowlingBet });
+        }
+        
+        // === Дартс ===
+        let currentDartsBet = null;
+        
+        function playDarts() {
+            if (!currentDartsBet) {
+                document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
+                return;
+            }
+            const value = Math.floor(Math.random() * 6) + 1;
+            const isEven = value % 2 === 0;
+            const resultDiv = document.getElementById('result-message');
+            
+            let win = false;
+            if (currentDartsBet === 'even' && isEven) win = true;
+            if (currentDartsBet === 'odd' && !isEven) win = true;
+            
+            const winAmount = win ? Math.floor(currentBet * 2) : 0;
+            
+            resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${value})`;
+            resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
+            
+            sendGameResult('darts', currentBet, win, winAmount, { result: value, bet: currentDartsBet });
+        }
+        
+        // === НАВИГАЦИЯ ===
+        function showGame(game) {
+            currentGame = game;
+            document.getElementById('games-menu').classList.add('hidden');
+            document.getElementById('game-area').classList.remove('hidden');
+            
+            // Скрываем все игры
+            document.getElementById('slots-game').classList.add('hidden');
+            document.getElementById('roulette-game').classList.add('hidden');
+            document.getElementById('dice-game').classList.add('hidden');
+            document.getElementById('blackjack-game').classList.add('hidden');
+            document.getElementById('bowling-game').classList.add('hidden');
+            document.getElementById('darts-game').classList.add('hidden');
+            
+            // Показываем выбранную
+            document.getElementById(`${game}-game`).classList.remove('hidden');
+            
+            let title = '';
+            switch(game) {
+                case 'slots': title = '🎰 СЛОТЫ'; break;
+                case 'roulette': title = '🎡 РУЛЕТКА'; break;
+                case 'dice': title = '🎲 КОСТИ'; break;
+                case 'blackjack': title = '🃏 БЛЭКДЖЕК'; break;
+                case 'bowling': title = '🎳 БОУЛИНГ'; break;
+                case 'darts': title = '🎯 ДАРТС'; break;
+            }
+            document.getElementById('game-title').innerHTML = title;
+            document.getElementById('result-message').innerHTML = '';
+        }
+        
+        function backToMenu() {
+            document.getElementById('games-menu').classList.remove('hidden');
+            document.getElementById('game-area').classList.add('hidden');
+            currentGame = null;
+        }
+        
+        // === ОБРАБОТЧИКИ СОБЫТИЙ ===
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const game = card.dataset.game;
+                showGame(game);
+            });
+        });
+        
+        document.getElementById('back-to-menu').addEventListener('click', backToMenu);
+        
+        // Ставки
+        document.querySelectorAll('.bet-option[data-bet]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentBet = parseInt(btn.dataset.bet);
+                document.querySelectorAll('.bet-option[data-bet]').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+        
+        // Слоты
+        document.getElementById('spin-btn').addEventListener('click', () => spinSlots());
+        
+        // Рулетка
+        document.querySelectorAll('[data-roulette]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentRouletteBet = btn.dataset.roulette;
+                document.querySelectorAll('[data-roulette]').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+        document.getElementById('roulette-spin-btn').addEventListener('click', () => spinRoulette());
+        
+        // Кости
+        document.querySelectorAll('[data-dice]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentDiceBet = btn.dataset.dice;
+                document.querySelectorAll('[data-dice]').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+        document.getElementById('dice-spin-btn').addEventListener('click', () => rollDice());
+        
+        // Блэкджек
+        document.getElementById('bj-start-btn').addEventListener('click', () => startBlackjack());
+        document.getElementById('bj-hit').addEventListener('click', () => blackjackHit());
+        document.getElementById('bj-stand').addEventListener('click', () => blackjackStand());
+        
+        // Боулинг
+        document.querySelectorAll('[data-bowling]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentBowlingBet = btn.dataset.bowling;
+                document.querySelectorAll('[data-bowling]').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+        document.getElementById('bowling-spin-btn').addEventListener('click', () => playBowling());
+        
+        // Дартс
+        document.querySelectorAll('[data-darts]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentDartsBet = btn.dataset.darts;
+                document.querySelectorAll('[data-darts]').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+        document.getElementById('darts-spin-btn').addEventListener('click', () => playDarts());
+        
+        // Загружаем баланс
+        loadBalance();
+        
+        // Сообщаем Telegram, что приложение готово
+        tg.ready();
+    </script>
+</body>
+</html>
