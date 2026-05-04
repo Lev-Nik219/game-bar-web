@@ -441,26 +441,37 @@
         // Загрузка баланса
         async function loadBalance() {
             if (!userId) {
+                console.error('No userId in loadBalance');
                 document.getElementById('balance').innerText = 'Ошибка ID';
                 return;
             }
             
+            console.log('Loading balance for userId:', userId);
+            
             try {
                 const response = await fetch(`${BOT_API_URL}/api/get_balance`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify({ user_id: userId })
                 });
+                
+                console.log('Response status:', response.status);
                 const data = await response.json();
+                console.log('Response data:', data);
+                
                 if (data.success) {
                     balance = data.balance;
                     document.getElementById('balance').innerText = balance;
+                    console.log('Balance updated to:', balance);
                 } else {
-                    console.error('Ошибка загрузки баланса:', data.error);
-                    document.getElementById('balance').innerText = 'Ошибка';
+                    console.error('Error from server:', data.error);
+                    document.getElementById('balance').innerText = 'Ошибка сервера';
                 }
             } catch (e) {
-                console.error('Ошибка загрузки баланса:', e);
+                console.error('Network error:', e);
                 document.getElementById('balance').innerText = 'Ошибка сети';
             }
         }
