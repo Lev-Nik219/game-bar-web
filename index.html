@@ -23,7 +23,6 @@
             align-items: center;
         }
         
-        /* Основной контейнер игры */
         .game-container {
             width: 100%;
             max-width: 500px;
@@ -34,7 +33,6 @@
             flex-direction: column;
         }
         
-        /* Шапка с балансом */
         .header {
             display: flex;
             justify-content: space-between;
@@ -69,7 +67,6 @@
             opacity: 0.8;
         }
         
-        /* Меню игр */
         .games-menu {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -101,7 +98,6 @@
             font-weight: 500;
         }
         
-        /* Игровая область */
         .game-area {
             background: rgba(0,0,0,0.3);
             border-radius: 24px;
@@ -179,7 +175,6 @@
             color: #ff6b6b;
         }
         
-        /* Кнопки ставок */
         .bet-buttons {
             display: flex;
             justify-content: center;
@@ -203,7 +198,6 @@
             color: #1a1a2e;
         }
         
-        /* Кнопка "Назад в меню" */
         .back-btn {
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
@@ -214,7 +208,6 @@
             margin-top: 20px;
         }
         
-        /* Анимация загрузки */
         .loader {
             display: inline-block;
             width: 20px;
@@ -229,12 +222,16 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Скрытие элементов */
         .hidden {
             display: none;
         }
         
-        /* Адаптация */
+        .roulette-number {
+            font-size: 48px;
+            margin: 20px;
+            text-align: center;
+        }
+        
         @media (max-width: 450px) {
             .games-menu {
                 gap: 10px;
@@ -252,16 +249,14 @@
 </head>
 <body>
     <div class="game-container" id="app">
-        <!-- Шапка с балансом -->
         <div class="header">
             <div class="balance">
                 <span class="balance-icon">💎</span>
                 <span class="balance-amount" id="balance">0</span>
             </div>
-            <div class="username" id="username"></div>
+            <div class="username" id="username">Игрок</div>
         </div>
         
-        <!-- Меню игр -->
         <div id="games-menu">
             <div class="games-menu">
                 <div class="game-card" data-game="slots">
@@ -291,12 +286,10 @@
             </div>
         </div>
         
-        <!-- Игровая область (изначально скрыта) -->
         <div id="game-area" class="hidden">
             <div class="game-area">
                 <div class="game-title" id="game-title">🎰 СЛОТЫ</div>
                 
-                <!-- Слоты -->
                 <div id="slots-game">
                     <div class="slot-reels">
                         <div class="reel" id="reel1">🍒</div>
@@ -314,9 +307,8 @@
                     </div>
                 </div>
                 
-                <!-- Рулетка (скрыта по умолчанию) -->
                 <div id="roulette-game" class="hidden">
-                    <div class="roulette-number" id="roulette-result" style="font-size: 48px; margin: 20px;">?</div>
+                    <div class="roulette-number" id="roulette-result">?</div>
                     <div class="bet-buttons" id="roulette-bets">
                         <button class="bet-option" data-roulette="red">🔴 Красное</button>
                         <button class="bet-option" data-roulette="black">⚫ Чёрное</button>
@@ -329,7 +321,6 @@
                     </div>
                 </div>
                 
-                <!-- Кости (скрыты по умолчанию) -->
                 <div id="dice-game" class="hidden">
                     <div style="display: flex; justify-content: center; gap: 20px; margin: 20px;">
                         <div style="font-size: 48px;" id="dice1">⚀</div>
@@ -344,7 +335,6 @@
                     </div>
                 </div>
                 
-                <!-- Блэкджек -->
                 <div id="blackjack-game" class="hidden">
                     <div style="margin: 15px 0;">
                         <div>🃏 Ваши карты: <span id="player-cards">—</span> (<span id="player-sum">0</span>)</div>
@@ -359,7 +349,6 @@
                     </div>
                 </div>
                 
-                <!-- Боулинг -->
                 <div id="bowling-game" class="hidden">
                     <div style="font-size: 72px; margin: 20px;">🎳</div>
                     <div class="bet-buttons" id="bowling-bets">
@@ -371,7 +360,6 @@
                     </div>
                 </div>
                 
-                <!-- Дартс -->
                 <div id="darts-game" class="hidden">
                     <div style="font-size: 72px; margin: 20px;">🎯</div>
                     <div class="bet-buttons" id="darts-bets">
@@ -393,30 +381,44 @@
     <script>
         // Инициализация Telegram WebApp
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем на весь экран
-        tg.enableClosingConfirmation(); // Подтверждение при закрытии
+        tg.expand();
+        tg.enableClosingConfirmation();
         
-        // Получаем данные пользователя
-        const user = tg.initDataUnsafe?.user;
-        const userId = user?.id;
-        const username = user?.username || user?.first_name || 'Игрок';
+        // Получаем user_id
+        function getUserId() {
+            const tg = window.Telegram.WebApp;
+            if (tg.initDataUnsafe?.user?.id) {
+                return tg.initDataUnsafe.user.id;
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            const userIdParam = urlParams.get('user_id');
+            if (userIdParam) {
+                return parseInt(userIdParam);
+            }
+            console.error('Не удалось получить user_id');
+            return null;
+        }
         
-        // Показываем имя пользователя
+        const userId = getUserId();
+        const username = tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || 'Игрок';
         document.getElementById('username').innerText = username;
         
-        // Состояние игры
         let currentGame = null;
         let currentBet = 100;
         let balance = 0;
         let isLoading = false;
         
-        // Символы для слотов
         const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
+        const BOT_API_URL = 'https://game-bar-bot.onrender.com';
         
-        // Загрузка баланса с сервера
         async function loadBalance() {
+            if (!userId) {
+                document.getElementById('balance').innerText = 'Ошибка';
+                return;
+            }
+            
             try {
-                const response = await fetch('https://game-bar-bot.onrender.com/api/get_balance', {
+                const response = await fetch(`${BOT_API_URL}/api/get_balance`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: userId })
@@ -425,19 +427,20 @@
                 if (data.success) {
                     balance = data.balance;
                     document.getElementById('balance').innerText = balance;
+                } else {
+                    console.error('Ошибка загрузки баланса:', data.error);
                 }
             } catch (e) {
                 console.error('Ошибка загрузки баланса:', e);
             }
         }
         
-        // Отправка результата игры в бота
         async function sendGameResult(game, bet, win, winAmount, details) {
             if (isLoading) return;
             isLoading = true;
             
             try {
-                const response = await fetch('https://game-bar-bot.onrender.com/api/game_result', {
+                const response = await fetch(`${BOT_API_URL}/api/game_result`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -462,14 +465,19 @@
             }
         }
         
-        // === ИГРА: СЛОТЫ ===
+        // Слоты
         function spinSlots() {
             const reel1El = document.getElementById('reel1');
             const reel2El = document.getElementById('reel2');
             const reel3El = document.getElementById('reel3');
             const resultDiv = document.getElementById('result-message');
             
-            // Анимация
+            if (balance < currentBet) {
+                resultDiv.innerHTML = '❌ Недостаточно средств! Пополните баланс.';
+                resultDiv.className = 'result-message lose';
+                return;
+            }
+            
             let spins = 0;
             const interval = setInterval(() => {
                 reel1El.innerText = symbols[Math.floor(Math.random() * symbols.length)];
@@ -488,7 +496,6 @@
                 reel2El.innerText = reel2;
                 reel3El.innerText = reel3;
                 
-                // Расчёт выигрыша
                 let multiplier = 0;
                 if (reel1 === reel2 && reel2 === reel3) {
                     if (reel1 === '7️⃣') multiplier = 10;
@@ -509,12 +516,18 @@
             }, 1100);
         }
         
-        // === ИГРА: РУЛЕТКА ===
+        // Рулетка
         let currentRouletteBet = null;
         
         function spinRoulette() {
             if (!currentRouletteBet) {
                 document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
+                return;
+            }
+            
+            if (balance < currentBet) {
+                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
+                document.getElementById('result-message').className = 'result-message lose';
                 return;
             }
             
@@ -547,12 +560,18 @@
             sendGameResult('roulette', currentBet, win, winAmount, { number, bet: currentRouletteBet });
         }
         
-        // === ИГРА: КОСТИ ===
+        // Кости
         let currentDiceBet = null;
         
         function rollDice() {
             if (!currentDiceBet) {
                 document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
+                return;
+            }
+            
+            if (balance < currentBet) {
+                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
+                document.getElementById('result-message').className = 'result-message lose';
                 return;
             }
             
@@ -580,7 +599,7 @@
             sendGameResult('dice', currentBet, win, winAmount, { dice1, dice2, total, bet: currentDiceBet });
         }
         
-        // === ИГРА: БЛЭКДЖЕК (упрощённая) ===
+        // Блэкджек
         let blackjackDeck = [];
         let playerHand = [];
         let dealerHand = [];
@@ -607,8 +626,6 @@
             document.getElementById('player-sum').innerHTML = playerSum;
             document.getElementById('dealer-cards').innerHTML = dealerHand.join(', ');
             document.getElementById('dealer-sum').innerHTML = dealerSum;
-            
-            if (playerSum > 21) endBlackjack(false);
         }
         
         async function endBlackjack(win) {
@@ -622,6 +639,11 @@
         
         function blackjackHit() {
             if (!gameActive) return;
+            if (balance < currentBet) {
+                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
+                document.getElementById('result-message').className = 'result-message lose';
+                return;
+            }
             const newCard = blackjackDeck.pop();
             playerHand.push(newCard);
             updateBlackjackUI();
@@ -633,7 +655,6 @@
             if (!gameActive) return;
             let dealerSum = dealerHand.reduce((a,b) => a + b, 0);
             while (dealerSum < 17) {
-                blackjackDeck.push(dealerHand.pop());
                 dealerHand.push(blackjackDeck.pop());
                 dealerSum = dealerHand.reduce((a,b) => a + b, 0);
                 updateBlackjackUI();
@@ -645,6 +666,11 @@
         }
         
         function startBlackjack() {
+            if (balance < currentBet) {
+                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств! Пополните баланс.';
+                document.getElementById('result-message').className = 'result-message lose';
+                return;
+            }
             blackjackDeck = initBlackjackDeck();
             playerHand = [blackjackDeck.pop(), blackjackDeck.pop()];
             dealerHand = [blackjackDeck.pop()];
@@ -653,7 +679,7 @@
             document.getElementById('result-message').innerHTML = '';
         }
         
-        // === Боулинг ===
+        // Боулинг
         let currentBowlingBet = null;
         
         function playBowling() {
@@ -661,6 +687,13 @@
                 document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
                 return;
             }
+            
+            if (balance < currentBet) {
+                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
+                document.getElementById('result-message').className = 'result-message lose';
+                return;
+            }
+            
             const value = Math.floor(Math.random() * 6) + 1;
             const resultDiv = document.getElementById('result-message');
             
@@ -676,7 +709,7 @@
             sendGameResult('bowling', currentBet, win, winAmount, { result: value, bet: currentBowlingBet });
         }
         
-        // === Дартс ===
+        // Дартс
         let currentDartsBet = null;
         
         function playDarts() {
@@ -684,6 +717,13 @@
                 document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
                 return;
             }
+            
+            if (balance < currentBet) {
+                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
+                document.getElementById('result-message').className = 'result-message lose';
+                return;
+            }
+            
             const value = Math.floor(Math.random() * 6) + 1;
             const isEven = value % 2 === 0;
             const resultDiv = document.getElementById('result-message');
@@ -700,13 +740,12 @@
             sendGameResult('darts', currentBet, win, winAmount, { result: value, bet: currentDartsBet });
         }
         
-        // === НАВИГАЦИЯ ===
+        // Навигация
         function showGame(game) {
             currentGame = game;
             document.getElementById('games-menu').classList.add('hidden');
             document.getElementById('game-area').classList.remove('hidden');
             
-            // Скрываем все игры
             document.getElementById('slots-game').classList.add('hidden');
             document.getElementById('roulette-game').classList.add('hidden');
             document.getElementById('dice-game').classList.add('hidden');
@@ -714,7 +753,6 @@
             document.getElementById('bowling-game').classList.add('hidden');
             document.getElementById('darts-game').classList.add('hidden');
             
-            // Показываем выбранную
             document.getElementById(`${game}-game`).classList.remove('hidden');
             
             let title = '';
@@ -736,17 +774,13 @@
             currentGame = null;
         }
         
-        // === ОБРАБОТЧИКИ СОБЫТИЙ ===
+        // Обработчики
         document.querySelectorAll('.game-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const game = card.dataset.game;
-                showGame(game);
-            });
+            card.addEventListener('click', () => showGame(card.dataset.game));
         });
         
         document.getElementById('back-to-menu').addEventListener('click', backToMenu);
         
-        // Ставки
         document.querySelectorAll('.bet-option[data-bet]').forEach(btn => {
             btn.addEventListener('click', () => {
                 currentBet = parseInt(btn.dataset.bet);
@@ -755,10 +789,8 @@
             });
         });
         
-        // Слоты
         document.getElementById('spin-btn').addEventListener('click', () => spinSlots());
         
-        // Рулетка
         document.querySelectorAll('[data-roulette]').forEach(btn => {
             btn.addEventListener('click', () => {
                 currentRouletteBet = btn.dataset.roulette;
@@ -768,7 +800,6 @@
         });
         document.getElementById('roulette-spin-btn').addEventListener('click', () => spinRoulette());
         
-        // Кости
         document.querySelectorAll('[data-dice]').forEach(btn => {
             btn.addEventListener('click', () => {
                 currentDiceBet = btn.dataset.dice;
@@ -778,12 +809,10 @@
         });
         document.getElementById('dice-spin-btn').addEventListener('click', () => rollDice());
         
-        // Блэкджек
         document.getElementById('bj-start-btn').addEventListener('click', () => startBlackjack());
         document.getElementById('bj-hit').addEventListener('click', () => blackjackHit());
         document.getElementById('bj-stand').addEventListener('click', () => blackjackStand());
         
-        // Боулинг
         document.querySelectorAll('[data-bowling]').forEach(btn => {
             btn.addEventListener('click', () => {
                 currentBowlingBet = btn.dataset.bowling;
@@ -793,7 +822,6 @@
         });
         document.getElementById('bowling-spin-btn').addEventListener('click', () => playBowling());
         
-        // Дартс
         document.querySelectorAll('[data-darts]').forEach(btn => {
             btn.addEventListener('click', () => {
                 currentDartsBet = btn.dataset.darts;
@@ -803,10 +831,12 @@
         });
         document.getElementById('darts-spin-btn').addEventListener('click', () => playDarts());
         
-        // Загружаем баланс
-        loadBalance();
+        // Кнопка "Я оплатил" для демо (заглушка)
+        document.querySelectorAll('[data-bet]').forEach(btn => {
+            if (btn.dataset.bet === '10') btn.classList.add('selected');
+        });
         
-        // Сообщаем Telegram, что приложение готово
+        loadBalance();
         tg.ready();
     </script>
 </body>
