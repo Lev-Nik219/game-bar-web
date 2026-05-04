@@ -384,15 +384,30 @@
         tg.expand();
         tg.enableClosingConfirmation();
         
-        // Получаем user_id
+        // ===== ОТЛАДКА =====
+        console.log('Telegram WebApp initialized');
+        console.log('initDataUnsafe:', tg.initDataUnsafe);
+        console.log('User:', tg.initDataUnsafe?.user);
+        
+        // Получаем данные пользователя
+        const webAppUser = tg.initDataUnsafe?.user;
+        const BOT_API_URL = 'https://game-bar-bot.onrender.com';
+        
+        let currentGame = null;
+        let currentBet = 100;
+        let balance = 0;
+        let isLoading = false;
+        
+        // Функция получения user_id
         function getUserId() {
-            const tg = window.Telegram.WebApp;
-            if (tg.initDataUnsafe?.user?.id) {
-                return tg.initDataUnsafe.user.id;
+            if (webAppUser && webAppUser.id) {
+                console.log('User ID from Telegram:', webAppUser.id);
+                return webAppUser.id;
             }
             const urlParams = new URLSearchParams(window.location.search);
             const userIdParam = urlParams.get('user_id');
             if (userIdParam) {
+                console.log('User ID from URL:', userIdParam);
                 return parseInt(userIdParam);
             }
             console.error('Не удалось получить user_id');
@@ -400,20 +415,22 @@
         }
         
         const userId = getUserId();
-        const username = tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || 'Игрок';
+        console.log('Final userId:', userId);
+        
+        const username = webAppUser?.username || webAppUser?.first_name || 'Игрок';
         document.getElementById('username').innerText = username;
         
-        let currentGame = null;
-        let currentBet = 100;
-        let balance = 0;
-        let isLoading = false;
+        if (!userId) {
+            document.getElementById('balance').innerText = 'Нет ID';
+        }
         
+        // Символы для слотов
         const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
-        const BOT_API_URL = 'https://game-bar-bot.onrender.com';
         
+        // Загрузка баланса
         async function loadBalance() {
             if (!userId) {
-                document.getElementById('balance').innerText = 'Ошибка';
+                document.getElementById('balance').innerText = 'Ошибка ID';
                 return;
             }
             
@@ -429,12 +446,15 @@
                     document.getElementById('balance').innerText = balance;
                 } else {
                     console.error('Ошибка загрузки баланса:', data.error);
+                    document.getElementById('balance').innerText = 'Ошибка';
                 }
             } catch (e) {
                 console.error('Ошибка загрузки баланса:', e);
+                document.getElementById('balance').innerText = 'Ошибка сети';
             }
         }
         
+        // Отправка результата игры
         async function sendGameResult(game, bet, win, winAmount, details) {
             if (isLoading) return;
             isLoading = true;
@@ -467,16 +487,16 @@
         
         // Слоты
         function spinSlots() {
+            if (balance < currentBet) {
+                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств! Пополните баланс.';
+                document.getElementById('result-message').className = 'result-message lose';
+                return;
+            }
+            
             const reel1El = document.getElementById('reel1');
             const reel2El = document.getElementById('reel2');
             const reel3El = document.getElementById('reel3');
             const resultDiv = document.getElementById('result-message');
-            
-            if (balance < currentBet) {
-                resultDiv.innerHTML = '❌ Недостаточно средств! Пополните баланс.';
-                resultDiv.className = 'result-message lose';
-                return;
-            }
             
             let spins = 0;
             const interval = setInterval(() => {
@@ -774,7 +794,7 @@
             currentGame = null;
         }
         
-        // Обработчики
+        // Обработчики событий
         document.querySelectorAll('.game-card').forEach(card => {
             card.addEventListener('click', () => showGame(card.dataset.game));
         });
@@ -831,12 +851,13 @@
         });
         document.getElementById('darts-spin-btn').addEventListener('click', () => playDarts());
         
-        // Кнопка "Я оплатил" для демо (заглушка)
-        document.querySelectorAll('[data-bet]').forEach(btn => {
-            if (btn.dataset.bet === '10') btn.classList.add('selected');
-        });
+        // Выбираем ставку по умолчанию
+        document.querySelector('.bet-option[data-bet="100"]').classList.add('selected');
         
+        // Загружаем баланс
         loadBalance();
+        
+        // Сообщаем Telegram, что приложение готово
         tg.ready();
     </script>
 </body>
