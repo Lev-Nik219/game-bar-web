@@ -282,7 +282,7 @@
                     <div class="game-name">Дартс</div>
                 </div>
             </div>
-            <button class="ad-btn" id="earn-coins-btn">📺 Заработать монеты (50 💎)</button>
+            <button class="ad-btn" id="earn-coins-btn">📺 Заработать монеты (25 💎)</button>
         </div>
         
         <div id="game-area" class="hidden">
@@ -501,7 +501,7 @@
                     document.getElementById('balance').innerText = balance;
                     return true;
                 } else if (data.error === 'cooldown') {
-                    tg.showAlert(`⏳ Вы уже получали бонус за рекламу!\nПодождите ${Math.ceil(data.remaining / 60)} минут.`);
+                    tg.showAlert(`⏳ Вы уже получали бонус за рекламу!\nПодождите ${data.remaining} секунд.`);
                     return false;
                 }
                 return false;
@@ -520,7 +520,7 @@
             isWatchingAd = true;
             
             try {
-                tg.showAlert('🎬 Загружаем рекламу...', () => {});
+                tg.showAlert('🎬 Загружаем рекламу...');
                 
                 const adController = Adsgram.showRewardedVideo({
                     blockId: ADSGRAM_BLOCK_ID,
@@ -528,7 +528,7 @@
                         console.log('Ad reward earned!', event);
                         const success = await claimAdReward();
                         if (success) {
-                            tg.showAlert('🎉 Спасибо за просмотр! Вы получили 50 💎');
+                            tg.showAlert('🎉 Спасибо за просмотр! Вы получили 25 💎');
                         } else {
                             tg.showAlert('❌ Не удалось получить бонус. Попробуйте позже.');
                         }
