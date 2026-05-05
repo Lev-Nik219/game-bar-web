@@ -19,6 +19,18 @@
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
         @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(247,151,30,0.2)}50%{box-shadow:0 0 40px rgba(247,151,30,0.4)}}
         @keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+        @keyframes popIn{0%{transform:scale(0)}80%{transform:scale(1.15)}100%{transform:scale(1)}}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+        @keyframes spin-fast{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        @keyframes dice-roll{0%{transform:rotate(0deg) scale(0.5);opacity:0}50%{transform:rotate(180deg) scale(1.2);opacity:1}100%{transform:rotate(360deg) scale(1);opacity:1}}
+        @keyframes card-flip{0%{transform:perspective(600px) rotateY(0deg)}50%{transform:perspective(600px) rotateY(90deg)}100%{transform:perspective(600px) rotateY(0deg)}}
+        @keyframes roulette-spin{0%{transform:rotate(0deg)}100%{transform:rotate(720deg)}}
+        @keyframes ball-run{0%{transform:rotate(0deg) translateX(60px) rotate(0deg)}100%{transform:rotate(720deg) translateX(60px) rotate(-720deg)}}
+        @keyframes dart-fly{0%{transform:translateY(60px) scale(0.3);opacity:0}60%{transform:translateY(-10px) scale(1.1);opacity:1}80%{transform:translateY(5px) scale(0.95)}100%{transform:translateY(0) scale(1)}}
+        @keyframes bowling-roll{0%{transform:translateX(-80px) rotate(0deg)}50%{transform:translateX(0) rotate(180deg)}100%{transform:translateX(0) rotate(360deg)}}
+        @keyframes pin-fall{0%{transform:rotate(0deg);opacity:1}100%{transform:rotate(45deg) translateY(20px);opacity:0}}
+        @keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1.5)}}
+        @keyframes coinRain{0%{transform:translateY(-100px) rotate(0deg);opacity:1}100%{transform:translateY(300px) rotate(720deg);opacity:0}}
         body{
             background:linear-gradient(135deg,#0a0a1a,#12122a 30%,#1a1a3a 60%,#0d0d28 100%);
             background-size:400% 400%;animation:bgPulse 12s ease infinite;
@@ -34,108 +46,52 @@
             pointer-events:none;z-index:0;
         }
         .game-container{width:100%;max-width:500px;margin:0 auto;padding:16px;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1}
-        .header{
-            display:flex;justify-content:space-between;align-items:center;
-            background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));
-            backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-            border-radius:24px;padding:16px 20px;margin-bottom:16px;
-            border:1px solid var(--border);box-shadow:var(--shadow-3d);
-            animation:cardIn 0.6s ease;
-        }
+        .header{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-radius:24px;padding:16px 20px;margin-bottom:16px;border:1px solid var(--border);box-shadow:var(--shadow-3d);animation:cardIn 0.6s ease}
         .balance{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.5);padding:10px 18px;border-radius:30px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.3)}
         .balance-icon{font-size:22px;filter:drop-shadow(0 0 6px rgba(255,215,0,0.6));animation:float 3s ease-in-out infinite}
-        .balance-amount{font-size:22px;font-weight:800;background:linear-gradient(180deg,#ffd700,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none}
+        .balance-amount{font-size:22px;font-weight:800;background:linear-gradient(180deg,#ffd700,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .username{font-size:13px;opacity:0.6;font-weight:500}
-        .daily-bonus-banner{
-            background:linear-gradient(135deg,rgba(247,151,30,0.15),rgba(255,210,0,0.1));
-            border:1px solid rgba(247,151,30,0.3);border-radius:18px;padding:14px 16px;
-            margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;
-            animation:glow 2s ease-in-out infinite;cursor:pointer;transition:transform 0.2s;
-            box-shadow:0 4px 16px rgba(247,151,30,0.15);
-        }
+        .daily-bonus-banner{background:linear-gradient(135deg,rgba(247,151,30,0.15),rgba(255,210,0,0.1));border:1px solid rgba(247,151,30,0.3);border-radius:18px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;animation:glow 2s ease-in-out infinite;cursor:pointer;transition:transform 0.2s;box-shadow:0 4px 16px rgba(247,151,30,0.15)}
         .daily-bonus-banner:active{transform:scale(0.97)}
         .daily-bonus-banner .db-info{display:flex;align-items:center;gap:10px}
         .daily-bonus-banner .db-icon{font-size:28px}
         .daily-bonus-banner .db-text{font-size:13px;font-weight:600}
-        .daily-bonus-banner .db-btn{
-            background:linear-gradient(180deg,#f7971e,#e65100);color:white;border:none;
-            padding:10px 18px;border-radius:25px;font-weight:700;font-size:13px;
-            cursor:pointer;box-shadow:0 4px 12px rgba(247,151,30,0.3);transition:all 0.15s;
-        }
+        .daily-bonus-banner .db-btn{background:linear-gradient(180deg,#f7971e,#e65100);color:white;border:none;padding:10px 18px;border-radius:25px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 4px 12px rgba(247,151,30,0.3);transition:all 0.15s}
         .daily-bonus-banner .db-btn:active{transform:scale(0.94);box-shadow:0 2px 6px rgba(247,151,30,0.2)}
         .tab-nav{display:flex;gap:8px;margin-bottom:16px;background:var(--card-bg);border-radius:20px;padding:6px;border:1px solid var(--border);box-shadow:var(--shadow-3d)}
-        .tab-btn{
-            flex:1;padding:12px 6px;border:none;background:transparent;color:rgba(255,255,255,0.45);
-            border-radius:16px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.3s;
-            display:flex;align-items:center;justify-content:center;gap:4px;
-        }
+        .tab-btn{flex:1;padding:12px 6px;border:none;background:transparent;color:rgba(255,255,255,0.45);border-radius:16px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:4px}
         .tab-btn.active{background:linear-gradient(180deg,rgba(247,151,30,0.25),rgba(255,210,0,0.15));color:white;box-shadow:0 4px 12px rgba(247,151,30,0.2)}
         .tab-btn:active{transform:scale(0.95)}
         .tab-content{display:none;flex:1}
         .tab-content.active{display:block;animation:cardIn 0.4s ease}
         .games-menu{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-        .game-card{
-            background:linear-gradient(180deg,rgba(42,42,74,0.9),rgba(26,26,58,0.95));
-            border-radius:22px;padding:22px 10px;text-align:center;cursor:pointer;
-            transition:all 0.2s;border:1px solid var(--border);position:relative;overflow:hidden;
-            box-shadow:0 8px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.05);
-        }
+        .game-card{background:linear-gradient(180deg,rgba(42,42,74,0.9),rgba(26,26,58,0.95));border-radius:22px;padding:22px 10px;text-align:center;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.05)}
         .game-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)}
         .game-card:active{transform:scale(0.93);box-shadow:0 2px 8px rgba(0,0,0,0.4)}
         .game-emoji{font-size:44px;margin-bottom:10px;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.4))}
         .game-name{font-size:13px;font-weight:600;opacity:0.8;letter-spacing:0.5px}
-        .game-area{background:rgba(0,0,0,0.35);border-radius:24px;padding:24px;margin-bottom:16px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-3d)}
+        .game-area{background:rgba(0,0,0,0.35);border-radius:24px;padding:24px;margin-bottom:16px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-3d);min-height:320px;position:relative;overflow:hidden}
         .game-title{font-size:24px;font-weight:800;margin-bottom:18px;letter-spacing:1px;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
         .slot-reels{display:flex;justify-content:center;gap:14px;margin:24px 0}
-        .reel{
-            width:75px;height:75px;
-            background:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(0,0,0,0.4));
-            border-radius:18px;display:flex;align-items:center;justify-content:center;
-            font-size:42px;transition:all 0.3s;border:2px solid var(--border);
-            box-shadow:inset 0 2px 4px rgba(0,0,0,0.5),0 4px 12px rgba(0,0,0,0.3);
-        }
-        .spin-btn,.get-coins-btn{
-            background:linear-gradient(180deg,#f7971e,#e65100);border:none;color:white;
-            font-weight:800;padding:16px 36px;border-radius:35px;font-size:17px;cursor:pointer;
-            margin:14px 5px 5px 5px;transition:all 0.15s;letter-spacing:1px;
-            box-shadow:var(--shadow-btn);position:relative;overflow:hidden;
-        }
-        .spin-btn::after,.get-coins-btn::after{
-            content:'';position:absolute;top:0;left:0;right:0;height:50%;
-            background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent);
-            border-radius:35px 35px 0 0;
-        }
+        .reel{width:75px;height:75px;background:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(0,0,0,0.4));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:42px;transition:all 0.1s;border:2px solid var(--border);box-shadow:inset 0 2px 4px rgba(0,0,0,0.5),0 4px 12px rgba(0,0,0,0.3)}
+        .reel.spinning{filter:blur(4px);background:linear-gradient(180deg,rgba(255,255,255,0.2),rgba(0,0,0,0.3))}
+        .reel.win-anim{animation:popIn 0.5s ease;border-color:#ffd700;box-shadow:0 0 20px rgba(255,215,0,0.5)}
+        .spin-btn,.get-coins-btn{background:linear-gradient(180deg,#f7971e,#e65100);border:none;color:white;font-weight:800;padding:16px 36px;border-radius:35px;font-size:17px;cursor:pointer;margin:14px 5px 5px 5px;transition:all 0.15s;letter-spacing:1px;box-shadow:var(--shadow-btn);position:relative;overflow:hidden}
+        .spin-btn::after,.get-coins-btn::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent);border-radius:35px 35px 0 0}
         .spin-btn:active,.get-coins-btn:active{transform:scale(0.94);box-shadow:var(--shadow-btn-active)}
         .get-coins-btn{background:linear-gradient(180deg,#4CAF50,#2E7D32);width:100%;box-shadow:0 6px 20px rgba(76,175,80,0.4);margin:0 0 16px 0;font-size:15px}
-        .result-message{font-size:17px;margin-top:18px;padding:14px;border-radius:16px;background:rgba(0,0,0,0.4);font-weight:700}
+        .result-message{font-size:17px;margin-top:18px;padding:14px;border-radius:16px;background:rgba(0,0,0,0.4);font-weight:700;position:relative;z-index:2}
         .win{color:#ffd700;text-shadow:0 0 15px rgba(255,215,0,0.4)}
         .lose{color:#ff6b6b}
         .bet-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}
-        .bet-option{
-            background:linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));
-            border:1px solid rgba(255,255,255,0.15);color:white;padding:12px 18px;
-            border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;
-            box-shadow:0 4px 10px rgba(0,0,0,0.2);
-        }
+        .bet-option{background:linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));border:1px solid rgba(255,255,255,0.15);color:white;padding:12px 18px;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;box-shadow:0 4px 10px rgba(0,0,0,0.2)}
         .bet-option:active{transform:scale(0.94)}
-        .bet-option.selected{
-            background:linear-gradient(180deg,#f7971e,#e65100);color:white;
-            border-color:transparent;font-weight:800;box-shadow:0 4px 16px rgba(247,151,30,0.4);
-        }
-        .back-btn{
-            background:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0.03));
-            border:1px solid rgba(255,255,255,0.12);color:white;padding:14px 24px;
-            border-radius:30px;cursor:pointer;margin-top:18px;font-size:14px;font-weight:600;
-            transition:all 0.15s;box-shadow:0 4px 12px rgba(0,0,0,0.2);
-        }
+        .bet-option.selected{background:linear-gradient(180deg,#f7971e,#e65100);color:white;border-color:transparent;font-weight:800;box-shadow:0 4px 16px rgba(247,151,30,0.4)}
+        .back-btn{background:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0.03));border:1px solid rgba(255,255,255,0.12);color:white;padding:14px 24px;border-radius:30px;cursor:pointer;margin-top:18px;font-size:14px;font-weight:600;transition:all 0.15s;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
         .back-btn:active{transform:scale(0.94);background:rgba(255,255,255,0.15)}
         .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:100;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(4px)}
         .modal-overlay.active{display:flex}
-        .modal{
-            background:linear-gradient(180deg,#1e1e3a,#12122a);border-radius:24px;padding:28px;
-            width:100%;max-width:400px;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,0.5);
-            animation:modalIn 0.3s ease;
-        }
+        .modal{background:linear-gradient(180deg,#1e1e3a,#12122a);border-radius:24px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:modalIn 0.3s ease}
         @keyframes modalIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
         .modal-title{font-size:22px;font-weight:800;margin-bottom:20px;text-align:center}
         .modal-btn{width:100%;padding:16px;border:none;border-radius:16px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:all 0.15s;box-shadow:0 6px 20px rgba(0,0,0,0.3)}
@@ -143,16 +99,27 @@
         .modal-btn.gold{background:linear-gradient(180deg,#f7971e,#e65100);color:white}
         .modal-btn.green{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white}
         .modal-btn.red{background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)}
-        .price-list{margin:18px 0}
-        .price-item{
-            display:flex;justify-content:space-between;align-items:center;
-            background:rgba(255,255,255,0.04);padding:14px 18px;border-radius:14px;
-            margin-bottom:10px;cursor:pointer;transition:all 0.15s;border:2px solid transparent;
-        }
-        .price-item:active{border-color:var(--accent);background:rgba(247,151,30,0.1)}
-        .price-item.selected{border-color:var(--accent);background:rgba(247,151,30,0.15);box-shadow:0 0 20px rgba(247,151,30,0.2)}
         .hidden{display:none!important}
-        .roulette-number{font-size:56px;margin:24px;font-weight:800;text-shadow:0 0 25px rgba(255,255,255,0.4)}
+        /* Roulette wheel */
+        .roulette-wheel{position:relative;width:160px;height:160px;margin:20px auto;border-radius:50%;background:conic-gradient(#e74c3c 0deg 18deg,#2c3e50 18deg 36deg,#e74c3c 36deg 54deg,#2c3e50 54deg 72deg,#e74c3c 72deg 90deg,#2c3e50 90deg 108deg,#e74c3c 108deg 126deg,#2c3e50 126deg 144deg,#e74c3c 144deg 162deg,#2c3e50 162deg 180deg,#e74c3c 180deg 198deg,#2c3e50 198deg 216deg,#e74c3c 216deg 234deg,#2c3e50 234deg 252deg,#e74c3c 252deg 270deg,#2c3e50 270deg 288deg,#e74c3c 288deg 306deg,#2c3e50 306deg 324deg,#e74c3c 324deg 342deg,#27ae60 342deg 360deg);border:4px solid rgba(255,255,255,0.2);box-shadow:inset 0 0 30px rgba(0,0,0,0.5),0 8px 32px rgba(0,0,0,0.4);transition:transform 3s cubic-bezier(0.17,0.89,0.32,1.25)}
+        .roulette-ball{position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:50%;left:50%;margin-left:-8px;margin-top:-78px;box-shadow:0 0 10px rgba(255,255,255,0.8);transition:all 3s cubic-bezier(0.17,0.89,0.32,1.25)}
+        .roulette-number{font-size:36px;margin-top:16px;font-weight:800}
+        /* Bowling */
+        .bowling-lane{position:relative;width:100%;height:60px;background:linear-gradient(90deg,#3e2723,#5d4037,#3e2723);border-radius:8px;margin:20px 0;overflow:hidden}
+        .bowling-ball{position:absolute;left:-40px;top:14px;font-size:32px;transition:all 1s ease-in}
+        .bowling-pins{position:absolute;right:20px;top:0;display:flex;gap:4px;font-size:28px;transition:all 0.5s ease}
+        /* Darts board */
+        .dart-board{position:relative;width:120px;height:120px;border-radius:50%;margin:20px auto;background:conic-gradient(#e74c3c 0deg 90deg,#2ecc71 90deg 180deg,#e74c3c 180deg 270deg,#2ecc71 270deg 360deg);border:3px solid rgba(255,255,255,0.3);box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+        .dart-board::after{content:'🎯';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:24px}
+        .dart-arrow{font-size:36px;transition:all 0.4s ease-out;animation:dart-fly 0.6s ease-out}
+        /* Cards */
+        .card-display{font-size:48px;display:inline-block;animation:card-flip 0.6s ease}
+        /* Dice container */
+        .dice-container{display:flex;justify-content:center;gap:24px;margin:24px 0}
+        .dice-anim{font-size:52px;transition:all 0.3s}
+        .dice-anim.rolling{animation:dice-roll 0.8s ease-out}
+        .hidden{display:none!important}
+        /* Profile and other styles */
         .profile-header{text-align:center;padding:24px;background:var(--card-bg);border-radius:24px;margin-bottom:16px;border:1px solid var(--border);box-shadow:var(--shadow-3d)}
         .profile-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(180deg,#f7971e,#e65100);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 14px;box-shadow:0 10px 30px rgba(247,151,30,0.4);animation:float 4s ease-in-out infinite}
         .profile-username{font-size:22px;font-weight:800;margin-bottom:4px}
@@ -191,7 +158,9 @@
         .friend-item .f-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#f7971e,#e65100);display:flex;align-items:center;justify-content:center;font-size:18px}
         input[type="text"]{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:white;font-size:15px;margin-bottom:18px;outline:none;text-align:center}
         input[type="text"]::placeholder{color:rgba(255,255,255,0.25)}
-        @media(max-width:400px){.games-menu{gap:8px}.game-emoji{font-size:34px}.game-name{font-size:11px}.game-card{padding:16px 6px}.reel{width:60px;height:60px;font-size:34px}.bet-option{padding:10px 14px;font-size:13px}.tab-btn{font-size:11px;padding:10px 4px}}
+        .sparkle{position:absolute;pointer-events:none;font-size:20px;animation:sparkle 0.6s ease-out forwards}
+        .coin-rain{position:fixed;pointer-events:none;font-size:24px;animation:coinRain 2s ease-in forwards;z-index:50}
+        @media(max-width:400px){.games-menu{gap:8px}.game-emoji{font-size:34px}.game-name{font-size:11px}.game-card{padding:16px 6px}.reel{width:60px;height:60px;font-size:34px}.bet-option{padding:10px 14px;font-size:13px}.tab-btn{font-size:11px;padding:10px 4px}.roulette-wheel{width:130px;height:130px}}
     </style>
 </head>
 <body>
@@ -200,10 +169,7 @@
             <div class="balance"><span class="balance-icon">💎</span><span class="balance-amount" id="balance">0</span></div>
             <div class="username" id="username">Игрок</div>
         </div>
-        <div class="daily-bonus-banner hidden" id="daily-bonus-banner">
-            <div class="db-info"><span class="db-icon">🎁</span><div><div class="db-text">Ежедневный бонус</div><div style="font-size:10px;opacity:0.5" id="db-streak-text">День 1</div></div></div>
-            <button class="db-btn" id="claim-daily-btn">+10 💎</button>
-        </div>
+        <div class="daily-bonus-banner hidden" id="daily-bonus-banner"><div class="db-info"><span class="db-icon">🎁</span><div><div class="db-text">Ежедневный бонус</div><div style="font-size:10px;opacity:0.5" id="db-streak-text">День 1</div></div></div><button class="db-btn" id="claim-daily-btn">+10 💎</button></div>
         <div class="tab-nav">
             <button class="tab-btn active" data-tab="games">🎮 Игры</button>
             <button class="tab-btn" data-tab="profile">👤 Профиль</button>
@@ -226,12 +192,30 @@
                 <div class="game-area">
                     <div class="game-title" id="game-title">🎰 СЛОТЫ</div>
                     <div class="bet-buttons" id="global-bet-buttons"><button class="bet-option" data-bet="10">💰10</button><button class="bet-option" data-bet="50">💰50</button><button class="bet-option" data-bet="100">💰100</button><button class="bet-option" data-bet="250">💰250</button></div>
+
+                    <!-- SLOTS -->
                     <div id="slots-game"><div class="slot-reels"><div class="reel" id="reel1">🍒</div><div class="reel" id="reel2">🍒</div><div class="reel" id="reel3">🍒</div></div><div><button class="spin-btn" id="spin-btn">🎰 КРУТИТЬ</button></div></div>
-                    <div id="roulette-game" class="hidden"><div class="roulette-number" id="roulette-result">?</div><div class="bet-buttons" id="roulette-bets"><button class="bet-option" data-roulette="red">🔴</button><button class="bet-option" data-roulette="black">⚫</button><button class="bet-option" data-roulette="green">🟢0</button><button class="bet-option" data-roulette="even">🟡Чёт</button><button class="bet-option" data-roulette="odd">🔵Нечет</button></div><div><button class="spin-btn" id="roulette-spin-btn">🎡 КРУТИТЬ</button></div></div>
-                    <div id="dice-game" class="hidden"><div style="display:flex;justify-content:center;gap:24px;margin:24px;"><div style="font-size:52px;" id="dice1">⚀</div><div style="font-size:52px;" id="dice2">⚀</div></div><div class="bet-buttons"><button class="bet-option" data-dice="over">⬆️>7</button><button class="bet-option" data-dice="under">⬇️<7</button></div><div><button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button></div></div>
-                    <div id="blackjack-game" class="hidden"><div style="margin:18px 0;"><div>🃏 Вы: <span id="player-cards">—</span> (<span id="player-sum">0</span>)</div><div>🤖 Дилер: <span id="dealer-cards">—</span> (<span id="dealer-sum">0</span>)</div></div><div class="bet-buttons"><button class="bet-option" id="bj-hit">🎯 Карту</button><button class="bet-option" id="bj-stand">✋ Хватит</button></div><div><button class="spin-btn" id="bj-start-btn">🃏 НАЧАТЬ</button></div></div>
-                    <div id="bowling-game" class="hidden"><div style="font-size:80px;margin:24px;">🎳</div><div class="bet-buttons"><button class="bet-option" data-bowling="over">⬆️>3</button><button class="bet-option" data-bowling="under">⬇️<4</button></div><div><button class="spin-btn" id="bowling-spin-btn">🎳 БРОСИТЬ</button></div></div>
-                    <div id="darts-game" class="hidden"><div style="font-size:80px;margin:24px;">🎯</div><div class="bet-buttons"><button class="bet-option" data-darts="even">🟡Чёт</button><button class="bet-option" data-darts="odd">🔵Нечет</button></div><div><button class="spin-btn" id="darts-spin-btn">🎯 БРОСИТЬ</button></div></div>
+
+                    <!-- ROULETTE -->
+                    <div id="roulette-game" class="hidden">
+                        <div class="roulette-wheel" id="roulette-wheel"><div class="roulette-ball" id="roulette-ball"></div></div>
+                        <div class="roulette-number" id="roulette-result">?</div>
+                        <div class="bet-buttons" id="roulette-bets"><button class="bet-option" data-roulette="red">🔴</button><button class="bet-option" data-roulette="black">⚫</button><button class="bet-option" data-roulette="green">🟢0</button><button class="bet-option" data-roulette="even">🟡Чёт</button><button class="bet-option" data-roulette="odd">🔵Нечет</button></div>
+                        <div><button class="spin-btn" id="roulette-spin-btn">🎡 КРУТИТЬ</button></div>
+                    </div>
+
+                    <!-- DICE -->
+                    <div id="dice-game" class="hidden"><div class="dice-container"><div class="dice-anim" id="dice1">⚀</div><div class="dice-anim" id="dice2">⚀</div></div><div class="bet-buttons"><button class="bet-option" data-dice="over">⬆️>7</button><button class="bet-option" data-dice="under">⬇️<7</button></div><div><button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button></div></div>
+
+                    <!-- BLACKJACK -->
+                    <div id="blackjack-game" class="hidden"><div style="margin:18px 0;"><div style="margin:8px 0;">🃏 Вы: <span id="player-cards">—</span> (<span id="player-sum">0</span>)</div><div style="margin:8px 0;">🤖 Дилер: <span id="dealer-cards">—</span> (<span id="dealer-sum">0</span>)</div></div><div class="bet-buttons"><button class="bet-option" id="bj-hit">🎯 Карту</button><button class="bet-option" id="bj-stand">✋ Хватит</button></div><div><button class="spin-btn" id="bj-start-btn">🃏 НАЧАТЬ</button></div></div>
+
+                    <!-- BOWLING -->
+                    <div id="bowling-game" class="hidden"><div class="bowling-lane"><span class="bowling-ball" id="bowling-ball">🎳</span><span class="bowling-pins" id="bowling-pins">🎳🎳🎳🎳🎳🎳</span></div><div class="bet-buttons"><button class="bet-option" data-bowling="over">⬆️>3</button><button class="bet-option" data-bowling="under">⬇️<4</button></div><div><button class="spin-btn" id="bowling-spin-btn">🎳 БРОСИТЬ</button></div></div>
+
+                    <!-- DARTS -->
+                    <div id="darts-game" class="hidden"><div class="dart-board" id="dart-board"></div><div id="dart-result" style="font-size:18px;font-weight:700;margin:10px 0;"></div><div class="bet-buttons"><button class="bet-option" data-darts="even">🟡Чёт</button><button class="bet-option" data-darts="odd">🔵Нечет</button></div><div><button class="spin-btn" id="darts-spin-btn">🎯 БРОСИТЬ</button></div></div>
+
                     <div id="result-message" class="result-message"></div>
                     <button class="back-btn" id="back-to-menu">🔙 Назад</button>
                 </div>
@@ -268,6 +252,23 @@
         function vibrate(){if(navigator.vibrate)navigator.vibrate(15)}
         document.querySelectorAll('button,.game-card,.price-item,.daily-bonus-banner').forEach(el=>el.addEventListener('click',vibrate))
 
+        function spawnSparkles(x,y,count=8){
+            for(let i=0;i<count;i++){
+                const s=document.createElement('div');s.className='sparkle'
+                s.innerText=['✨','💫','⭐','🌟'][Math.floor(Math.random()*4)]
+                s.style.cssText=`left:${x+Math.random()*80-40}px;top:${y+Math.random()*60-30}px;animation-delay:${Math.random()*0.3}s`
+                document.body.appendChild(s);setTimeout(()=>s.remove(),800)
+            }
+        }
+
+        function spawnWinCoins(count=10){
+            for(let i=0;i<count;i++){
+                const c=document.createElement('div');c.className='coin-rain';c.innerText='💎'
+                c.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*1}s;animation-duration:${1.5+Math.random()*2}s`
+                document.body.appendChild(c);setTimeout(()=>c.remove(),3000)
+            }
+        }
+
         async function checkPendingPaymentOnLoad(){
             if(!userId)return;const ppId=localStorage.getItem('pending_payment_id'),ppUid=localStorage.getItem('pending_user_id')
             if(ppId&&ppUid&&parseInt(ppUid)===userId){document.getElementById('pending-payment-banner').classList.remove('hidden')
@@ -286,7 +287,7 @@
         document.getElementById('claim-daily-btn').addEventListener('click',async()=>{
             const btn=document.getElementById('claim-daily-btn');btn.disabled=true;btn.innerText='⏳'
             try{const r=await fetch(`${BOT_API_URL}/api/daily_bonus`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json()
-            if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;document.getElementById('daily-bonus-banner').classList.add('hidden');tg.showAlert(`🎁 +${d.bonus} 💎! Дней подряд: ${d.streak}`)}else{tg.showAlert('⏳ Уже получали сегодня')}}catch(e){}
+            if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;document.getElementById('daily-bonus-banner').classList.add('hidden');tg.showAlert(`🎁 +${d.bonus} 💎! Дней: ${d.streak}`)}else{tg.showAlert('⏳ Уже получали')}}catch(e){}
             finally{btn.disabled=false;btn.innerText='+10 💎'}
         })
 
@@ -332,12 +333,122 @@
         function showGame(game){currentGame=game;document.getElementById('games-menu').classList.add('hidden');document.getElementById('game-area').classList.remove('hidden');['slots','roulette','dice','blackjack','bowling','darts'].forEach(g=>document.getElementById(`${g}-game`).classList.add('hidden'));document.getElementById(`${game}-game`).classList.remove('hidden');const t={slots:'🎰 СЛОТЫ',roulette:'🎡 РУЛЕТКА',dice:'🎲 КОСТИ',blackjack:'🃏 БЛЭКДЖЕК',bowling:'🎳 БОУЛИНГ',darts:'🎯 ДАРТС'};document.getElementById('game-title').innerHTML=t[game];document.getElementById('result-message').innerHTML=''}
         function backToMenu(){document.getElementById('games-menu').classList.remove('hidden');document.getElementById('game-area').classList.add('hidden');currentGame=null}
 
-        function spinSlots(){if(balance<currentBet){showNoBalance();return}const r1=document.getElementById('reel1'),r2=document.getElementById('reel2'),r3=document.getElementById('reel3'),rd=document.getElementById('result-message');let s=0;const iv=setInterval(()=>{r1.innerText=symbols[Math.floor(Math.random()*5)];r2.innerText=symbols[Math.floor(Math.random()*5)];r3.innerText=symbols[Math.floor(Math.random()*5)];s++;if(s>10)clearInterval(iv)},100);setTimeout(async()=>{const a=symbols[Math.floor(Math.random()*5)],b=symbols[Math.floor(Math.random()*5)],c=symbols[Math.floor(Math.random()*5)];r1.innerText=a;r2.innerText=b;r3.innerText=c;const win=Math.random()<WIN_RATE;let wa=0;if(win){let m=2;if(a===b&&b===c){if(a==='7️⃣')m=10;else if(a==='💎')m=5;else if(a==='BAR')m=3}else if(a===b||a===c||b===c)m=1.5;wa=Math.floor(currentBet*m)}rd.innerHTML=win?`🎉 +${wa} 💎`:'😞 Проигрыш';rd.className=`result-message ${win?'win':'lose'}`;await sendGameResult('slots',currentBet,win,wa,{reel1:a,reel2:b,reel3:c});await afterGame()},1100)}
-        let crb=null;async function spinRoulette(){if(!crb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}if(balance<currentBet){showNoBalance();return}const rd=document.getElementById('result-message');const n=Math.floor(Math.random()*37);document.getElementById('roulette-result').innerHTML=n;const win=Math.random()<WIN_RATE;let wa=0;if(win){let m=2;if(crb==='green'&&n===0)m=35;wa=Math.floor(currentBet*m)}rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${n})`;rd.className=`result-message ${win?'win':'lose'}`;await sendGameResult('roulette',currentBet,win,wa,{number:n,bet:crb});await afterGame()}
-        let cdb=null;async function rollDice(){if(!cdb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}if(balance<currentBet){showNoBalance();return}const d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,t=d1+d2;const df=['⚀','⚁','⚂','⚃','⚄','⚅'];document.getElementById('dice1').innerHTML=df[d1-1];document.getElementById('dice2').innerHTML=df[d2-1];const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;const rd=document.getElementById('result-message');rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${t})`;rd.className=`result-message ${win?'win':'lose'}`;await sendGameResult('dice',currentBet,win,wa,{dice1:d1,dice2:d2,total:t});await afterGame()}
-        let bjd=[],ph=[],dh=[],ga=false;function ibd(){const d=[];for(let i=0;i<4;i++){for(let v of[2,3,4,5,6,7,8,9,10,10,10,10,11])d.push(v)}for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}function ubj(){const ps=ph.reduce((a,b)=>a+b,0),ds=dh.reduce((a,b)=>a+b,0);document.getElementById('player-cards').innerHTML=ph.join(', ');document.getElementById('player-sum').innerHTML=ps;document.getElementById('dealer-cards').innerHTML=dh.join(', ');document.getElementById('dealer-sum').innerHTML=ds}async function ebj(hw){if(!ga)return;ga=false;const win=hw&&Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;document.getElementById('result-message').innerHTML=win?`🎉 +${wa} 💎`:'😞 Проигрыш';document.getElementById('result-message').className=`result-message ${win?'win':'lose'}`;await sendGameResult('blackjack',currentBet,win,wa,{playerHand:ph,dealerHand:dh});await afterGame()}function bjh(){if(!ga)return;if(balance<currentBet){showNoBalance();return}ph.push(bjd.pop());ubj();if(ph.reduce((a,b)=>a+b,0)>21)ebj(false)}async function bjs(){if(!ga)return;let ds=dh.reduce((a,b)=>a+b,0);while(ds<17){dh.push(bjd.pop());ds=dh.reduce((a,b)=>a+b,0);ubj();await new Promise(r=>setTimeout(r,500))}const ps=ph.reduce((a,b)=>a+b,0);if(ds>21||ps>ds)ebj(true);else ebj(false)}function sbj(){if(balance<currentBet){showNoBalance();return}bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;ubj();document.getElementById('result-message').innerHTML=''}
-        let cbb=null;async function playBowling(){if(!cbb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}if(balance<currentBet){showNoBalance();return}const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;const rd=document.getElementById('result-message');rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${v})`;rd.className=`result-message ${win?'win':'lose'}`;await sendGameResult('bowling',currentBet,win,wa,{result:v});await afterGame()}
-        let cdab=null;async function playDarts(){if(!cdab){document.getElementById('result-message').innerHTML='❌ Ставка!';return}if(balance<currentBet){showNoBalance();return}const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;const rd=document.getElementById('result-message');rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${v})`;rd.className=`result-message ${win?'win':'lose'}`;await sendGameResult('darts',currentBet,win,wa,{result:v});await afterGame()}
+        // ===== 🎰 СЛОТЫ — анимация спиннинга с blur =====
+        let slotSpinning=false
+        function spinSlots(){
+            if(balance<currentBet){showNoBalance();return}
+            if(slotSpinning)return;slotSpinning=true
+            const r1=document.getElementById('reel1'),r2=document.getElementById('reel2'),r3=document.getElementById('reel3'),rd=document.getElementById('result-message')
+            const spinBtn=document.getElementById('spin-btn');spinBtn.disabled=true
+            r1.classList.add('spinning');r2.classList.add('spinning');r3.classList.add('spinning')
+            const spinDuration=1200;const totalFrames=24;const frameInterval=spinDuration/totalFrames
+            let frame=0
+            const interval=setInterval(()=>{
+                r1.innerText=symbols[Math.floor(Math.random()*5)];r2.innerText=symbols[Math.floor(Math.random()*5)];r3.innerText=symbols[Math.floor(Math.random()*5)];frame++
+                if(frame>=totalFrames-3)r1.classList.remove('spinning')
+                if(frame>=totalFrames-2)r2.classList.remove('spinning')
+                if(frame>=totalFrames)r3.classList.remove('spinning')
+                if(frame>=totalFrames){clearInterval(interval)
+                    const a=symbols[Math.floor(Math.random()*5)],b=symbols[Math.floor(Math.random()*5)],c=symbols[Math.floor(Math.random()*5)]
+                    r1.innerText=a;r2.innerText=b;r3.innerText=c
+                    const win=Math.random()<WIN_RATE;let wa=0
+                    if(win){let m=2;if(a===b&&b===c){if(a==='7️⃣')m=10;else if(a==='💎')m=5;else if(a==='BAR')m=3}else if(a===b||a===c||b===c)m=1.5;wa=Math.floor(currentBet*m)}
+                    if(win){r1.classList.add('win-anim');r2.classList.add('win-anim');r3.classList.add('win-anim');spawnWinCoins(8)}
+                    rd.innerHTML=win?`🎉 +${wa} 💎`:'😞 Проигрыш';rd.className=`result-message ${win?'win':'lose'}`
+                    sendGameResult('slots',currentBet,win,wa,{reel1:a,reel2:b,reel3:c}).then(()=>{afterGame();spinBtn.disabled=false;slotSpinning=false})
+                }
+            },frameInterval)
+        }
+
+        // ===== 🎡 РУЛЕТКА — вращение колеса и шарика =====
+        let crb=null,rouletteSpinning=false
+        async function spinRoulette(){
+            if(!crb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
+            if(balance<currentBet){showNoBalance();return}
+            if(rouletteSpinning)return;rouletteSpinning=true
+            const rd=document.getElementById('result-message'),wheel=document.getElementById('roulette-wheel'),ball=document.getElementById('roulette-ball')
+            const spinBtn=document.getElementById('roulette-spin-btn');spinBtn.disabled=true
+            const n=Math.floor(Math.random()*37);document.getElementById('roulette-result').innerHTML='🎡'
+            const angle=1800+Math.random()*360;wheel.style.transform=`rotate(${angle}deg)`
+            ball.style.transform=`rotate(${-angle}deg)`
+            setTimeout(()=>{
+                let col='';if(n===0)col='green';else if([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n))col='red';else col='black'
+                document.getElementById('roulette-result').innerHTML=n
+                const win=Math.random()<WIN_RATE;let wa=0
+                if(win){let m=2;if(crb==='green'&&n===0)m=35;wa=Math.floor(currentBet*m)}
+                if(win)spawnSparkles(wheel.offsetLeft+80,wheel.offsetTop+80,12)
+                rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${n})`;rd.className=`result-message ${win?'win':'lose'}`
+                sendGameResult('roulette',currentBet,win,wa,{number:n,bet:crb}).then(()=>{afterGame();spinBtn.disabled=false;rouletteSpinning=false})
+            },3000)
+        }
+
+        // ===== 🎲 КОСТИ — анимация броска =====
+        let cdb=null,diceSpinning=false
+        async function rollDice(){
+            if(!cdb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
+            if(balance<currentBet){showNoBalance();return}
+            if(diceSpinning)return;diceSpinning=true
+            const d1El=document.getElementById('dice1'),d2El=document.getElementById('dice2'),rd=document.getElementById('result-message')
+            const spinBtn=document.getElementById('dice-spin-btn');spinBtn.disabled=true
+            d1El.classList.add('rolling');d2El.classList.add('rolling')
+            const diceFaces=['⚀','⚁','⚂','⚃','⚄','⚅']
+            let count=0;const iv=setInterval(()=>{d1El.innerText=diceFaces[Math.floor(Math.random()*6)];d2El.innerText=diceFaces[Math.floor(Math.random()*6)];count++;if(count>=12)clearInterval(iv)},60)
+            setTimeout(()=>{
+                d1El.classList.remove('rolling');d2El.classList.remove('rolling')
+                const d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,t=d1+d2
+                d1El.innerText=diceFaces[d1-1];d2El.innerText=diceFaces[d2-1]
+                const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0
+                if(win){d1El.style.transform='scale(1.2)';d2El.style.transform='scale(1.2)';setTimeout(()=>{d1El.style.transform='';d2El.style.transform=''},300);spawnWinCoins(6)}
+                rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${t})`;rd.className=`result-message ${win?'win':'lose'}`
+                sendGameResult('dice',currentBet,win,wa,{dice1:d1,dice2:d2,total:t}).then(()=>{afterGame();spinBtn.disabled=false;diceSpinning=false})
+            },800)
+        }
+
+        // ===== 🃏 БЛЭКДЖЕК — анимация раздачи =====
+        let bjd=[],ph=[],dh=[],ga=false,bjAnimating=false
+        const cardSuits=['♠️','♥️','♦️','♣️']
+        function getCardDisplay(v){if(v===11)return 'A';if(v===10)return ['K','Q','J','10'][Math.floor(Math.random()*4)];return v}
+        function ibd(){const d=[];for(let i=0;i<4;i++){for(let v of[2,3,4,5,6,7,8,9,10,10,10,10,11])d.push(v)}for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
+        function ubj(){const ps=ph.reduce((a,b)=>a+b,0),ds=dh.reduce((a,b)=>a+b,0);document.getElementById('player-cards').innerHTML=ph.map(v=>`<span class="card-display">${cardSuits[Math.floor(Math.random()*4)]}${getCardDisplay(v)}</span>`).join(' ');document.getElementById('player-sum').innerHTML=ps;document.getElementById('dealer-cards').innerHTML=dh.map(v=>`<span class="card-display">${cardSuits[Math.floor(Math.random()*4)]}${getCardDisplay(v)}</span>`).join(' ');document.getElementById('dealer-sum').innerHTML=ds}
+        async function ebj(hw){if(!ga)return;ga=false;bjAnimating=false;const win=hw&&Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;if(win)spawnSparkles(window.innerWidth/2,300,15);document.getElementById('result-message').innerHTML=win?`🎉 +${wa} 💎`:'😞 Проигрыш';document.getElementById('result-message').className=`result-message ${win?'win':'lose'}`;await sendGameResult('blackjack',currentBet,win,wa,{playerHand:ph,dealerHand:dh});await afterGame()}
+        async function bjh(){if(!ga||bjAnimating)return;if(balance<currentBet){showNoBalance();return}bjAnimating=true;const card=bjd.pop();ph.push(card);ubj();await new Promise(r=>setTimeout(r,400));bjAnimating=false;if(ph.reduce((a,b)=>a+b,0)>21)ebj(false)}
+        async function bjs(){if(!ga||bjAnimating)return;bjAnimating=true;let ds=dh.reduce((a,b)=>a+b,0);while(ds<17){dh.push(bjd.pop());ds=dh.reduce((a,b)=>a+b,0);ubj();await new Promise(r=>setTimeout(r,600))}bjAnimating=false;const ps=ph.reduce((a,b)=>a+b,0);if(ds>21||ps>ds)ebj(true);else ebj(false)}
+        function sbj(){if(balance<currentBet){showNoBalance();return}bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;ubj();document.getElementById('result-message').innerHTML=''}
+
+        // ===== 🎳 БОУЛИНГ — анимация катящегося шара =====
+        let cbb=null,bowlingAnimating=false
+        async function playBowling(){
+            if(!cbb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
+            if(balance<currentBet){showNoBalance();return}
+            if(bowlingAnimating)return;bowlingAnimating=true
+            const ball=document.getElementById('bowling-ball'),pins=document.getElementById('bowling-pins'),rd=document.getElementById('result-message')
+            const spinBtn=document.getElementById('bowling-spin-btn');spinBtn.disabled=true
+            ball.style.left='-40px';ball.style.transform='rotate(0deg)';pins.style.transform=''
+            setTimeout(()=>{ball.style.left='calc(100% - 60px)';ball.style.transform='rotate(720deg)'},100)
+            setTimeout(()=>{const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0
+                if(win){pins.innerHTML=pins.innerHTML.replace(/🎳/g,'💥');pins.style.transform='rotate(15deg) scale(0.7)';setTimeout(()=>{pins.innerHTML='🎳🎳🎳🎳🎳🎳';pins.style.transform=''},1000);spawnWinCoins(5)}
+                rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${v})`;rd.className=`result-message ${win?'win':'lose'}`
+                sendGameResult('bowling',currentBet,win,wa,{result:v}).then(()=>{afterGame();spinBtn.disabled=false;bowlingAnimating=false})
+            },1200)
+        }
+
+        // ===== 🎯 ДАРТС — анимация полёта дротика =====
+        let cdab=null,dartsAnimating=false
+        async function playDarts(){
+            if(!cdab){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
+            if(balance<currentBet){showNoBalance();return}
+            if(dartsAnimating)return;dartsAnimating=true
+            const rd=document.getElementById('result-message'),dr=document.getElementById('dart-result')
+            const spinBtn=document.getElementById('darts-spin-btn');spinBtn.disabled=true
+            dr.innerHTML='<span class="dart-arrow" style="font-size:48px;">🎯</span>'
+            setTimeout(()=>{dr.innerHTML='<span style="font-size:48px;">💥</span>'},400)
+            setTimeout(()=>{const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0
+                dr.innerHTML=win?`🎯 ${v} — Попадание!`:`💨 ${v} — Мимо!`
+                if(win)spawnSparkles(document.getElementById('dart-board').offsetLeft+60,document.getElementById('dart-board').offsetTop+60,8)
+                rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${v})`;rd.className=`result-message ${win?'win':'lose'}`
+                sendGameResult('darts',currentBet,win,wa,{result:v}).then(()=>{afterGame();spinBtn.disabled=false;dartsAnimating=false})
+            },700)
+        }
 
         document.querySelectorAll('.game-card').forEach(c=>c.addEventListener('click',()=>showGame(c.dataset.game)))
         document.getElementById('back-to-menu').addEventListener('click',backToMenu)
