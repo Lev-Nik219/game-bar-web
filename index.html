@@ -16,10 +16,10 @@
         @keyframes rouletteSpin{0%{transform:rotate(0deg)}100%{transform:rotate(1800deg)}}
         @keyframes cardDeal{0%{transform:translateX(-40px) rotate(-10deg);opacity:0}100%{transform:translateX(0) rotate(0);opacity:1}}
         @keyframes cardDealDealer{0%{transform:translateX(40px) rotate(10deg);opacity:0}100%{transform:translateX(0) rotate(0);opacity:1}}
-        @keyframes bowlingRoll{0%{transform:translateX(-50px)}100%{transform:translateX(180px)}}
-        @keyframes pinFall{0%{transform:rotate(0deg) translateY(0);opacity:1}100%{transform:rotate(var(--r)) translateY(var(--y)) translateX(var(--x));opacity:0}}
-        @keyframes dartAim{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-60%) scale(1.1)}}
-        @keyframes dartHit{0%{transform:translate(-50%,-60%) scale(0);opacity:0}60%{transform:translate(-50%,-55%) scale(1.3);opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+        @keyframes bowlingBallRoll{0%{transform:translateX(-40px) rotate(0deg)}100%{transform:translateX(160px) rotate(360deg)}}
+        @keyframes pinFly{0%{transform:translate(0,0) rotate(0deg) scale(1);opacity:1}100%{transform:translate(var(--px),var(--py)) rotate(var(--pr)) scale(0.8);opacity:0}}
+        @keyframes dartFloat{0%,100%{transform:translate(-50%,-50%)}25%{transform:translate(-52%,-54%)}50%{transform:translate(-48%,-52%)}75%{transform:translate(-51%,-55%)}}
+        @keyframes dartThrow{0%{transform:translate(-50%,-50%) scale(0) rotate(-30deg)}40%{transform:translate(-50%,-60%) scale(1.2) rotate(5deg)}100%{transform:translate(-50%,-50%) scale(1) rotate(0deg)}}
         @keyframes pulseResult{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
         body{background:linear-gradient(135deg,#0a0a1a,#12122a 30%,#1a1a3a 60%,#0d0d28 100%);background-size:400% 400%;animation:bgPulse 12s ease infinite;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:white;min-height:100vh;display:flex;justify-content:center;align-items:center;overflow-x:hidden}
         body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 20% 50%,rgba(247,151,30,0.03) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(255,210,0,0.03) 0%,transparent 50%),radial-gradient(circle at 50% 80%,rgba(76,175,80,0.03) 0%,transparent 50%);pointer-events:none;z-index:0}
@@ -125,8 +125,8 @@
                 <div id="roulette-game" class="hidden"><div class="roulette-wheel-container"><div class="roulette-outer"><div class="roulette-ring" id="roulette-ring"></div><div class="roulette-ball" id="roulette-ball-anim"></div><div class="roulette-center"></div></div></div><div class="roulette-result-num" id="roulette-result-display">?</div><div class="bet-buttons" id="roulette-bets"><button class="bet-option" data-roulette="red">🔴</button><button class="bet-option" data-roulette="black">⚫</button><button class="bet-option" data-roulette="green">🟢0</button><button class="bet-option" data-roulette="even">🟡Чёт</button><button class="bet-option" data-roulette="odd">🔵Нечет</button></div><div><button class="spin-btn" id="roulette-spin-btn">🎡 КРУТИТЬ</button></div></div>
                 <div id="dice-game" class="hidden"><div style="display:flex;justify-content:center;gap:24px;margin:24px 0;"><div style="font-size:52px;" id="dice1">⚀</div><div style="font-size:52px;" id="dice2">⚀</div></div><div class="bet-buttons"><button class="bet-option" data-dice="over">⬆️>7</button><button class="bet-option" data-dice="under">⬇️<7</button></div><div><button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button></div></div>
                 <div id="blackjack-game" class="hidden"><div class="card-row"><span class="clabel">🤖</span><div id="dealer-cards"><span class="card-slot">🂠</span></div><span id="dealer-sum" style="margin-left:6px;font-weight:700">0</span></div><div class="card-row"><span class="clabel">🃏</span><div id="player-cards"><span class="card-slot">🂠</span></div><span id="player-sum" style="margin-left:6px;font-weight:700">0</span></div><div class="bet-buttons"><button class="bet-option" id="bj-hit">🎯 Карту</button><button class="bet-option" id="bj-stand">✋ Хватит</button></div><div><button class="spin-btn" id="bj-start-btn">🃏 НАЧАТЬ</button></div></div>
-                <div id="bowling-game" class="hidden"><div class="bowling-scene"><div class="bowling-ball-anim" id="bowling-ball">🎱</div><div class="bowling-pins-row" id="bowling-pins"></div><div class="bowling-lane-visual"></div></div><div class="bet-buttons"><button class="bet-option" data-bowling="over">⬆️>3</button><button class="bet-option" data-bowling="under">⬇️<4</button></div><div><button class="spin-btn" id="bowling-spin-btn">🎳 БРОСИТЬ</button></div></div>
-                <div id="darts-game" class="hidden"><div class="darts-scene"><div class="dartboard"><div class="ring"></div><div class="ring2"></div><div class="bull"></div></div><div class="dart-arrow-fly" id="dart-arrow-anim" style="display:none">🎯</div></div><div class="dart-result-area" id="dart-result-area"></div><div class="bet-buttons"><button class="bet-option" data-darts="even">🟡Чёт</button><button class="bet-option" data-darts="odd">🔵Нечет</button></div><div><button class="spin-btn" id="darts-spin-btn">🎯 БРОСИТЬ</button></div></div>
+                <div id="bowling-game" class="hidden"><div style="position:relative;width:100%;height:180px;background:rgba(0,0,0,0.3);border-radius:16px;margin:16px 0;overflow:hidden"><div style="position:absolute;bottom:0;left:0;right:0;height:55px;background:linear-gradient(0deg,#4a2c1a,#6b3a2a,#5a3020 60%,#3d2010);border-radius:0 0 16px 16px;box-shadow:inset 0 2px 10px rgba(0,0,0,0.5)"></div><div style="position:absolute;bottom:58px;left:20px;font-size:42px;transition:all 1.3s ease-in;z-index:5;filter:drop-shadow(0 6px 8px rgba(0,0,0,0.5))" id="bowling-ball">🎳</div><div id="bowling-pins-row" style="position:absolute;bottom:56px;right:35px;display:flex;gap:0;z-index:3"></div></div><div class="bet-buttons"><button class="bet-option" data-bowling="over">⬆️>3</button><button class="bet-option" data-bowling="under">⬇️<4</button></div><div><button class="spin-btn" id="bowling-spin-btn">🎳 БРОСИТЬ</button></div></div>
+                <div id="darts-game" class="hidden"><div style="position:relative;width:200px;height:200px;margin:20px auto"><div style="width:180px;height:180px;border-radius:50%;background:conic-gradient(#111 0deg 30deg,#e74c3c 30deg 60deg,#111 60deg 90deg,#2ecc71 90deg 120deg,#111 120deg 150deg,#e74c3c 150deg 180deg,#111 180deg 210deg,#2ecc71 210deg 240deg,#111 240deg 270deg,#e74c3c 270deg 300deg,#111 300deg 330deg,#2ecc71 330deg 360deg);border:5px solid #6b6b6b;box-shadow:0 0 30px rgba(0,0,0,0.5),inset 0 0 30px rgba(0,0,0,0.4);margin:0 auto;position:relative"><div style="position:absolute;top:15px;left:15px;right:15px;bottom:15px;border-radius:50%;border:2px solid rgba(255,255,255,0.12)"></div><div style="position:absolute;top:55px;left:55px;right:55px;bottom:55px;border-radius:50%;border:2px solid rgba(255,255,255,0.1)"></div><div style="position:absolute;top:50%;left:50%;width:35px;height:35px;margin-left:-17px;margin-top:-17px;background:radial-gradient(circle,#e74c3c,#8B0000);border-radius:50%;border:2px solid #111;transform:translate(0,0)"></div></div><div style="position:absolute;top:50%;left:50%;font-size:42px;transform:translate(-50%,-50%);z-index:5;display:none" id="dart-arrow-anim">🎯</div></div><div style="font-size:18px;font-weight:700;min-height:28px;margin:6px 0" id="dart-result-area"></div><div class="bet-buttons"><button class="bet-option" data-darts="even">🟡Чёт</button><button class="bet-option" data-darts="odd">🔵Нечет</button></div><div><button class="spin-btn" id="darts-spin-btn">🎯 БРОСИТЬ</button></div></div>
                 <div id="result-message" class="result-message"></div><button class="back-btn" id="back-to-menu">🔙 Назад</button>
             </div></div>
         </div>
@@ -240,15 +240,65 @@
         async function bjs(){if(!ga)return;let ds=dh.reduce((a,b)=>a+b,0);while(ds<17){dh.push(bjd.pop());ds=dh.reduce((a,b)=>a+b,0);rc();await new Promise(r=>setTimeout(r,700))};const ps=ph.reduce((a,b)=>a+b,0);if(ds>21||ps>ds)ebj(true);else ebj(false)}
         function sbj(){if(balance<currentBet){showNoBalance();return};bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;rc();document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message'}
 
-        // 🎳 БОУЛИНГ — шар катится, кегли падают
+        // 🎳 БОУЛИНГ — Telegram-style
         let cbb=null,bowlingAnimating=false
-        function resetPins(){const container=document.getElementById('bowling-pins');container.innerHTML='';for(let i=0;i<6;i++){const pin=document.createElement('span');pin.className='bowling-pin-el';pin.innerText='🎳';pin.style.marginLeft=i===3?'-4px':'0';container.appendChild(pin)}}
-        async function playBowling(){if(!cbb){document.getElementById('result-message').innerHTML='❌ Ставка!';return};if(balance<currentBet){showNoBalance();return};if(bowlingAnimating)return;bowlingAnimating=true;const ball=document.getElementById('bowling-ball'),rd=document.getElementById('result-message'),sb=document.getElementById('bowling-spin-btn');sb.disabled=true;resetPins();ball.style.left='-30px';ball.style.transition='none';setTimeout(()=>{ball.style.transition='left 1.2s ease-in';ball.style.left='calc(100% - 50px)'},100);setTimeout(()=>{const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;if(win){document.querySelectorAll('.bowling-pin-el').forEach((p,i)=>{setTimeout(()=>{p.classList.add('hit');p.style.setProperty('--x',`${-8+Math.random()*16}px`);p.style.setProperty('--y',`${Math.random()*12}px`);p.style.setProperty('--r',`${-40+Math.random()*80}deg`)},i*70)});spawnWinCoins(5)};rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${win?'win':'lose'}`;sendGameResult('bowling',currentBet,win,wa,{}).then(()=>{afterGame(win);sb.disabled=false;bowlingAnimating=false})},1400)}
-
-        // 🎯 ДАРТС — прицеливание + бросок
+        function resetBowlingPins(){
+            const container=document.getElementById('bowling-pins-row');container.innerHTML=''
+            const positions=[0,-8,8,-16,0,16]
+            for(let i=0;i<6;i++){
+                const pin=document.createElement('span')
+                pin.style.cssText=`font-size:24px;display:inline-block;margin-left:${positions[i]}px;transition:all 0.4s ease-out`
+                pin.innerText='🎳';container.appendChild(pin)
+            }
+        }
+        async function playBowling(){
+            if(!cbb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
+            if(balance<currentBet){showNoBalance();return}
+            if(bowlingAnimating)return;bowlingAnimating=true
+            const ball=document.getElementById('bowling-ball'),rd=document.getElementById('result-message'),sb=document.getElementById('bowling-spin-btn')
+            sb.disabled=true;resetBowlingPins()
+            ball.style.transition='none';ball.style.left='20px';ball.style.transform='rotate(0deg)'
+            setTimeout(()=>{
+                ball.style.transition='all 1.3s ease-in'
+                ball.style.left='calc(100% - 55px)';ball.style.transform='rotate(540deg)'
+            },100)
+            setTimeout(()=>{
+                const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0
+                if(win){
+                    const pins=document.querySelectorAll('#bowling-pins-row span')
+                    pins.forEach((p,i)=>{
+                        setTimeout(()=>{
+                            p.style.transform=`translate(${-5+Math.random()*10}px,${Math.random()*8}px) rotate(${-20+Math.random()*40}deg) scale(0.7)`
+                            p.style.opacity='0.5'
+                        },i*60)
+                    })
+                    spawnWinCoins(5)
+                }
+                rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${win?'win':'lose'}`
+                sendGameResult('bowling',currentBet,win,wa,{}).then(()=>{afterGame(win);sb.disabled=false;bowlingAnimating=false})
+            },1500)
+        }
+        // 🎯 ДАРТС — Telegram-style
         let cdab=null,dartsAnimating=false
-        async function playDarts(){if(!cdab){document.getElementById('result-message').innerHTML='❌ Ставка!';return};if(balance<currentBet){showNoBalance();return};if(dartsAnimating)return;dartsAnimating=true;const arrow=document.getElementById('dart-arrow-anim'),dr=document.getElementById('dart-result-area'),rd=document.getElementById('result-message'),sb=document.getElementById('darts-spin-btn');sb.disabled=true;arrow.style.display='block';arrow.style.animation='dartAim 0.4s ease-in-out 3';arrow.style.transform='translate(-50%,-50%)';setTimeout(()=>{arrow.style.animation='dartHit 0.5s ease-out forwards';arrow.style.transform='translate(-50%,-55%) scale(1.3)'},1200);setTimeout(()=>{const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;arrow.style.display='none';arrow.style.transform='translate(-50%,-50%)';dr.innerHTML=win?`🎯 ${v} — Попадание!`:`💨 ${v} — Мимо!`;rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${win?'win':'lose'}`;sendGameResult('darts',currentBet,win,wa,{}).then(()=>{afterGame(win);sb.disabled=false;dartsAnimating=false;dr.innerHTML=''})},1800)}
-
+        async function playDarts(){
+            if(!cdab){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
+            if(balance<currentBet){showNoBalance();return}
+            if(dartsAnimating)return;dartsAnimating=true
+            const arrow=document.getElementById('dart-arrow-anim'),dr=document.getElementById('dart-result-area'),rd=document.getElementById('result-message'),sb=document.getElementById('darts-spin-btn')
+            sb.disabled=true
+            arrow.style.display='block';arrow.style.transform='translate(-50%,-50%)'
+            arrow.style.animation='dartFloat 0.5s ease-in-out 3'
+            setTimeout(()=>{
+                arrow.style.animation='dartThrow 0.4s ease-out forwards'
+            },1500)
+            setTimeout(()=>{
+                const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0
+                arrow.style.display='none';arrow.style.transform='translate(-50%,-50%)'
+                dr.innerHTML=win?`🎯 Точное попадание!`:`💨 Мимо!`
+                rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ`;rd.className=`result-message ${win?'win':'lose'}`
+                sendGameResult('darts',currentBet,win,wa,{}).then(()=>{afterGame(win);sb.disabled=false;dartsAnimating=false;dr.innerHTML=''})
+            },2000)
+        }
         document.querySelectorAll('.game-card').forEach(c=>c.addEventListener('click',()=>showGame(c.dataset.game)));document.getElementById('back-to-menu').addEventListener('click',backToMenu)
         document.querySelectorAll('[data-roulette]').forEach(b=>b.addEventListener('click',()=>{crb=b.dataset.roulette;document.querySelectorAll('[data-roulette]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
         document.querySelectorAll('[data-dice]').forEach(b=>b.addEventListener('click',()=>{cdb=b.dataset.dice;document.querySelectorAll('[data-dice]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
