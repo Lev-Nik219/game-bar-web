@@ -131,20 +131,21 @@
 
         // 🎡 РУЛЕТКА
         let crb=null,rouletteSpinning=false,rNumbers=[]
-        function buildRouletteRing(){
-            const ring=document.getElementById('roulette-ring');ring.innerHTML='';
-            const reds=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
-            rNumbers=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
-            const total=rNumbers.length;const sliceDeg=360/total;
-            rNumbers.forEach((num,i)=>{
-                const sector=document.createElement('div');sector.className='roulette-sector';
-                const startAngle=i*sliceDeg-90;
-                const bg=num===0?'#27ae60':reds.has(num)?'#e74c3c':'#2c3e50';
-                // ← ВОТ ЭТУ СТРОКУ ЗАМЕНИ:
-                sector.style.cssText=`transform:rotate(${startAngle}deg);background:${bg};width:100px;height:100px;position:absolute;top:0;left:50%;margin-left:-50px;transform-origin:50% 100%;clip-path:polygon(50% 0%,100% 100%,0% 100%);display:flex;align-items:flex-start;justify-content:center;padding-top:6px;font-size:9px;font-weight:700;color:#fff`;
-                sector.innerText=num;ring.appendChild(sector);
-            });
-        }        async function spinRoulette(){if(!crb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}if(balance<currentBet){showNoBalance();return}if(rouletteSpinning)return;rouletteSpinning=true;if(!rNumbers.length)buildRouletteRing();const ring=document.getElementById('roulette-ring'),ball=document.getElementById('roulette-ball-anim'),rd=document.getElementById('result-message'),rr=document.getElementById('roulette-result-display'),sb=document.getElementById('roulette-spin-btn');sb.disabled=true;ring.style.transition='none';ring.style.transform='rotate(0deg)';ball.style.transition='none';ball.style.transform='';setTimeout(()=>{ring.style.transition='transform 5s cubic-bezier(0.17,0.89,0.32,1.25)';ball.style.transition='all 5s cubic-bezier(0.17,0.89,0.32,1.25)';const n=Math.floor(Math.random()*37);const idx=rNumbers.indexOf(n);const extra=360*4;const sliceDeg=360/rNumbers.length;const wheelAngle=-(idx*sliceDeg)-sliceDeg/2-extra;const ballAngle=wheelAngle;ring.style.transform=`rotate(${wheelAngle}deg)`;ball.style.transform=`rotate(${-ballAngle}deg)`;rr.innerHTML='🎡';setTimeout(()=>{const win=Math.random()<WIN_RATE;let wa=0;if(win){let m=2;if(crb==='green'&&n===0)m=35;wa=Math.floor(currentBet*m);spawnWinCoins(6)}rr.innerHTML=`${n}`;rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${n})`;rd.className=`result-message ${win?'win':'lose'}`;sendGameResult('roulette',currentBet,win,wa,{}).then(()=>{afterGame(win);sb.disabled=false;rouletteSpinning=false})},5200)},100)}
+function buildRouletteRing(){
+    const ring=document.getElementById('roulette-ring');ring.innerHTML='';
+    const reds=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
+    rNumbers=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+    const total=rNumbers.length;const sliceDeg=360/total;
+    rNumbers.forEach((num,i)=>{
+        const sector=document.createElement('div');sector.className='roulette-sector';
+        const startAngle=i*sliceDeg;
+        const bg=num===0?'#27ae60':reds.has(num)?'#e74c3c':'#2c3e50';
+        sector.style.cssText=`transform:rotate(${startAngle}deg);background:${bg};width:100px;height:100px;position:absolute;top:50%;left:50%;margin-left:-50px;margin-top:-100px;transform-origin:50% 100%;clip-path:polygon(50% 0%,100% 100%,0% 100%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:9px;font-weight:700;color:#fff`;
+        sector.innerText=num;ring.appendChild(sector);
+    });
+}
+        
+        async function spinRoulette(){if(!crb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}if(balance<currentBet){showNoBalance();return}if(rouletteSpinning)return;rouletteSpinning=true;if(!rNumbers.length)buildRouletteRing();const ring=document.getElementById('roulette-ring'),ball=document.getElementById('roulette-ball-anim'),rd=document.getElementById('result-message'),rr=document.getElementById('roulette-result-display'),sb=document.getElementById('roulette-spin-btn');sb.disabled=true;ring.style.transition='none';ring.style.transform='rotate(0deg)';ball.style.transition='none';ball.style.transform='';setTimeout(()=>{ring.style.transition='transform 5s cubic-bezier(0.17,0.89,0.32,1.25)';ball.style.transition='all 5s cubic-bezier(0.17,0.89,0.32,1.25)';const n=Math.floor(Math.random()*37);const idx=rNumbers.indexOf(n);const extra=360*4;const sliceDeg=360/rNumbers.length;const wheelAngle=-(idx*sliceDeg)-sliceDeg/2-extra;const ballAngle=wheelAngle;ring.style.transform=`rotate(${wheelAngle}deg)`;ball.style.transform=`rotate(${-ballAngle}deg)`;rr.innerHTML='🎡';setTimeout(()=>{const win=Math.random()<WIN_RATE;let wa=0;if(win){let m=2;if(crb==='green'&&n===0)m=35;wa=Math.floor(currentBet*m);spawnWinCoins(6)}rr.innerHTML=`${n}`;rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${n})`;rd.className=`result-message ${win?'win':'lose'}`;sendGameResult('roulette',currentBet,win,wa,{}).then(()=>{afterGame(win);sb.disabled=false;rouletteSpinning=false})},5200)},100)}
 
         // 🎲 КОСТИ
         let cdb=null,diceSpinning=false
