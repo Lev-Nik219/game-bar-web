@@ -189,13 +189,26 @@
         </div>
     </div>
 
+    <!-- Модальное окно "Недостаточно средств" -->
+    <div class="modal-overlay" id="no-balance-modal">
+        <div class="modal">
+            <div class="modal-title">😞 Недостаточно средств</div>
+            <p style="text-align:center;margin-bottom:16px;opacity:0.8;font-size:14px;">
+                На вашем счету недостаточно баллов для игры.<br>
+                💎 Пополните баланс и продолжайте выигрывать!
+            </p>
+            <button class="modal-btn gold" id="go-buy-coins-btn">💳 Пополнить баланс</button>
+            <button class="modal-btn red" id="close-no-balance-modal">❌ Закрыть</button>
+        </div>
+    </div>
+
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp; tg.expand(); tg.enableClosingConfirmation();
         const BOT_API_URL = 'https://game-bar-bot.onrender.com';
         const webAppUser = tg.initDataUnsafe?.user;
         let currentGame = null, currentBet = 100, balance = 0, isLoading = false, userProfile = null, selectedAmount = null;
-        const WIN_RATE = 0.45; // 45% шанс победы
+        const WIN_RATE = 0.45;
 
         function getUserId() {
             if (webAppUser && webAppUser.id) return webAppUser.id;
@@ -240,6 +253,18 @@
                 } else { tg.showAlert(d.message||'⏳ Попробуйте позже.'); }
             } catch(e) { tg.showAlert('❌ Ошибка'); }
             finally { btn.disabled = false; btn.innerText = '🔄 Проверить оплату'; }
+        });
+
+        // ===== ОКНО "НЕДОСТАТОЧНО СРЕДСТВ" =====
+        function showNoBalance() {
+            document.getElementById('no-balance-modal').classList.add('active');
+        }
+        document.getElementById('go-buy-coins-btn').addEventListener('click', () => {
+            document.getElementById('no-balance-modal').classList.remove('active');
+            document.getElementById('buy-modal').classList.add('active');
+        });
+        document.getElementById('close-no-balance-modal').addEventListener('click', () => {
+            document.getElementById('no-balance-modal').classList.remove('active');
         });
 
         // ===== TAB SYSTEM =====
@@ -352,7 +377,7 @@
 
         // === СЛОТЫ ===
         function spinSlots(){
-            if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}
+            if(balance<currentBet){showNoBalance();return;}
             const r1=document.getElementById('reel1'),r2=document.getElementById('reel2'),r3=document.getElementById('reel3'),rd=document.getElementById('result-message');
             let s=0;const iv=setInterval(()=>{r1.innerText=symbols[Math.floor(Math.random()*5)];r2.innerText=symbols[Math.floor(Math.random()*5)];r3.innerText=symbols[Math.floor(Math.random()*5)];s++;if(s>10)clearInterval(iv);},100);
             setTimeout(async()=>{
@@ -372,7 +397,7 @@
         let crb=null;
         async function spinRoulette(){
             if(!crb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
-            if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}
+            if(balance<currentBet){showNoBalance();return;}
             const rd=document.getElementById('result-message');const n=Math.floor(Math.random()*37);
             let col='';if(n===0)col='green';else if([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n))col='red';else col='black';
             const p=n!==0&&n%2===0?'even':'odd';document.getElementById('roulette-result').innerHTML=n;
@@ -392,7 +417,7 @@
         let cdb=null;
         async function rollDice(){
             if(!cdb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
-            if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}
+            if(balance<currentBet){showNoBalance();return;}
             const d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,t=d1+d2;
             const df=['⚀','⚁','⚂','⚃','⚄','⚅'];document.getElementById('dice1').innerHTML=df[d1-1];document.getElementById('dice2').innerHTML=df[d2-1];
             let w=false;
@@ -408,15 +433,15 @@
         function ibd(){const d=[];for(let i=0;i<4;i++){for(let v of[2,3,4,5,6,7,8,9,10,10,10,10,11])d.push(v);}for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]];}return d;}
         function ubj(){const ps=ph.reduce((a,b)=>a+b,0),ds=dh.reduce((a,b)=>a+b,0);document.getElementById('player-cards').innerHTML=ph.join(', ');document.getElementById('player-sum').innerHTML=ps;document.getElementById('dealer-cards').innerHTML=dh.join(', ');document.getElementById('dealer-sum').innerHTML=ds;}
         async function ebj(w){if(!ga)return;ga=false;w=w&&Math.random()<WIN_RATE;const wa=w?Math.floor(currentBet*2):0;document.getElementById('result-message').innerHTML=w?`🎉 ВЫИГРЫШ: +${wa} 💎`:'😞 ПРОИГРЫШ';document.getElementById('result-message').className=`result-message ${w?'win':'lose'}`;await sendGameResult('blackjack',currentBet,w,wa,{playerHand:ph,dealerHand:dh});await afterGame();}
-        function bjh(){if(!ga)return;if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}ph.push(bjd.pop());ubj();if(ph.reduce((a,b)=>a+b,0)>21)ebj(false);}
+        function bjh(){if(!ga)return;if(balance<currentBet){showNoBalance();return;}ph.push(bjd.pop());ubj();if(ph.reduce((a,b)=>a+b,0)>21)ebj(false);}
         async function bjs(){if(!ga)return;let ds=dh.reduce((a,b)=>a+b,0);while(ds<17){dh.push(bjd.pop());ds=dh.reduce((a,b)=>a+b,0);ubj();await new Promise(r=>setTimeout(r,500));}const ps=ph.reduce((a,b)=>a+b,0);if(ds>21||ps>ds)ebj(true);else ebj(false);}
-        function sbj(){if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;ubj();document.getElementById('result-message').innerHTML='';}
+        function sbj(){if(balance<currentBet){showNoBalance();return;}bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;ubj();document.getElementById('result-message').innerHTML='';}
 
         // === БОУЛИНГ ===
         let cbb=null;
         async function playBowling(){
             if(!cbb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
-            if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}
+            if(balance<currentBet){showNoBalance();return;}
             const v=Math.floor(Math.random()*6)+1;let w=false;
             if(cbb==='over'&&v>3)w=Math.random()<WIN_RATE;
             if(cbb==='under'&&v<4)w=Math.random()<WIN_RATE;
@@ -429,7 +454,7 @@
         let cdab=null;
         async function playDarts(){
             if(!cdab){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
-            if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}
+            if(balance<currentBet){showNoBalance();return;}
             const v=Math.floor(Math.random()*6)+1,ie=v%2===0;let w=false;
             if(cdab==='even'&&ie)w=Math.random()<WIN_RATE;
             if(cdab==='odd'&&!ie)w=Math.random()<WIN_RATE;
