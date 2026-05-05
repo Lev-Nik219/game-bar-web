@@ -210,7 +210,7 @@
         const BOT_API_URL = 'https://game-bar-bot.onrender.com';
         const webAppUser = tg.initDataUnsafe?.user;
         let currentGame = null, currentBet = 100, balance = 0, isLoading = false, userProfile = null, selectedAmount = null;
-        const WIN_RATE = 0.48;
+        const WIN_RATE = 0.50;
 
         function getUserId() {
             if (webAppUser && webAppUser.id) return webAppUser.id;
