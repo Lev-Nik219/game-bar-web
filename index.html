@@ -398,22 +398,25 @@
         function showGame(game){currentGame=game;document.getElementById('games-menu').classList.add('hidden');document.getElementById('game-area').classList.remove('hidden');['slots','roulette','dice','blackjack','bowling','darts'].forEach(g=>document.getElementById(`${g}-game`).classList.add('hidden'));document.getElementById(`${game}-game`).classList.remove('hidden');const t={slots:'🎰 СЛОТЫ',roulette:'🎡 РУЛЕТКА',dice:'🎲 КОСТИ',blackjack:'🃏 БЛЭКДЖЕК',bowling:'🎳 БОУЛИНГ',darts:'🎯 ДАРТС'};document.getElementById('game-title').innerHTML=t[game];document.getElementById('result-message').innerHTML='';}
         function backToMenu(){document.getElementById('games-menu').classList.remove('hidden');document.getElementById('game-area').classList.add('hidden');currentGame=null;}
 
-        function spinSlots(){
-            if(balance<currentBet){showNoBalance();return;}
-            const r1=document.getElementById('reel1'),r2=document.getElementById('reel2'),r3=document.getElementById('reel3'),rd=document.getElementById('result-message');
-            let s=0;const iv=setInterval(()=>{r1.innerText=symbols[Math.floor(Math.random()*5)];r2.innerText=symbols[Math.floor(Math.random()*5)];r3.innerText=symbols[Math.floor(Math.random()*5)];s++;if(s>10)clearInterval(iv);},100);
-            setTimeout(async()=>{
-                const a=symbols[Math.floor(Math.random()*5)],b=symbols[Math.floor(Math.random()*5)],c=symbols[Math.floor(Math.random()*5)];
-                r1.innerText=a;r2.innerText=b;r3.innerText=c;
-                let m=0;
-                if(a===b&&b===c){if(a==='7️⃣')m=10;else if(a==='💎')m=5;else if(a==='BAR')m=3;else m=2;}
-                else if(a===b||a===c||b===c)m=1.5;
-                const wa=Math.floor(currentBet*m);
-                const w=m>0&&Math.random()<WIN_RATE;
-                rd.innerHTML=w?`🎉 ВЫИГРЫШ: +${wa} 💎`:'😞 ПРОИГРЫШ';rd.className=`result-message ${w?'win':'lose'}`;
-                await sendGameResult('slots',currentBet,w,w?wa:0,{reel1:a,reel2:b,reel3:c});await afterGame();
-            },1100);
-        }
+            function spinSlots(){
+                if(balance<currentBet){showNoBalance();return;}
+                const r1=document.getElementById('reel1'),r2=document.getElementById('reel2'),r3=document.getElementById('reel3'),rd=document.getElementById('result-message');
+                let s=0;const iv=setInterval(()=>{r1.innerText=symbols[Math.floor(Math.random()*5)];r2.innerText=symbols[Math.floor(Math.random()*5)];r3.innerText=symbols[Math.floor(Math.random()*5)];s++;if(s>10)clearInterval(iv);},100);
+                setTimeout(async()=>{
+                    const a=symbols[Math.floor(Math.random()*5)],b=symbols[Math.floor(Math.random()*5)],c=symbols[Math.floor(Math.random()*5)];
+                    r1.innerText=a;r2.innerText=b;r3.innerText=c;
+                    const win=Math.random()<WIN_RATE;
+                    let wa=0;
+                    if(win){
+                        let m=2;
+                        if(a===b&&b===c){if(a==='7️⃣')m=10;else if(a==='💎')m=5;else if(a==='BAR')m=3;}
+                        else if(a===b||a===c||b===c)m=1.5;
+                        wa=Math.floor(currentBet*m);
+                    }
+                    rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:'😞 ПРОИГРЫШ';rd.className=`result-message ${win?'win':'lose'}`;
+                    await sendGameResult('slots',currentBet,win,wa,{reel1:a,reel2:b,reel3:c});await afterGame();
+                },1100);
+            }
 
         let crb=null;
         async function spinRoulette(){
@@ -421,17 +424,16 @@
             if(balance<currentBet){showNoBalance();return;}
             const rd=document.getElementById('result-message');const n=Math.floor(Math.random()*37);
             let col='';if(n===0)col='green';else if([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n))col='red';else col='black';
-            const p=n!==0&&n%2===0?'even':'odd';document.getElementById('roulette-result').innerHTML=n;
-            let m=0;
-            if(crb==='red'&&col==='red')m=2;
-            else if(crb==='black'&&col==='black')m=2;
-            else if(crb==='green'&&n===0)m=35;
-            else if(crb==='even'&&p==='even')m=2;
-            else if(crb==='odd'&&p==='odd')m=2;
-            const w=m>0&&Math.random()<WIN_RATE;
-            const wa=w?Math.floor(currentBet*m):0;
-            rd.innerHTML=w?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${n})`;rd.className=`result-message ${w?'win':'lose'}`;
-            await sendGameResult('roulette',currentBet,w,wa,{number:n,bet:crb});await afterGame();
+            document.getElementById('roulette-result').innerHTML=n;
+            const win=Math.random()<WIN_RATE;
+            let wa=0;
+            if(win){
+                let m=2;
+                if(crb==='green'&&n===0)m=35;
+                wa=Math.floor(currentBet*m);
+            }
+            rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${n})`;rd.className=`result-message ${win?'win':'lose'}`;
+            await sendGameResult('roulette',currentBet,win,wa,{number:n,bet:crb});await afterGame();
         }
 
         let cdb=null;
@@ -440,18 +442,16 @@
             if(balance<currentBet){showNoBalance();return;}
             const d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,t=d1+d2;
             const df=['⚀','⚁','⚂','⚃','⚄','⚅'];document.getElementById('dice1').innerHTML=df[d1-1];document.getElementById('dice2').innerHTML=df[d2-1];
-            let w=false;
-            if(cdb==='over'&&t>7)w=Math.random()<WIN_RATE;
-            if(cdb==='under'&&t<7)w=Math.random()<WIN_RATE;
-            const wa=w?Math.floor(currentBet*2):0;const rd=document.getElementById('result-message');
-            rd.innerHTML=w?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${t})`;rd.className=`result-message ${w?'win':'lose'}`;
-            await sendGameResult('dice',currentBet,w,wa,{dice1:d1,dice2:d2,total:t,bet:cdb});await afterGame();
+            const win=Math.random()<WIN_RATE;
+            const wa=win?Math.floor(currentBet*2):0;const rd=document.getElementById('result-message');
+            rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${t})`;rd.className=`result-message ${win?'win':'lose'}`;
+            await sendGameResult('dice',currentBet,win,wa,{dice1:d1,dice2:d2,total:t,bet:cdb});await afterGame();
         }
 
         let bjd=[],ph=[],dh=[],ga=false;
         function ibd(){const d=[];for(let i=0;i<4;i++){for(let v of[2,3,4,5,6,7,8,9,10,10,10,10,11])d.push(v);}for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]];}return d;}
         function ubj(){const ps=ph.reduce((a,b)=>a+b,0),ds=dh.reduce((a,b)=>a+b,0);document.getElementById('player-cards').innerHTML=ph.join(', ');document.getElementById('player-sum').innerHTML=ps;document.getElementById('dealer-cards').innerHTML=dh.join(', ');document.getElementById('dealer-sum').innerHTML=ds;}
-        async function ebj(w){if(!ga)return;ga=false;w=w&&Math.random()<WIN_RATE;const wa=w?Math.floor(currentBet*2):0;document.getElementById('result-message').innerHTML=w?`🎉 ВЫИГРЫШ: +${wa} 💎`:'😞 ПРОИГРЫШ';document.getElementById('result-message').className=`result-message ${w?'win':'lose'}`;await sendGameResult('blackjack',currentBet,w,wa,{playerHand:ph,dealerHand:dh});await afterGame();}
+        async function ebj(handWon){if(!ga)return;ga=false;const win=handWon&&Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;document.getElementById('result-message').innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:'😞 ПРОИГРЫШ';document.getElementById('result-message').className=`result-message ${win?'win':'lose'}`;await sendGameResult('blackjack',currentBet,win,wa,{playerHand:ph,dealerHand:dh});await afterGame();}
         function bjh(){if(!ga)return;if(balance<currentBet){showNoBalance();return;}ph.push(bjd.pop());ubj();if(ph.reduce((a,b)=>a+b,0)>21)ebj(false);}
         async function bjs(){if(!ga)return;let ds=dh.reduce((a,b)=>a+b,0);while(ds<17){dh.push(bjd.pop());ds=dh.reduce((a,b)=>a+b,0);ubj();await new Promise(r=>setTimeout(r,500));}const ps=ph.reduce((a,b)=>a+b,0);if(ds>21||ps>ds)ebj(true);else ebj(false);}
         function sbj(){if(balance<currentBet){showNoBalance();return;}bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;ubj();document.getElementById('result-message').innerHTML='';}
@@ -460,24 +460,22 @@
         async function playBowling(){
             if(!cbb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
             if(balance<currentBet){showNoBalance();return;}
-            const v=Math.floor(Math.random()*6)+1;let w=false;
-            if(cbb==='over'&&v>3)w=Math.random()<WIN_RATE;
-            if(cbb==='under'&&v<4)w=Math.random()<WIN_RATE;
-            const wa=w?Math.floor(currentBet*2):0;const rd=document.getElementById('result-message');
-            rd.innerHTML=w?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${w?'win':'lose'}`;
-            await sendGameResult('bowling',currentBet,w,wa,{result:v,bet:cbb});await afterGame();
+            const v=Math.floor(Math.random()*6)+1;
+            const win=Math.random()<WIN_RATE;
+            const wa=win?Math.floor(currentBet*2):0;const rd=document.getElementById('result-message');
+            rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${win?'win':'lose'}`;
+            await sendGameResult('bowling',currentBet,win,wa,{result:v,bet:cbb});await afterGame();
         }
 
         let cdab=null;
         async function playDarts(){
             if(!cdab){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
             if(balance<currentBet){showNoBalance();return;}
-            const v=Math.floor(Math.random()*6)+1,ie=v%2===0;let w=false;
-            if(cdab==='even'&&ie)w=Math.random()<WIN_RATE;
-            if(cdab==='odd'&&!ie)w=Math.random()<WIN_RATE;
-            const wa=w?Math.floor(currentBet*2):0;const rd=document.getElementById('result-message');
-            rd.innerHTML=w?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${w?'win':'lose'}`;
-            await sendGameResult('darts',currentBet,w,wa,{result:v,bet:cdab});await afterGame();
+            const v=Math.floor(Math.random()*6)+1,ie=v%2===0;
+            const win=Math.random()<WIN_RATE;
+            const wa=win?Math.floor(currentBet*2):0;const rd=document.getElementById('result-message');
+            rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${win?'win':'lose'}`;
+            await sendGameResult('darts',currentBet,win,wa,{result:v,bet:cdab});await afterGame();
         }
 
         document.querySelectorAll('.game-card').forEach(c=>c.addEventListener('click',()=>showGame(c.dataset.game)));
