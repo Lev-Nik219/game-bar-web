@@ -870,55 +870,137 @@
             });
         });
         
-        document.getElementById('confirm-purchase-btn').addEventListener('click', async () => {
-            if (!selectedAmount) return;
-            
-            document.getElementById('confirm-purchase-btn').disabled = true;
-            document.getElementById('confirm-purchase-btn').innerText = '⏳ Создаём счёт...';
-            
-            try {
-                const response = await fetch(`${BOT_API_URL}/api/create_invoice`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        user_id: userId,
-                        amount_points: selectedAmount.points
-                    })
-                });
-                const data = await response.json();
-                
-                if (data.success && data.invoice_url) {
-                    document.getElementById('buy-modal').classList.remove('active');
-                    selectedAmount = null;
-                    document.querySelectorAll('.price-item').forEach(i => i.classList.remove('selected'));
-                    
-                    tg.openLink(data.invoice_url);
-                    
-                    tg.showAlert(
-                        `💳 Счёт создан!\n\n` +
-                        `💎 ${data.amount_points} баллов\n` +
-                        `💵 ${data.price_usdt} USDT\n\n` +
-                        `После оплаты баллы начислятся автоматически.`
-                    );
-                } else {
-                    tg.showAlert('❌ Ошибка создания платежа. Попробуйте позже.');
-                }
-            } catch (e) {
-                console.error('Payment error:', e);
-                tg.showAlert('❌ Ошибка сети. Попробуйте позже.');
-            } finally {
-                document.getElementById('confirm-purchase-btn').innerText = '💳 Оплатить выбранное';
-                document.getElementById('confirm-purchase-btn').disabled = true;
-            }
+// Переменная для хранения ID платежа
+let currentPaymentId = null;
+
+document.getElementById('confirm-purchase-btn').addEventListener('click', async () => {
+    if (!selectedAmount) return;
+    
+    document.getElementById('confirm-purchase-btn').disabled = true;
+    document.getElementById('confirm-purchase-btn').innerText = '⏳ Создаём счёт...';
+    
+    try {
+        const response = await fetch(`${BOT_API_URL}/api/create_invoice`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: userId,
+                amount_points: selectedAmount.points
+            })
         });
+        const data = await response.json();
         
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    overlay.classList.remove('active');
-                }
-            });
+        if (data.success && data.invoice_url) {
+            // Сохраняем payment_id для проверки
+            currentPaymentId = data.payment_id;
+            
+            document.getElementById('buy-modal').classList.remove('active');
+            
+            // Показываем модальное окно с инструкцией
+            document.getElementById('payment-instruction-modal').classList.add('active');
+            document.getElementById('instruction-amount').innerText = `${data.amount_points} баллов за ${data.price_usdt} USDT`;
+            
+            // Открываем ссылку на оплату
+            tg.openLink(data.invoice_url);
+            
+        } else {
+            tg.showAlert('❌ Ошибка создания платежа. Попробуйте позже.');
+        }
+    } catch (e) {
+        console.error('Payment error:', e);
+        tg.showAlert('❌ Ошибка сети. Попробуйте позже.');
+    } finally {
+        document.getElementById('confirm-purchase-btn').innerText = '💳 Оплатить выбранное';
+        document.getElementById('confirm-purchase-btn').disabled = true;
+        selectedAmount = null;
+        document.querySelectorAll('#buy-modal .price-item').forEach(i => i.classList.remove('selected'));
+    }
+});
+
+// Кнопка "Проверить оплату"
+document.getElementById('check-payment-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('check-payment-btn');
+    btn.disabled = true;
+    btn.innerText = '⏳ Проверяем...';
+    
+    try {
+        const response = await fetch(`${BOT_API_URL}/api/check_payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: userId,
+                payment_id: currentPaymentId
+            })
         });
+        const data = await response.json();
+        
+        if (data.status === 'paid') {
+            document.getElementById('payment-instruction-modal').classList.remove('active');
+            balance = data.new_balance;
+            document.getElementById('balance').innerText = balance;
+            tg.showAlert(`✅ Оплата прошла!\nНачислено: ${data.amount_points} баллов\nБаланс: ${data.new_balance} 💎`);
+            currentPaymentId = null;
+        } else if (data.status === 'already_credited') {
+            document.getElementById('payment-instruction-modal').classList.remove('active');
+            tg.showAlert('✅ Баллы уже были начислены ранее!');
+            currentPaymentId = null;
+            await loadBalance();
+        } else {
+            tg.showAlert(data.message || '⏳ Платёж ещё не получен. Попробуйте позже.');
+        }
+    } catch (e) {
+        console.error('Check payment error:', e);
+        tg.showAlert('❌ Ошибка проверки. Попробуйте позже.');
+    } finally {
+        btn.disabled = false;
+        btn.innerText = '🔄 Проверить оплату';
+    }
+});
+
+// Закрытие окна инструкции
+document.getElementById('close-instruction-modal').addEventListener('click', () => {
+    document.getElementById('payment-instruction-modal').classList.remove('active');
+    currentPaymentId = null;
+});
+
+// Автопроверка при возврате в Mini App
+document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState === 'visible' && currentPaymentId) {
+        // Пользователь вернулся — проверяем платёж
+        await new Promise(r => setTimeout(r, 2000)); // Ждём 2 секунды
+        
+        try {
+            const response = await fetch(`${BOT_API_URL}/api/check_payment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: userId,
+                    payment_id: currentPaymentId
+                })
+            });
+            const data = await response.json();
+            
+            if (data.status === 'paid' || data.status === 'already_credited') {
+                document.getElementById('payment-instruction-modal').classList.remove('active');
+                await loadBalance();
+                if (data.status === 'paid') {
+                    tg.showAlert(`✅ Оплата прошла!\nНачислено: ${data.amount_points} баллов`);
+                }
+                currentPaymentId = null;
+            }
+        } catch (e) {
+            console.error('Auto check error:', e);
+        }
+    }
+});
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.classList.remove('active');
+        }
+    });
+});
         
         // ===== PROFILE FUNCTIONS =====
         async function loadProfile() {
@@ -1212,5 +1294,22 @@
         loadBalance();
         tg.ready();
     </script>
+        <!-- Модальное окно "Инструкция по оплате" -->
+    <div class="modal-overlay" id="payment-instruction-modal">
+        <div class="modal">
+            <div class="modal-title">💳 Оплата CryptoPay</div>
+            <p style="margin-bottom: 12px; opacity: 0.8; font-size: 14px;">
+                Вы будете перенаправлены в CryptoBot для оплаты.
+            </p>
+            <p style="margin-bottom: 16px; font-weight: 600;" id="instruction-amount">
+                0 баллов за 0 USDT
+            </p>
+            <p style="margin-bottom: 16px; opacity: 0.7; font-size: 13px;">
+                После оплаты вернитесь сюда и нажмите кнопку ниже.
+            </p>
+            <button class="modal-btn gold" id="check-payment-btn">🔄 Проверить оплату</button>
+            <button class="modal-btn red" id="close-instruction-modal" style="margin-top: 8px;">❌ Отмена</button>
+        </div>
+    </div>
 </body>
 </html>
