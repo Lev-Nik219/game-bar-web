@@ -94,6 +94,16 @@
         input[type="text"] { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: white; font-size: 15px; margin-bottom: 16px; outline: none; text-align: center; }
         input[type="text"]::placeholder { color: rgba(255,255,255,0.3); }
         @media (max-width: 400px) { .games-menu { gap: 8px; } .game-emoji { font-size: 32px; } .game-name { font-size: 11px; } .game-card { padding: 14px 6px; } .reel { width: 55px; height: 55px; font-size: 32px; } .bet-option { padding: 8px 12px; font-size: 12px; } }
+                .referral-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+        .referral-card { background: var(--card-bg); border-radius: 16px; padding: 16px; text-align: center; border: 1px solid var(--border); }
+        .referral-card .r-icon { font-size: 28px; margin-bottom: 6px; }
+        .referral-card .r-value { font-size: 22px; font-weight: 700; }
+        .referral-card .r-label { font-size: 11px; opacity: 0.6; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .referral-link-box { background: rgba(0,0,0,0.3); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: center; border: 1px solid var(--border); }
+        .referral-link-box .ref-link { font-size: 12px; word-break: break-all; opacity: 0.7; margin: 8px 0; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 8px; }
+        .friend-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--card-bg); border-radius: 12px; margin-bottom: 6px; border: 1px solid var(--border); }
+        .friend-item .f-info { display: flex; align-items: center; gap: 8px; }
+        .friend-item .f-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #f7971e, #ffd200); display: flex; align-items: center; justify-content: center; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -105,6 +115,7 @@
         <div class="tab-nav">
             <button class="tab-btn active" data-tab="games">🎮 Игры</button>
             <button class="tab-btn" data-tab="profile">👤 Профиль</button>
+            <button class="tab-btn" data-tab="referral">👥 Друзья</button>
         </div>
         <div class="payment-banner hidden" id="pending-payment-banner">
             <div class="banner-text">⏳ У вас есть ожидающий платёж!</div>
@@ -151,6 +162,45 @@
                     <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-value" id="profile-wins">0</div><div class="stat-label">Побед</div></div>
                     <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-value" id="profile-winrate">0%</div><div class="stat-label">Винрейт</div><div class="winrate-bar"><div class="winrate-fill" id="winrate-fill" style="width:0%"></div></div></div>
                 </div>
+                        <div class="tab-content" id="tab-referral">
+            <div class="fade-in">
+                <div class="profile-header" style="padding: 16px;">
+                    <div style="font-size: 48px; margin-bottom: 8px;">👥</div>
+                    <div style="font-size: 18px; font-weight: 700;">Реферальная программа</div>
+                    <div style="font-size: 13px; opacity: 0.6; margin-top: 4px;">Приглашайте друзей и получайте бонусы!</div>
+                </div>
+                
+                <div class="referral-stats">
+                    <div class="referral-card">
+                        <div class="r-icon">👤</div>
+                        <div class="r-value" id="ref-total">0</div>
+                        <div class="r-label">Друзей</div>
+                    </div>
+                    <div class="referral-card">
+                        <div class="r-icon">🎮</div>
+                        <div class="r-value" id="ref-played">0</div>
+                        <div class="r-label">Играют</div>
+                    </div>
+                </div>
+                
+                <div class="referral-link-box">
+                    <div style="font-size: 13px; opacity: 0.7; margin-bottom: 6px;">🔗 Ваша реферальная ссылка</div>
+                    <div class="ref-link" id="ref-link-text">Загрузка...</div>
+                    <button class="modal-btn gold" id="copy-ref-link" style="font-size: 13px; padding: 10px; margin-top: 4px;">📋 Копировать ссылку</button>
+                    <button class="modal-btn green" id="share-ref-link" style="font-size: 13px; padding: 10px; margin-top: 4px;">📤 Поделиться</button>
+                </div>
+                
+                <div style="text-align: center; opacity: 0.7; font-size: 12px; margin-bottom: 12px;">
+                    💡 За каждого друга, сыгравшего игру — <b>+100 💎</b><br>
+                    🎁 Друг получит <b>+25 💎</b> за переход по ссылке
+                </div>
+                
+                <div class="games-section">
+                    <div class="section-title">👥 Ваши друзья</div>
+                    <div id="friends-list"><div class="loading-text">Загрузка...</div></div>
+                </div>
+            </div>
+        </div>
                 <div class="games-section" id="achievements-section">
                     <div class="section-title">🏆 Достижения</div>
                     <div id="achievements-list"><div class="loading-text">Загрузка...</div></div>
@@ -492,6 +542,104 @@
         document.getElementById('bj-stand').addEventListener('click',bjs);
         document.getElementById('bowling-spin-btn').addEventListener('click',playBowling);
         document.getElementById('darts-spin-btn').addEventListener('click',playDarts);
+        // ===== РЕФЕРАЛЬНАЯ СИСТЕМА =====
+let referralLink = '';
+
+async function loadReferralData() {
+    if (!userId) return;
+    
+    // Загружаем ссылку
+    try {
+        const r = await fetch(`${BOT_API_URL}/api/get_referral_link`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});
+        const d = await r.json();
+        if (d.success) {
+            referralLink = d.link;
+            document.getElementById('ref-link-text').innerText = d.link;
+        }
+    } catch(e) {}
+    
+    // Загружаем статистику
+    try {
+        const r = await fetch(`${BOT_API_URL}/api/get_referral_stats`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});
+        const d = await r.json();
+        if (d.success) {
+            document.getElementById('ref-total').innerText = d.stats.total;
+            document.getElementById('ref-played').innerText = d.stats.played;
+            
+            const fl = document.getElementById('friends-list');
+            if (d.stats.friends.length > 0) {
+                fl.innerHTML = d.stats.friends.map(f => `
+                    <div class="friend-item">
+                        <div class="f-info">
+                            <div class="f-avatar">👤</div>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 500;">${f.username}</div>
+                                <div style="font-size: 11px; opacity: 0.5;">ID: ${f.user_id}</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 13px; opacity: 0.7;">🎮 ${f.games}</div>
+                    </div>
+                `).join('');
+            } else {
+                fl.innerHTML = '<div style="text-align:center;opacity:0.5;padding:12px;">Пока нет друзей. Пригласите кого-нибудь!</div>';
+            }
+        }
+    } catch(e) {}
+}
+
+document.getElementById('copy-ref-link').addEventListener('click', () => {
+    if (referralLink) {
+        tg.openLink(referralLink);
+        setTimeout(() => tg.showAlert('✅ Ссылка открыта! Отправьте её другу.'), 500);
+    }
+});
+
+document.getElementById('share-ref-link').addEventListener('click', () => {
+    if (referralLink) {
+        const text = `🎮 Game Bar Casino — играй и выигрывай!\n\n💰 Присоединяйся и получи +25 бонусных баллов!\n\n${referralLink}`;
+        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(text)}`);
+    }
+});
+
+// Обработка реферальной ссылки при загрузке
+async function handleReferralJoin() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const startapp = urlParams.get('startapp') || urlParams.get('tgWebAppStartParam');
+    
+    if (startapp && startapp.startsWith('ref_') && userId) {
+        const inviterId = startapp.replace('ref_', '');
+        const stored = localStorage.getItem('referral_processed');
+        
+        if (stored !== inviterId && parseInt(inviterId) !== userId) {
+            try {
+                const r = await fetch(`${BOT_API_URL}/api/referral_join`, {
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({user_id:userId, inviter_id:parseInt(inviterId)})
+                });
+                const d = await r.json();
+                if (d.success) {
+                    localStorage.setItem('referral_processed', inviterId);
+                    await loadBalance();
+                    tg.showAlert(`🎉 ${d.message}`);
+                }
+            } catch(e) {}
+        }
+    }
+}
+
+// Обновляем переключение вкладок (добавляем referral)
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+    const t=b.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); document.getElementById(`tab-${t}`).classList.add('active');
+    if(t==='profile') { loadProfile(); loadAchievements(); }
+    if(t==='referral') loadReferralData();
+}));
+
+// Запускаем обработку рефералки при загрузке
+handleReferralJoin();
         initBetButtons(); loadBalance(); checkPendingPaymentOnLoad(); tg.ready();
     </script>
 </body>
