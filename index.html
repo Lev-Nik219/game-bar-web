@@ -77,6 +77,16 @@
         .game-item-result { font-weight: 700; font-size: 14px; }
         .game-item-result.win { color: var(--win); }
         .game-item-result.lose { color: var(--lose); }
+        .achievement-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--card-bg); border-radius: 14px; margin-bottom: 8px; border: 1px solid var(--border); transition: all 0.3s; }
+        .achievement-card.earned { border-color: rgba(247,151,30,0.3); background: rgba(247,151,30,0.05); }
+        .achievement-card.locked { opacity: 0.5; }
+        .achievement-icon { font-size: 32px; min-width: 44px; text-align: center; }
+        .achievement-info { flex: 1; }
+        .achievement-name { font-size: 14px; font-weight: 600; }
+        .achievement-desc { font-size: 11px; opacity: 0.6; margin-top: 2px; }
+        .achievement-progress { font-size: 11px; font-weight: 600; margin-top: 4px; }
+        .achievement-progress-bar { background: rgba(255,255,255,0.1); border-radius: 6px; height: 5px; margin-top: 4px; overflow: hidden; }
+        .achievement-progress-fill { background: linear-gradient(90deg, var(--accent), var(--accent2)); height: 100%; border-radius: 6px; transition: width 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.4s ease; }
         .payment-banner { background: linear-gradient(135deg, rgba(247,151,30,0.2), rgba(255,210,0,0.1)); border: 1px solid rgba(247,151,30,0.3); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: center; animation: fadeIn 0.4s ease; }
@@ -115,12 +125,7 @@
             <div id="game-area" class="hidden">
                 <div class="game-area">
                     <div class="game-title" id="game-title">🎰 СЛОТЫ</div>
-                    <div class="bet-buttons" id="global-bet-buttons">
-                        <button class="bet-option" data-bet="10">💰 10</button>
-                        <button class="bet-option" data-bet="50">💰 50</button>
-                        <button class="bet-option" data-bet="100">💰 100</button>
-                        <button class="bet-option" data-bet="250">💰 250</button>
-                    </div>
+                    <div class="bet-buttons" id="global-bet-buttons"><button class="bet-option" data-bet="10">💰 10</button><button class="bet-option" data-bet="50">💰 50</button><button class="bet-option" data-bet="100">💰 100</button><button class="bet-option" data-bet="250">💰 250</button></div>
                     <div id="slots-game"><div class="slot-reels"><div class="reel" id="reel1">🍒</div><div class="reel" id="reel2">🍒</div><div class="reel" id="reel3">🍒</div></div><div><button class="spin-btn" id="spin-btn">🎰 КРУТИТЬ</button></div></div>
                     <div id="roulette-game" class="hidden"><div class="roulette-number" id="roulette-result">?</div><div class="bet-buttons" id="roulette-bets"><button class="bet-option" data-roulette="red">🔴 Красное</button><button class="bet-option" data-roulette="black">⚫ Чёрное</button><button class="bet-option" data-roulette="green">🟢 Зелёное (0)</button><button class="bet-option" data-roulette="even">🟡 Чётное</button><button class="bet-option" data-roulette="odd">🔵 Нечётное</button></div><div><button class="spin-btn" id="roulette-spin-btn">🎡 КРУТИТЬ</button></div></div>
                     <div id="dice-game" class="hidden"><div style="display:flex;justify-content:center;gap:20px;margin:20px;"><div style="font-size:48px;" id="dice1">⚀</div><div style="font-size:48px;" id="dice2">⚀</div></div><div class="bet-buttons" id="dice-bets"><button class="bet-option" data-dice="over">⬆️ Больше 7</button><button class="bet-option" data-dice="under">⬇️ Меньше 7</button></div><div><button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button></div></div>
@@ -146,12 +151,18 @@
                     <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-value" id="profile-wins">0</div><div class="stat-label">Побед</div></div>
                     <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-value" id="profile-winrate">0%</div><div class="stat-label">Винрейт</div><div class="winrate-bar"><div class="winrate-fill" id="winrate-fill" style="width:0%"></div></div></div>
                 </div>
-                <div class="games-section" id="recent-games-section"><div class="section-title">🕐 Последние игры</div><div id="recent-games-list"><div class="loading-text">Загрузка...</div></div></div>
+                <div class="games-section" id="achievements-section">
+                    <div class="section-title">🏆 Достижения</div>
+                    <div id="achievements-list"><div class="loading-text">Загрузка...</div></div>
+                </div>
+                <div class="games-section" id="recent-games-section">
+                    <div class="section-title">🕐 Последние игры</div>
+                    <div id="recent-games-list"><div class="loading-text">Загрузка...</div></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Модальное окно "Получить монеты" -->
     <div class="modal-overlay" id="coins-modal">
         <div class="modal">
             <div class="modal-title">💰 Получить монеты</div>
@@ -160,8 +171,6 @@
             <button class="modal-btn red" id="close-coins-modal">❌ Закрыть</button>
         </div>
     </div>
-
-    <!-- Модальное окно "Купить баллы" -->
     <div class="modal-overlay" id="buy-modal">
         <div class="modal">
             <div class="modal-title">💳 Пополнение баллов</div>
@@ -175,8 +184,6 @@
             <button class="modal-btn red" id="close-buy-modal">🔙 Назад</button>
         </div>
     </div>
-
-    <!-- Модальное окно "Редактировать профиль" -->
     <div class="modal-overlay" id="edit-profile-modal">
         <div class="modal">
             <div class="modal-title">✏️ Редактировать профиль</div>
@@ -188,15 +195,10 @@
             <button class="modal-btn red" id="close-edit-profile-modal">❌ Отмена</button>
         </div>
     </div>
-
-    <!-- Модальное окно "Недостаточно средств" -->
     <div class="modal-overlay" id="no-balance-modal">
         <div class="modal">
             <div class="modal-title">😞 Недостаточно средств</div>
-            <p style="text-align:center;margin-bottom:16px;opacity:0.8;font-size:14px;">
-                На вашем счету недостаточно баллов для игры.<br>
-                💎 Пополните баланс и продолжайте выигрывать!
-            </p>
+            <p style="text-align:center;margin-bottom:16px;opacity:0.8;font-size:14px;">На вашем счету недостаточно баллов для игры.<br>💎 Пополните баланс и продолжайте выигрывать!</p>
             <button class="modal-btn gold" id="go-buy-coins-btn">💳 Пополнить баланс</button>
             <button class="modal-btn red" id="close-no-balance-modal">❌ Закрыть</button>
         </div>
@@ -220,7 +222,6 @@
         const username = webAppUser?.username || webAppUser?.first_name || 'Игрок';
         document.getElementById('username').innerText = username;
 
-        // ===== ПРОВЕРКА ОЖИДАЮЩЕГО ПЛАТЕЖА =====
         async function checkPendingPaymentOnLoad() {
             if (!userId) return;
             const ppId = localStorage.getItem('pending_payment_id');
@@ -255,7 +256,6 @@
             finally { btn.disabled = false; btn.innerText = '🔄 Проверить оплату'; }
         });
 
-        // ===== ОКНО "НЕДОСТАТОЧНО СРЕДСТВ" =====
         function showNoBalance() {
             document.getElementById('no-balance-modal').classList.add('active');
         }
@@ -267,16 +267,14 @@
             document.getElementById('no-balance-modal').classList.remove('active');
         });
 
-        // ===== TAB SYSTEM =====
         document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
             const t=b.dataset.tab;
             document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
             b.classList.add('active'); document.getElementById(`tab-${t}`).classList.add('active');
-            if(t==='profile') loadProfile();
+            if(t==='profile') { loadProfile(); loadAchievements(); }
         }));
 
-        // ===== COINS MODAL =====
         document.getElementById('get-coins-btn').addEventListener('click',()=>document.getElementById('coins-modal').classList.add('active'));
         document.getElementById('close-coins-modal').addEventListener('click',()=>document.getElementById('coins-modal').classList.remove('active'));
         document.getElementById('watch-ad-btn').addEventListener('click',()=>{document.getElementById('coins-modal').classList.remove('active');tg.showAlert('📺 Реклама временно недоступна.');});
@@ -301,7 +299,6 @@
         });
         document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('active');}));
 
-        // ===== РЕДАКТОР ПРОФИЛЯ =====
         const avatarEmojis=['🦊','🐺','🦁','🐯','🐻','🐼','🐨','🐰','🦄','🐲','🎃','🤖','👑','💀','👻'];
         let selectedAvatar='🦊',currentDisplayName='';
         const avatarPicker=document.getElementById('avatar-picker');
@@ -329,7 +326,39 @@
             finally{btn.disabled=false;btn.innerText='💾 Сохранить';}
         });
 
-        // ===== PROFILE =====
+        async function loadAchievements() {
+            if (!userId) return;
+            try {
+                const r = await fetch(`${BOT_API_URL}/api/get_achievements`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});
+                const d = await r.json();
+                if (d.success) renderAchievements(d.achievements);
+            } catch(e) { document.getElementById('achievements-list').innerHTML = '<div class="loading-text">Ошибка загрузки</div>'; }
+        }
+
+        function renderAchievements(achievements) {
+            const container = document.getElementById('achievements-list');
+            if (!achievements || achievements.length === 0) {
+                container.innerHTML = '<div class="loading-text">Нет достижений</div>';
+                return;
+            }
+            container.innerHTML = achievements.map(a => {
+                const pct = Math.min(100, Math.round((a.progress / a.target) * 100));
+                return `
+                    <div class="achievement-card ${a.earned ? 'earned' : 'locked'}">
+                        <div class="achievement-icon">${a.earned ? a.icon : '🔒'}</div>
+                        <div class="achievement-info">
+                            <div class="achievement-name">${a.name}</div>
+                            <div class="achievement-desc">${a.desc}</div>
+                            <div class="achievement-progress">${a.earned ? '✅ Получено' : `${a.progress}/${a.target}`}</div>
+                            <div class="achievement-progress-bar">
+                                <div class="achievement-progress-fill" style="width:${a.earned ? 100 : pct}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
         async function loadProfile() {
             if (!userId) return;
             document.getElementById('profile-id').innerText = `ID: ${userId}`;
@@ -355,27 +384,20 @@
             } else { rl.innerHTML = '<div class="loading-text">Нет сыгранных игр</div>'; }
         }
 
-        // ===== GAMES (45% win rate) =====
         const symbols = ['🍒','🍋','💎','7️⃣','BAR'];
-
         function initBetButtons() {
             document.querySelectorAll('.bet-option[data-bet]').forEach(b=>b.addEventListener('click',()=>{currentBet=parseInt(b.dataset.bet);document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');}));
             const d=document.querySelector('.bet-option[data-bet="100"]');if(d)d.classList.add('selected');
         }
-
         async function loadBalance() {
             if(!userId)return;
             try{const r=await fetch(`${BOT_API_URL}/api/get_balance`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.balance;document.getElementById('balance').innerText=balance;}}catch(e){}
         }
-
         async function sendGameResult(game,bet,win,wa,details){if(isLoading)return;isLoading=true;try{const r=await fetch(`${BOT_API_URL}/api/game_result`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,game,bet,win,win_amount:wa,details})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;}return d;}catch(e){}finally{isLoading=false;}}
-
         async function afterGame(){await loadBalance();backToMenu();}
-
         function showGame(game){currentGame=game;document.getElementById('games-menu').classList.add('hidden');document.getElementById('game-area').classList.remove('hidden');['slots','roulette','dice','blackjack','bowling','darts'].forEach(g=>document.getElementById(`${g}-game`).classList.add('hidden'));document.getElementById(`${game}-game`).classList.remove('hidden');const t={slots:'🎰 СЛОТЫ',roulette:'🎡 РУЛЕТКА',dice:'🎲 КОСТИ',blackjack:'🃏 БЛЭКДЖЕК',bowling:'🎳 БОУЛИНГ',darts:'🎯 ДАРТС'};document.getElementById('game-title').innerHTML=t[game];document.getElementById('result-message').innerHTML='';}
         function backToMenu(){document.getElementById('games-menu').classList.remove('hidden');document.getElementById('game-area').classList.add('hidden');currentGame=null;}
 
-        // === СЛОТЫ ===
         function spinSlots(){
             if(balance<currentBet){showNoBalance();return;}
             const r1=document.getElementById('reel1'),r2=document.getElementById('reel2'),r3=document.getElementById('reel3'),rd=document.getElementById('result-message');
@@ -393,7 +415,6 @@
             },1100);
         }
 
-        // === РУЛЕТКА ===
         let crb=null;
         async function spinRoulette(){
             if(!crb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
@@ -413,7 +434,6 @@
             await sendGameResult('roulette',currentBet,w,wa,{number:n,bet:crb});await afterGame();
         }
 
-        // === КОСТИ ===
         let cdb=null;
         async function rollDice(){
             if(!cdb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
@@ -428,7 +448,6 @@
             await sendGameResult('dice',currentBet,w,wa,{dice1:d1,dice2:d2,total:t,bet:cdb});await afterGame();
         }
 
-        // === БЛЭКДЖЕК ===
         let bjd=[],ph=[],dh=[],ga=false;
         function ibd(){const d=[];for(let i=0;i<4;i++){for(let v of[2,3,4,5,6,7,8,9,10,10,10,10,11])d.push(v);}for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]];}return d;}
         function ubj(){const ps=ph.reduce((a,b)=>a+b,0),ds=dh.reduce((a,b)=>a+b,0);document.getElementById('player-cards').innerHTML=ph.join(', ');document.getElementById('player-sum').innerHTML=ps;document.getElementById('dealer-cards').innerHTML=dh.join(', ');document.getElementById('dealer-sum').innerHTML=ds;}
@@ -437,7 +456,6 @@
         async function bjs(){if(!ga)return;let ds=dh.reduce((a,b)=>a+b,0);while(ds<17){dh.push(bjd.pop());ds=dh.reduce((a,b)=>a+b,0);ubj();await new Promise(r=>setTimeout(r,500));}const ps=ph.reduce((a,b)=>a+b,0);if(ds>21||ps>ds)ebj(true);else ebj(false);}
         function sbj(){if(balance<currentBet){showNoBalance();return;}bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;ubj();document.getElementById('result-message').innerHTML='';}
 
-        // === БОУЛИНГ ===
         let cbb=null;
         async function playBowling(){
             if(!cbb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
@@ -450,7 +468,6 @@
             await sendGameResult('bowling',currentBet,w,wa,{result:v,bet:cbb});await afterGame();
         }
 
-        // === ДАРТС ===
         let cdab=null;
         async function playDarts(){
             if(!cdab){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
@@ -463,7 +480,6 @@
             await sendGameResult('darts',currentBet,w,wa,{result:v,bet:cdab});await afterGame();
         }
 
-        // === EVENT LISTENERS ===
         document.querySelectorAll('.game-card').forEach(c=>c.addEventListener('click',()=>showGame(c.dataset.game)));
         document.getElementById('back-to-menu').addEventListener('click',backToMenu);
         document.querySelectorAll('[data-roulette]').forEach(b=>b.addEventListener('click',()=>{crb=b.dataset.roulette;document.querySelectorAll('[data-roulette]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');}));
