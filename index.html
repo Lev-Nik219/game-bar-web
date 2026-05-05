@@ -214,7 +214,7 @@
             border: 1px solid var(--border);
         }
         
-        .spin-btn {
+        .spin-btn, .get-coins-btn {
             background: linear-gradient(135deg, #f7971e, #ffd200);
             border: none;
             color: #1a1a2e;
@@ -229,9 +229,16 @@
             box-shadow: 0 4px 15px rgba(247,151,30,0.3);
         }
         
-        .spin-btn:active {
+        .get-coins-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(76,175,80,0.3);
+            margin: 0 0 16px 0;
+            font-size: 15px;
+        }
+        
+        .spin-btn:active, .get-coins-btn:active {
             transform: scale(0.96);
-            box-shadow: 0 2px 8px rgba(247,151,30,0.2);
         }
         
         .result-message {
@@ -296,23 +303,103 @@
             background: rgba(255,255,255,0.15);
         }
         
-        .ad-btn {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            border: none;
-            color: white;
-            font-weight: 600;
-            padding: 14px 24px;
-            border-radius: 25px;
-            font-size: 15px;
-            cursor: pointer;
-            margin: 10px 0;
-            transition: all 0.2s;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(76,175,80,0.3);
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
         
-        .ad-btn:active {
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: linear-gradient(145deg, #1a1a3a, #0f0f2a);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn:active {
             transform: scale(0.97);
+        }
+        
+        .modal-btn.gold {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+        }
+        
+        .modal-btn.green {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .modal-btn.red {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .price-list {
+            margin: 15px 0;
+        }
+        
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .price-item:active {
+            border-color: var(--accent);
+            background: rgba(247,151,30,0.1);
+        }
+        
+        .price-item.selected {
+            border-color: var(--accent);
+            background: rgba(247,151,30,0.15);
         }
         
         .hidden {
@@ -326,7 +413,6 @@
             text-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
         
-        /* Profile styles */
         .profile-header {
             text-align: center;
             padding: 20px;
@@ -465,24 +551,6 @@
             color: var(--lose);
         }
         
-        .skeleton {
-            background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            background-size: 200% 100%;
-            animation: skeleton-pulse 1.5s ease-in-out infinite;
-            border-radius: 8px;
-        }
-        
-        @keyframes skeleton-pulse {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        .loading-text {
-            text-align: center;
-            opacity: 0.5;
-            padding: 20px;
-        }
-        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -514,10 +582,6 @@
                 padding: 8px 12px;
                 font-size: 12px;
             }
-            .stat-cards {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
         }
     </style>
 </head>
@@ -532,12 +596,8 @@
         </div>
         
         <div class="tab-nav">
-            <button class="tab-btn active" data-tab="games">
-                🎮 Игры
-            </button>
-            <button class="tab-btn" data-tab="profile">
-                👤 Профиль
-            </button>
+            <button class="tab-btn active" data-tab="games">🎮 Игры</button>
+            <button class="tab-btn" data-tab="profile">👤 Профиль</button>
         </div>
         
         <div class="tab-content active" id="tab-games">
@@ -568,7 +628,7 @@
                         <div class="game-name">Дартс</div>
                     </div>
                 </div>
-                <button class="ad-btn" id="earn-coins-btn">📺 Заработать монеты (25 💎)</button>
+                <button class="get-coins-btn" id="get-coins-btn">💰 Получить монеты</button>
             </div>
             
             <div id="game-area" class="hidden">
@@ -588,9 +648,7 @@
                             <div class="reel" id="reel2">🍒</div>
                             <div class="reel" id="reel3">🍒</div>
                         </div>
-                        <div>
-                            <button class="spin-btn" id="spin-btn">🎰 КРУТИТЬ</button>
-                        </div>
+                        <div><button class="spin-btn" id="spin-btn">🎰 КРУТИТЬ</button></div>
                     </div>
                     
                     <div id="roulette-game" class="hidden">
@@ -602,9 +660,7 @@
                             <button class="bet-option" data-roulette="even">🟡 Чётное</button>
                             <button class="bet-option" data-roulette="odd">🔵 Нечётное</button>
                         </div>
-                        <div>
-                            <button class="spin-btn" id="roulette-spin-btn">🎡 КРУТИТЬ</button>
-                        </div>
+                        <div><button class="spin-btn" id="roulette-spin-btn">🎡 КРУТИТЬ</button></div>
                     </div>
                     
                     <div id="dice-game" class="hidden">
@@ -616,9 +672,7 @@
                             <button class="bet-option" data-dice="over">⬆️ Больше 7</button>
                             <button class="bet-option" data-dice="under">⬇️ Меньше 7</button>
                         </div>
-                        <div>
-                            <button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button>
-                        </div>
+                        <div><button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button></div>
                     </div>
                     
                     <div id="blackjack-game" class="hidden">
@@ -630,9 +684,7 @@
                             <button class="bet-option" id="bj-hit">🎯 Взять карту</button>
                             <button class="bet-option" id="bj-stand">✋ Хватит</button>
                         </div>
-                        <div>
-                            <button class="spin-btn" id="bj-start-btn">🃏 НАЧАТЬ</button>
-                        </div>
+                        <div><button class="spin-btn" id="bj-start-btn">🃏 НАЧАТЬ</button></div>
                     </div>
                     
                     <div id="bowling-game" class="hidden">
@@ -641,9 +693,7 @@
                             <button class="bet-option" data-bowling="over">⬆️ Больше 3</button>
                             <button class="bet-option" data-bowling="under">⬇️ Меньше 4</button>
                         </div>
-                        <div>
-                            <button class="spin-btn" id="bowling-spin-btn">🎳 БРОСИТЬ</button>
-                        </div>
+                        <div><button class="spin-btn" id="bowling-spin-btn">🎳 БРОСИТЬ</button></div>
                     </div>
                     
                     <div id="darts-game" class="hidden">
@@ -652,9 +702,7 @@
                             <button class="bet-option" data-darts="even">🟡 Чётное</button>
                             <button class="bet-option" data-darts="odd">🔵 Нечётное</button>
                         </div>
-                        <div>
-                            <button class="spin-btn" id="darts-spin-btn">🎯 БРОСИТЬ</button>
-                        </div>
+                        <div><button class="spin-btn" id="darts-spin-btn">🎯 БРОСИТЬ</button></div>
                     </div>
                     
                     <div id="result-message" class="result-message"></div>
@@ -691,19 +739,52 @@
                         <div class="stat-icon">📊</div>
                         <div class="stat-value" id="profile-winrate">0%</div>
                         <div class="stat-label">Винрейт</div>
-                        <div class="winrate-bar">
-                            <div class="winrate-fill" id="winrate-fill" style="width: 0%"></div>
-                        </div>
+                        <div class="winrate-bar"><div class="winrate-fill" id="winrate-fill" style="width:0%"></div></div>
                     </div>
                 </div>
                 
                 <div class="games-section" id="recent-games-section">
                     <div class="section-title">🕐 Последние игры</div>
-                    <div id="recent-games-list">
-                        <div class="loading-text">Загрузка...</div>
-                    </div>
+                    <div id="recent-games-list"><div class="loading-text">Загрузка...</div></div>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно "Получить монеты" -->
+    <div class="modal-overlay" id="coins-modal">
+        <div class="modal">
+            <div class="modal-title">💰 Получить монеты</div>
+            <button class="modal-btn green" id="watch-ad-btn">📺 Смотреть ролик — 25 баллов</button>
+            <button class="modal-btn gold" id="buy-coins-btn">💳 Купить баллы</button>
+            <button class="modal-btn red" id="close-coins-modal">❌ Закрыть</button>
+        </div>
+    </div>
+    
+    <!-- Модальное окно "Купить баллы" -->
+    <div class="modal-overlay" id="buy-modal">
+        <div class="modal">
+            <div class="modal-title">💳 Пополнение баллов</div>
+            <div class="price-list" id="price-list">
+                <div class="price-item" data-amount="250" data-price="20">
+                    <span>💎 250 баллов</span>
+                    <span style="color: #ffd700; font-weight: 600;">20 USDT</span>
+                </div>
+                <div class="price-item" data-amount="500" data-price="35">
+                    <span>💎 500 баллов</span>
+                    <span style="color: #ffd700; font-weight: 600;">35 USDT</span>
+                </div>
+                <div class="price-item" data-amount="750" data-price="50">
+                    <span>💎 750 баллов</span>
+                    <span style="color: #ffd700; font-weight: 600;">50 USDT</span>
+                </div>
+                <div class="price-item" data-amount="1000" data-price="65">
+                    <span>💎 1000 баллов</span>
+                    <span style="color: #ffd700; font-weight: 600;">65 USDT</span>
+                </div>
+            </div>
+            <button class="modal-btn gold" id="confirm-purchase-btn" disabled>💳 Оплатить выбранное</button>
+            <button class="modal-btn red" id="close-buy-modal">🔙 Назад</button>
         </div>
     </div>
     
@@ -714,7 +795,6 @@
         tg.enableClosingConfirmation();
         
         const BOT_API_URL = 'https://game-bar-bot.onrender.com';
-        
         const webAppUser = tg.initDataUnsafe?.user;
         
         let currentGame = null;
@@ -722,6 +802,7 @@
         let balance = 0;
         let isLoading = false;
         let userProfile = null;
+        let selectedAmount = null;
         
         function getUserId() {
             if (webAppUser && webAppUser.id) return webAppUser.id;
@@ -739,15 +820,98 @@
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const tabName = btn.dataset.tab;
-                
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
                 btn.classList.add('active');
                 document.getElementById(`tab-${tabName}`).classList.add('active');
+                if (tabName === 'profile') loadProfile();
+            });
+        });
+        
+        // ===== COINS MODAL =====
+        document.getElementById('get-coins-btn').addEventListener('click', () => {
+            document.getElementById('coins-modal').classList.add('active');
+        });
+        
+        document.getElementById('close-coins-modal').addEventListener('click', () => {
+            document.getElementById('coins-modal').classList.remove('active');
+        });
+        
+        document.getElementById('watch-ad-btn').addEventListener('click', () => {
+            document.getElementById('coins-modal').classList.remove('active');
+            tg.showAlert('📺 Реклама временно недоступна. Попробуйте позже.');
+        });
+        
+        document.getElementById('buy-coins-btn').addEventListener('click', () => {
+            document.getElementById('coins-modal').classList.remove('active');
+            document.getElementById('buy-modal').classList.add('active');
+        });
+        
+        document.getElementById('close-buy-modal').addEventListener('click', () => {
+            document.getElementById('buy-modal').classList.remove('active');
+            selectedAmount = null;
+            document.getElementById('confirm-purchase-btn').disabled = true;
+            document.querySelectorAll('.price-item').forEach(i => i.classList.remove('selected'));
+        });
+        
+        document.querySelectorAll('.price-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.price-item').forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                selectedAmount = {
+                    points: parseInt(item.dataset.amount),
+                    price: parseFloat(item.dataset.price)
+                };
+                document.getElementById('confirm-purchase-btn').disabled = false;
+            });
+        });
+        
+        document.getElementById('confirm-purchase-btn').addEventListener('click', async () => {
+            if (!selectedAmount) return;
+            
+            document.getElementById('confirm-purchase-btn').disabled = true;
+            document.getElementById('confirm-purchase-btn').innerText = '⏳ Создаём счёт...';
+            
+            try {
+                const response = await fetch(`${BOT_API_URL}/api/create_invoice`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        amount_points: selectedAmount.points
+                    })
+                });
+                const data = await response.json();
                 
-                if (tabName === 'profile') {
-                    loadProfile();
+                if (data.success && data.invoice_url) {
+                    document.getElementById('buy-modal').classList.remove('active');
+                    selectedAmount = null;
+                    document.querySelectorAll('.price-item').forEach(i => i.classList.remove('selected'));
+                    
+                    tg.openLink(data.invoice_url);
+                    
+                    tg.showAlert(
+                        `💳 Счёт создан!\n\n` +
+                        `💎 ${data.amount_points} баллов\n` +
+                        `💵 ${data.price_usdt} USDT\n\n` +
+                        `После оплаты баллы начислятся автоматически.`
+                    );
+                } else {
+                    tg.showAlert('❌ Ошибка создания платежа. Попробуйте позже.');
+                }
+            } catch (e) {
+                console.error('Payment error:', e);
+                tg.showAlert('❌ Ошибка сети. Попробуйте позже.');
+            } finally {
+                document.getElementById('confirm-purchase-btn').innerText = '💳 Оплатить выбранное';
+                document.getElementById('confirm-purchase-btn').disabled = true;
+            }
+        });
+        
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
                 }
             });
         });
@@ -755,10 +919,8 @@
         // ===== PROFILE FUNCTIONS =====
         async function loadProfile() {
             if (!userId) return;
-            
             document.getElementById('profile-username').innerText = username;
             document.getElementById('profile-id').innerText = `ID: ${userId}`;
-            
             try {
                 const response = await fetch(`${BOT_API_URL}/api/get_profile`, {
                     method: 'POST',
@@ -766,7 +928,6 @@
                     body: JSON.stringify({ user_id: userId })
                 });
                 const data = await response.json();
-                
                 if (data.success) {
                     userProfile = data.profile;
                     renderProfile(userProfile);
@@ -783,19 +944,9 @@
             document.getElementById('profile-winrate').innerText = profile.winrate + '%';
             document.getElementById('winrate-fill').style.width = profile.winrate + '%';
             
-            // Recent games
             const recentList = document.getElementById('recent-games-list');
             if (profile.recent_games && profile.recent_games.length > 0) {
-                const gameEmojis = {
-                    'slots': '🎰',
-                    'roulette': '🎡',
-                    'dice': '🎲',
-                    'blackjack': '🃏',
-                    'bowling': '🎳',
-                    'darts': '🎯',
-                    'ad_reward': '📺'
-                };
-                
+                const gameEmojis = { 'slots': '🎰', 'roulette': '🎡', 'dice': '🎲', 'blackjack': '🃏', 'bowling': '🎳', 'darts': '🎯', 'ad_reward': '📺' };
                 recentList.innerHTML = profile.recent_games.map(g => `
                     <div class="recent-game-item">
                         <div class="game-item-left">
@@ -812,7 +963,7 @@
             }
         }
         
-        // ===== GAME FUNCTIONS (unchanged) =====
+        // ===== GAME FUNCTIONS =====
         const symbols = ['🍒', '🍋', '💎', '7️⃣', 'BAR'];
         
         function initBetButtons() {
@@ -918,15 +1069,8 @@
         
         let currentRouletteBet = null;
         async function spinRoulette() {
-            if (!currentRouletteBet) {
-                document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
-                return;
-            }
-            if (balance < currentBet) {
-                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
-                document.getElementById('result-message').className = 'result-message lose';
-                return;
-            }
+            if (!currentRouletteBet) { document.getElementById('result-message').innerHTML='❌ Сделайте ставку!'; return; }
+            if (balance < currentBet) { document.getElementById('result-message').innerHTML='❌ Недостаточно средств!'; document.getElementById('result-message').className='result-message lose'; return; }
             const resultDiv = document.getElementById('result-message');
             const number = Math.floor(Math.random() * 37);
             let color = '';
@@ -935,8 +1079,7 @@
             else color = 'black';
             const parity = number !== 0 && number % 2 === 0 ? 'even' : 'odd';
             document.getElementById('roulette-result').innerHTML = number;
-            let win = false;
-            let multiplier = 0;
+            let win = false; let multiplier = 0;
             if (currentRouletteBet === 'red' && color === 'red') { win = true; multiplier = 2; }
             else if (currentRouletteBet === 'black' && color === 'black') { win = true; multiplier = 2; }
             else if (currentRouletteBet === 'green' && number === 0) { win = true; multiplier = 35; }
@@ -951,24 +1094,14 @@
         
         let currentDiceBet = null;
         async function rollDice() {
-            if (!currentDiceBet) {
-                document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
-                return;
-            }
-            if (balance < currentBet) {
-                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
-                document.getElementById('result-message').className = 'result-message lose';
-                return;
-            }
-            const dice1El = document.getElementById('dice1');
-            const dice2El = document.getElementById('dice2');
+            if (!currentDiceBet) { document.getElementById('result-message').innerHTML='❌ Сделайте ставку!'; return; }
+            if (balance < currentBet) { document.getElementById('result-message').innerHTML='❌ Недостаточно средств!'; document.getElementById('result-message').className='result-message lose'; return; }
+            const dice1El = document.getElementById('dice1'); const dice2El = document.getElementById('dice2');
             const resultDiv = document.getElementById('result-message');
-            const dice1 = Math.floor(Math.random() * 6) + 1;
-            const dice2 = Math.floor(Math.random() * 6) + 1;
+            const dice1 = Math.floor(Math.random() * 6) + 1; const dice2 = Math.floor(Math.random() * 6) + 1;
             const total = dice1 + dice2;
             const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-            dice1El.innerHTML = diceFaces[dice1 - 1];
-            dice2El.innerHTML = diceFaces[dice2 - 1];
+            dice1El.innerHTML = diceFaces[dice1 - 1]; dice2El.innerHTML = diceFaces[dice2 - 1];
             let win = false;
             if (currentDiceBet === 'over' && total > 7) win = true;
             if (currentDiceBet === 'under' && total < 7) win = true;
@@ -979,186 +1112,97 @@
             await afterGame();
         }
         
-        let blackjackDeck = [];
-        let playerHand = [];
-        let dealerHand = [];
-        let gameActive = false;
+        let blackjackDeck = []; let playerHand = []; let dealerHand = []; let gameActive = false;
         function initBlackjackDeck() {
             const deck = [];
-            for (let i = 0; i < 4; i++) {
-                for (let v of [2,3,4,5,6,7,8,9,10,10,10,10,11]) deck.push(v);
-            }
-            for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [deck[i], deck[j]] = [deck[j], deck[i]];
-            }
+            for (let i = 0; i < 4; i++) { for (let v of [2,3,4,5,6,7,8,9,10,10,10,10,11]) deck.push(v); }
+            for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
             return deck;
         }
         function updateBlackjackUI() {
-            const playerSum = playerHand.reduce((a,b) => a + b, 0);
-            const dealerSum = dealerHand.reduce((a,b) => a + b, 0);
-            document.getElementById('player-cards').innerHTML = playerHand.join(', ');
-            document.getElementById('player-sum').innerHTML = playerSum;
-            document.getElementById('dealer-cards').innerHTML = dealerHand.join(', ');
-            document.getElementById('dealer-sum').innerHTML = dealerSum;
+            const ps = playerHand.reduce((a,b)=>a+b,0); const ds = dealerHand.reduce((a,b)=>a+b,0);
+            document.getElementById('player-cards').innerHTML=playerHand.join(', '); document.getElementById('player-sum').innerHTML=ps;
+            document.getElementById('dealer-cards').innerHTML=dealerHand.join(', '); document.getElementById('dealer-sum').innerHTML=ds;
         }
         async function endBlackjack(win) {
-            if (!gameActive) return;
-            gameActive = false;
-            const winAmount = win ? Math.floor(currentBet * 2) : 0;
-            document.getElementById('result-message').innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ`;
-            document.getElementById('result-message').className = `result-message ${win ? 'win' : 'lose'}`;
-            await sendGameResult('blackjack', currentBet, win, winAmount, { playerHand, dealerHand });
-            await afterGame();
+            if (!gameActive) return; gameActive = false;
+            const wa = win ? Math.floor(currentBet*2) : 0;
+            document.getElementById('result-message').innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ`;
+            document.getElementById('result-message').className=`result-message ${win?'win':'lose'}`;
+            await sendGameResult('blackjack',currentBet,win,wa,{playerHand,dealerHand}); await afterGame();
         }
         function blackjackHit() {
             if (!gameActive) return;
-            if (balance < currentBet) {
-                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
-                document.getElementById('result-message').className = 'result-message lose';
-                return;
-            }
-            playerHand.push(blackjackDeck.pop());
-            updateBlackjackUI();
-            if (playerHand.reduce((a,b) => a + b, 0) > 21) endBlackjack(false);
+            if (balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}
+            playerHand.push(blackjackDeck.pop()); updateBlackjackUI();
+            if (playerHand.reduce((a,b)=>a+b,0)>21) endBlackjack(false);
         }
         async function blackjackStand() {
             if (!gameActive) return;
-            let dealerSum = dealerHand.reduce((a,b) => a + b, 0);
-            while (dealerSum < 17) {
-                dealerHand.push(blackjackDeck.pop());
-                dealerSum = dealerHand.reduce((a,b) => a + b, 0);
-                updateBlackjackUI();
-                await new Promise(r => setTimeout(r, 500));
-            }
-            const playerSum = playerHand.reduce((a,b) => a + b, 0);
-            if (dealerSum > 21 || playerSum > dealerSum) endBlackjack(true);
-            else endBlackjack(false);
+            let ds=dealerHand.reduce((a,b)=>a+b,0);
+            while(ds<17){dealerHand.push(blackjackDeck.pop());ds=dealerHand.reduce((a,b)=>a+b,0);updateBlackjackUI();await new Promise(r=>setTimeout(r,500));}
+            const ps=playerHand.reduce((a,b)=>a+b,0);
+            if(ds>21||ps>ds) endBlackjack(true); else endBlackjack(false);
         }
         function startBlackjack() {
-            if (balance < currentBet) {
-                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
-                document.getElementById('result-message').className = 'result-message lose';
-                return;
-            }
-            blackjackDeck = initBlackjackDeck();
-            playerHand = [blackjackDeck.pop(), blackjackDeck.pop()];
-            dealerHand = [blackjackDeck.pop()];
-            gameActive = true;
-            updateBlackjackUI();
-            document.getElementById('result-message').innerHTML = '';
+            if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}
+            blackjackDeck=initBlackjackDeck();playerHand=[blackjackDeck.pop(),blackjackDeck.pop()];dealerHand=[blackjackDeck.pop()];gameActive=true;updateBlackjackUI();
+            document.getElementById('result-message').innerHTML='';
         }
         
         let currentBowlingBet = null;
         async function playBowling() {
-            if (!currentBowlingBet) {
-                document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
-                return;
-            }
-            if (balance < currentBet) {
-                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
-                document.getElementById('result-message').className = 'result-message lose';
-                return;
-            }
-            const value = Math.floor(Math.random() * 6) + 1;
-            const resultDiv = document.getElementById('result-message');
-            let win = false;
-            if (currentBowlingBet === 'over' && value > 3) win = true;
-            if (currentBowlingBet === 'under' && value < 4) win = true;
-            const winAmount = win ? Math.floor(currentBet * 2) : 0;
-            resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${value})`;
-            resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
-            await sendGameResult('bowling', currentBet, win, winAmount, { result: value, bet: currentBowlingBet });
-            await afterGame();
+            if(!currentBowlingBet){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
+            if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}
+            const v=Math.floor(Math.random()*6)+1;const rd=document.getElementById('result-message');
+            let w=false;if(currentBowlingBet==='over'&&v>3)w=true;if(currentBowlingBet==='under'&&v<4)w=true;
+            const wa=w?Math.floor(currentBet*2):0;
+            rd.innerHTML=w?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${w?'win':'lose'}`;
+            await sendGameResult('bowling',currentBet,w,wa,{result:v,bet:currentBowlingBet});await afterGame();
         }
         
         let currentDartsBet = null;
         async function playDarts() {
-            if (!currentDartsBet) {
-                document.getElementById('result-message').innerHTML = '❌ Сделайте ставку!';
-                return;
-            }
-            if (balance < currentBet) {
-                document.getElementById('result-message').innerHTML = '❌ Недостаточно средств!';
-                document.getElementById('result-message').className = 'result-message lose';
-                return;
-            }
-            const value = Math.floor(Math.random() * 6) + 1;
-            const isEven = value % 2 === 0;
-            const resultDiv = document.getElementById('result-message');
-            let win = false;
-            if (currentDartsBet === 'even' && isEven) win = true;
-            if (currentDartsBet === 'odd' && !isEven) win = true;
-            const winAmount = win ? Math.floor(currentBet * 2) : 0;
-            resultDiv.innerHTML = win ? `🎉 ВЫИГРЫШ: +${winAmount} 💎` : `😞 ПРОИГРЫШ (${value})`;
-            resultDiv.className = `result-message ${win ? 'win' : 'lose'}`;
-            await sendGameResult('darts', currentBet, win, winAmount, { result: value, bet: currentDartsBet });
-            await afterGame();
+            if(!currentDartsBet){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return;}
+            if(balance<currentBet){document.getElementById('result-message').innerHTML='❌ Недостаточно средств!';document.getElementById('result-message').className='result-message lose';return;}
+            const v=Math.floor(Math.random()*6)+1;const isEven=v%2===0;const rd=document.getElementById('result-message');
+            let w=false;if(currentDartsBet==='even'&&isEven)w=true;if(currentDartsBet==='odd'&&!isEven)w=true;
+            const wa=w?Math.floor(currentBet*2):0;
+            rd.innerHTML=w?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${w?'win':'lose'}`;
+            await sendGameResult('darts',currentBet,w,wa,{result:v,bet:currentDartsBet});await afterGame();
         }
         
         function showGame(game) {
-            currentGame = game;
+            currentGame=game;
             document.getElementById('games-menu').classList.add('hidden');
             document.getElementById('game-area').classList.remove('hidden');
-            ['slots','roulette','dice','blackjack','bowling','darts'].forEach(g => {
-                document.getElementById(`${g}-game`).classList.add('hidden');
-            });
+            ['slots','roulette','dice','blackjack','bowling','darts'].forEach(g=>document.getElementById(`${g}-game`).classList.add('hidden'));
             document.getElementById(`${game}-game`).classList.remove('hidden');
-            const titles = { slots:'🎰 СЛОТЫ', roulette:'🎡 РУЛЕТКА', dice:'🎲 КОСТИ', blackjack:'🃏 БЛЭКДЖЕК', bowling:'🎳 БОУЛИНГ', darts:'🎯 ДАРТС' };
-            document.getElementById('game-title').innerHTML = titles[game];
-            document.getElementById('result-message').innerHTML = '';
+            const titles={slots:'🎰 СЛОТЫ',roulette:'🎡 РУЛЕТКА',dice:'🎲 КОСТИ',blackjack:'🃏 БЛЭКДЖЕК',bowling:'🎳 БОУЛИНГ',darts:'🎯 ДАРТС'};
+            document.getElementById('game-title').innerHTML=titles[game];
+            document.getElementById('result-message').innerHTML='';
         }
         
         function backToMenu() {
             document.getElementById('games-menu').classList.remove('hidden');
             document.getElementById('game-area').classList.add('hidden');
-            currentGame = null;
+            currentGame=null;
         }
         
-        // Event listeners
-        document.querySelectorAll('.game-card').forEach(card => {
-            card.addEventListener('click', () => showGame(card.dataset.game));
-        });
-        document.getElementById('back-to-menu').addEventListener('click', backToMenu);
-        document.querySelectorAll('[data-roulette]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                currentRouletteBet = btn.dataset.roulette;
-                document.querySelectorAll('[data-roulette]').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-            });
-        });
-        document.querySelectorAll('[data-dice]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                currentDiceBet = btn.dataset.dice;
-                document.querySelectorAll('[data-dice]').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-            });
-        });
-        document.querySelectorAll('[data-bowling]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                currentBowlingBet = btn.dataset.bowling;
-                document.querySelectorAll('[data-bowling]').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-            });
-        });
-        document.querySelectorAll('[data-darts]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                currentDartsBet = btn.dataset.darts;
-                document.querySelectorAll('[data-darts]').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-            });
-        });
-        document.getElementById('spin-btn').addEventListener('click', spinSlots);
-        document.getElementById('roulette-spin-btn').addEventListener('click', spinRoulette);
-        document.getElementById('dice-spin-btn').addEventListener('click', rollDice);
-        document.getElementById('bj-start-btn').addEventListener('click', startBlackjack);
-        document.getElementById('bj-hit').addEventListener('click', blackjackHit);
-        document.getElementById('bj-stand').addEventListener('click', blackjackStand);
-        document.getElementById('bowling-spin-btn').addEventListener('click', playBowling);
-        document.getElementById('darts-spin-btn').addEventListener('click', playDarts);
-        document.getElementById('earn-coins-btn').addEventListener('click', () => {
-            tg.showAlert('📺 Реклама временно недоступна. Попробуйте позже.');
-        });
+        document.querySelectorAll('.game-card').forEach(c=>c.addEventListener('click',()=>showGame(c.dataset.game)));
+        document.getElementById('back-to-menu').addEventListener('click',backToMenu);
+        document.querySelectorAll('[data-roulette]').forEach(b=>b.addEventListener('click',()=>{currentRouletteBet=b.dataset.roulette;document.querySelectorAll('[data-roulette]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');}));
+        document.querySelectorAll('[data-dice]').forEach(b=>b.addEventListener('click',()=>{currentDiceBet=b.dataset.dice;document.querySelectorAll('[data-dice]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');}));
+        document.querySelectorAll('[data-bowling]').forEach(b=>b.addEventListener('click',()=>{currentBowlingBet=b.dataset.bowling;document.querySelectorAll('[data-bowling]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');}));
+        document.querySelectorAll('[data-darts]').forEach(b=>b.addEventListener('click',()=>{currentDartsBet=b.dataset.darts;document.querySelectorAll('[data-darts]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');}));
+        document.getElementById('spin-btn').addEventListener('click',spinSlots);
+        document.getElementById('roulette-spin-btn').addEventListener('click',spinRoulette);
+        document.getElementById('dice-spin-btn').addEventListener('click',rollDice);
+        document.getElementById('bj-start-btn').addEventListener('click',startBlackjack);
+        document.getElementById('bj-hit').addEventListener('click',blackjackHit);
+        document.getElementById('bj-stand').addEventListener('click',blackjackStand);
+        document.getElementById('bowling-spin-btn').addEventListener('click',playBowling);
+        document.getElementById('darts-spin-btn').addEventListener('click',playDarts);
         
         initBetButtons();
         loadBalance();
