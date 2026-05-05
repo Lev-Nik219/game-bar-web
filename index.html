@@ -21,30 +21,25 @@
         @keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
         @keyframes popIn{0%{transform:scale(0)}80%{transform:scale(1.15)}100%{transform:scale(1)}}
         @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-        @keyframes spin-fast{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
         @keyframes dice-roll{0%{transform:rotate(0deg) scale(0.5);opacity:0}50%{transform:rotate(180deg) scale(1.2);opacity:1}100%{transform:rotate(360deg) scale(1);opacity:1}}
-        @keyframes card-flip{0%{transform:perspective(600px) rotateY(0deg)}50%{transform:perspective(600px) rotateY(90deg)}100%{transform:perspective(600px) rotateY(0deg)}}
-        @keyframes roulette-spin{0%{transform:rotate(0deg)}100%{transform:rotate(720deg)}}
-        @keyframes ball-run{0%{transform:rotate(0deg) translateX(60px) rotate(0deg)}100%{transform:rotate(720deg) translateX(60px) rotate(-720deg)}}
-        @keyframes dart-fly{0%{transform:translateY(60px) scale(0.3);opacity:0}60%{transform:translateY(-10px) scale(1.1);opacity:1}80%{transform:translateY(5px) scale(0.95)}100%{transform:translateY(0) scale(1)}}
-        @keyframes bowling-roll{0%{transform:translateX(-80px) rotate(0deg)}50%{transform:translateX(0) rotate(180deg)}100%{transform:translateX(0) rotate(360deg)}}
-        @keyframes pin-fall{0%{transform:rotate(0deg);opacity:1}100%{transform:rotate(45deg) translateY(20px);opacity:0}}
+        @keyframes rouletteSpin{0%{transform:rotate(0deg)}100%{transform:rotate(1440deg)}}
+        @keyframes ballBounce{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.3)}}
+        @keyframes cardDeal{0%{transform:translateX(-60px) rotate(-15deg);opacity:0}100%{transform:translateX(0) rotate(0);opacity:1}}
+        @keyframes cardDealDealer{0%{transform:translateX(60px) rotate(15deg);opacity:0}100%{transform:translateX(0) rotate(0);opacity:1}}
+        @keyframes bowlingRoll{0%{transform:translateX(-60px) rotate(0deg)}100%{transform:translateX(200px) rotate(540deg)}}
+        @keyframes pinHit{0%{transform:translate(0,0) rotate(0deg);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--dr));opacity:0}}
+        @keyframes dartAim{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        @keyframes dartHit{0%{transform:scale(0) rotate(-30deg);opacity:0}60%{transform:scale(1.2) rotate(5deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
         @keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1.5)}}
-        @keyframes coinRain{0%{transform:translateY(-100px) rotate(0deg);opacity:1}100%{transform:translateY(300px) rotate(720deg);opacity:0}}
+        @keyframes coinRain{0%{transform:translateY(-100px) rotate(0deg);opacity:1}100%{transform:translateY(400px) rotate(720deg);opacity:0}}
+        @keyframes pulseResult{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
         body{
             background:linear-gradient(135deg,#0a0a1a,#12122a 30%,#1a1a3a 60%,#0d0d28 100%);
             background-size:400% 400%;animation:bgPulse 12s ease infinite;
             font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-            color:white;min-height:100vh;display:flex;justify-content:center;align-items:center;
-            overflow-x:hidden;
+            color:white;min-height:100vh;display:flex;justify-content:center;align-items:center;overflow-x:hidden;
         }
-        body::before{
-            content:'';position:fixed;top:0;left:0;right:0;bottom:0;
-            background:radial-gradient(circle at 20% 50%,rgba(247,151,30,0.03) 0%,transparent 50%),
-                       radial-gradient(circle at 80% 20%,rgba(255,210,0,0.03) 0%,transparent 50%),
-                       radial-gradient(circle at 50% 80%,rgba(76,175,80,0.03) 0%,transparent 50%);
-            pointer-events:none;z-index:0;
-        }
+        body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 20% 50%,rgba(247,151,30,0.03) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(255,210,0,0.03) 0%,transparent 50%),radial-gradient(circle at 50% 80%,rgba(76,175,80,0.03) 0%,transparent 50%);pointer-events:none;z-index:0}
         .game-container{width:100%;max-width:500px;margin:0 auto;padding:16px;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1}
         .header{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-radius:24px;padding:16px 20px;margin-bottom:16px;border:1px solid var(--border);box-shadow:var(--shadow-3d);animation:cardIn 0.6s ease}
         .balance{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.5);padding:10px 18px;border-radius:30px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.3)}
@@ -70,7 +65,7 @@
         .game-card:active{transform:scale(0.93);box-shadow:0 2px 8px rgba(0,0,0,0.4)}
         .game-emoji{font-size:44px;margin-bottom:10px;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.4))}
         .game-name{font-size:13px;font-weight:600;opacity:0.8;letter-spacing:0.5px}
-        .game-area{background:rgba(0,0,0,0.35);border-radius:24px;padding:24px;margin-bottom:16px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-3d);min-height:320px;position:relative;overflow:hidden}
+        .game-area{background:rgba(0,0,0,0.35);border-radius:24px;padding:24px;margin-bottom:16px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-3d);min-height:340px;position:relative;overflow:hidden}
         .game-title{font-size:24px;font-weight:800;margin-bottom:18px;letter-spacing:1px;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
         .slot-reels{display:flex;justify-content:center;gap:14px;margin:24px 0}
         .reel{width:75px;height:75px;background:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(0,0,0,0.4));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:42px;transition:all 0.1s;border:2px solid var(--border);box-shadow:inset 0 2px 4px rgba(0,0,0,0.5),0 4px 12px rgba(0,0,0,0.3)}
@@ -80,7 +75,7 @@
         .spin-btn::after,.get-coins-btn::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent);border-radius:35px 35px 0 0}
         .spin-btn:active,.get-coins-btn:active{transform:scale(0.94);box-shadow:var(--shadow-btn-active)}
         .get-coins-btn{background:linear-gradient(180deg,#4CAF50,#2E7D32);width:100%;box-shadow:0 6px 20px rgba(76,175,80,0.4);margin:0 0 16px 0;font-size:15px}
-        .result-message{font-size:17px;margin-top:18px;padding:14px;border-radius:16px;background:rgba(0,0,0,0.4);font-weight:700;position:relative;z-index:2}
+        .result-message{font-size:18px;margin-top:18px;padding:16px;border-radius:16px;background:rgba(0,0,0,0.4);font-weight:700;position:relative;z-index:2;animation:pulseResult 0.5s ease 2}
         .win{color:#ffd700;text-shadow:0 0 15px rgba(255,215,0,0.4)}
         .lose{color:#ff6b6b}
         .bet-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}
@@ -100,203 +95,107 @@
         .modal-btn.green{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white}
         .modal-btn.red{background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)}
         .hidden{display:none!important}
-        /* Roulette wheel */
-        .roulette-wheel{position:relative;width:160px;height:160px;margin:20px auto;border-radius:50%;background:conic-gradient(#e74c3c 0deg 18deg,#2c3e50 18deg 36deg,#e74c3c 36deg 54deg,#2c3e50 54deg 72deg,#e74c3c 72deg 90deg,#2c3e50 90deg 108deg,#e74c3c 108deg 126deg,#2c3e50 126deg 144deg,#e74c3c 144deg 162deg,#2c3e50 162deg 180deg,#e74c3c 180deg 198deg,#2c3e50 198deg 216deg,#e74c3c 216deg 234deg,#2c3e50 234deg 252deg,#e74c3c 252deg 270deg,#2c3e50 270deg 288deg,#e74c3c 288deg 306deg,#2c3e50 306deg 324deg,#e74c3c 324deg 342deg,#27ae60 342deg 360deg);border:4px solid rgba(255,255,255,0.2);box-shadow:inset 0 0 30px rgba(0,0,0,0.5),0 8px 32px rgba(0,0,0,0.4);transition:transform 3s cubic-bezier(0.17,0.89,0.32,1.25)}
-        .roulette-ball{position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:50%;left:50%;margin-left:-8px;margin-top:-78px;box-shadow:0 0 10px rgba(255,255,255,0.8);transition:all 3s cubic-bezier(0.17,0.89,0.32,1.25)}
-        .roulette-number{font-size:36px;margin-top:16px;font-weight:800}
-        /* Bowling */
-        .bowling-lane{position:relative;width:100%;height:60px;background:linear-gradient(90deg,#3e2723,#5d4037,#3e2723);border-radius:8px;margin:20px 0;overflow:hidden}
-        .bowling-ball{position:absolute;left:-40px;top:14px;font-size:32px;transition:all 1s ease-in}
-        .bowling-pins{position:absolute;right:20px;top:0;display:flex;gap:4px;font-size:28px;transition:all 0.5s ease}
-        /* Darts board */
-        .dart-board{position:relative;width:120px;height:120px;border-radius:50%;margin:20px auto;background:conic-gradient(#e74c3c 0deg 90deg,#2ecc71 90deg 180deg,#e74c3c 180deg 270deg,#2ecc71 270deg 360deg);border:3px solid rgba(255,255,255,0.3);box-shadow:0 8px 24px rgba(0,0,0,0.4)}
-        .dart-board::after{content:'🎯';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:24px}
-        .dart-arrow{font-size:36px;transition:all 0.4s ease-out;animation:dart-fly 0.6s ease-out}
-        /* Cards */
-        .card-display{font-size:48px;display:inline-block;animation:card-flip 0.6s ease}
-        /* Dice container */
-        .dice-container{display:flex;justify-content:center;gap:24px;margin:24px 0}
-        .dice-anim{font-size:52px;transition:all 0.3s}
-        .dice-anim.rolling{animation:dice-roll 0.8s ease-out}
+        /* Рулетка */
+        .roulette-table{position:relative;width:280px;height:280px;margin:20px auto;border-radius:50%;border:6px solid #8B7355;background:radial-gradient(circle,#1a1a2e 55%,#0d0d1a 60%,#2c1810 62%,#8B7355 65%,#1a1a2e 68%);box-shadow:0 0 40px rgba(0,0,0,0.6),inset 0 0 60px rgba(0,0,0,0.8);transition:transform 4s cubic-bezier(0.17,0.89,0.32,1.25)}
+        .roulette-table .number-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:240px;height:240px}
+        .roulette-table .ball{position:absolute;width:18px;height:18px;background:radial-gradient(circle at 40% 40%,#fff,#ccc);border-radius:50%;top:50%;left:50%;margin-left:-9px;margin-top:-128px;box-shadow:0 0 12px rgba(255,255,255,0.8),0 2px 4px rgba(0,0,0,0.5);transition:all 4s cubic-bezier(0.17,0.89,0.32,1.25);z-index:5}
+        .roulette-table .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:radial-gradient(circle,#2c1810,#1a0f0a);border-radius:50%;border:3px solid #8B7355;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;z-index:3}
+        .roulette-result-display{font-size:42px;font-weight:800;margin:10px 0;min-height:50px}
+        /* Карты */
+        .card-table{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+        .card-row{display:flex;align-items:center;gap:8px;justify-content:center;min-height:70px}
+        .card-row .label{font-size:13px;opacity:0.6;min-width:60px;text-align:right}
+        .card-slot{width:52px;height:72px;background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(0,0,0,0.3));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid var(--border);transition:all 0.3s;position:relative}
+        .card-slot.new-card{animation:cardDeal 0.5s ease}
+        .card-slot.dealer-card{animation:cardDealDealer 0.5s ease}
+        .card-slot .card-inner{font-size:22px;font-weight:700}
+        /* Боулинг */
+        .bowling-scene{position:relative;width:100%;height:140px;margin:16px 0;overflow:hidden}
+        .bowling-lane{position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(0deg,#3e2723,#5d4037,#3e2723);border-radius:4px;box-shadow:inset 0 2px 8px rgba(0,0,0,0.5)}
+        .bowling-lane::before{content:'';position:absolute;top:50%;left:10%;right:10%;height:2px;background:rgba(255,255,255,0.1)}
+        .bowling-ball{position:absolute;bottom:44px;left:30px;font-size:40px;transition:all 1.2s ease-in;z-index:3;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.5))}
+        .bowling-pins-container{position:absolute;bottom:42px;right:40px;display:flex;gap:2px;z-index:2}
+        .bowling-pin{font-size:22px;transition:all 0.4s ease-out}
+        .bowling-pin.knocked{animation:pinHit 0.6s ease-out forwards}
+        /* Дартс */
+        .darts-scene{position:relative;width:180px;height:180px;margin:20px auto}
+        .dart-board-visual{width:180px;height:180px;border-radius:50%;background:conic-gradient(#1a1a1a 0deg 45deg,#e74c3c 45deg 90deg,#1a1a1a 90deg 135deg,#2ecc71 135deg 180deg,#1a1a1a 180deg 225deg,#e74c3c 225deg 270deg,#1a1a1a 270deg 315deg,#2ecc71 315deg 360deg);border:6px solid #8B7355;box-shadow:0 8px 32px rgba(0,0,0,0.5),inset 0 0 30px rgba(0,0,0,0.5);position:relative}
+        .dart-board-visual .bullseye{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:radial-gradient(circle,#e74c3c,#8B0000);border-radius:50%;border:3px solid #1a1a1a}
+        .dart-board-visual .inner-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;border:2px solid rgba(255,255,255,0.3)}
+        .dart-arrow-anim{position:absolute;font-size:36px;transition:all 0.1s ease-out;z-index:5;animation:dartAim 0.4s ease-in-out 3}
+        /* Общие */
         .hidden{display:none!important}
-        /* Profile and other styles */
         .profile-header{text-align:center;padding:24px;background:var(--card-bg);border-radius:24px;margin-bottom:16px;border:1px solid var(--border);box-shadow:var(--shadow-3d)}
         .profile-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(180deg,#f7971e,#e65100);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 14px;box-shadow:0 10px 30px rgba(247,151,30,0.4);animation:float 4s ease-in-out infinite}
-        .profile-username{font-size:22px;font-weight:800;margin-bottom:4px}
-        .profile-id{font-size:12px;opacity:0.4}
+        .profile-username{font-size:22px;font-weight:800;margin-bottom:4px}.profile-id{font-size:12px;opacity:0.4}
         .stat-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
         .stat-card{background:var(--card-bg);border-radius:18px;padding:18px;text-align:center;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.2)}
-        .stat-card .stat-icon{font-size:30px;margin-bottom:6px}
-        .stat-card .stat-value{font-size:24px;font-weight:800;background:linear-gradient(180deg,#fff,#aaa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .stat-card .stat-label{font-size:11px;opacity:0.5;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-        .winrate-bar{background:rgba(255,255,255,0.08);border-radius:10px;height:8px;margin-top:10px;overflow:hidden}
-        .winrate-fill{background:linear-gradient(90deg,var(--accent),var(--accent2));height:100%;border-radius:10px;transition:width 0.5s}
+        .stat-card .stat-icon{font-size:30px;margin-bottom:6px}.stat-card .stat-value{font-size:24px;font-weight:800;background:linear-gradient(180deg,#fff,#aaa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.stat-card .stat-label{font-size:11px;opacity:0.5;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+        .winrate-bar{background:rgba(255,255,255,0.08);border-radius:10px;height:8px;margin-top:10px;overflow:hidden}.winrate-fill{background:linear-gradient(90deg,var(--accent),var(--accent2));height:100%;border-radius:10px;transition:width 0.5s}
         .games-section{background:var(--card-bg);border-radius:24px;padding:18px;margin-bottom:16px;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.2)}
         .section-title{font-size:13px;font-weight:700;opacity:0.5;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
-        .recent-game-item,.friend-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
-        .recent-game-item:last-child,.friend-item:last-child{border-bottom:none}
-        .game-item-left,.f-info{display:flex;align-items:center;gap:10px}
-        .game-item-emoji{font-size:26px}
-        .game-item-result{font-weight:800;font-size:14px}
-        .game-item-result.win{color:var(--win)}.game-item-result.lose{color:var(--lose)}
-        .achievement-card{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card-bg);border-radius:16px;margin-bottom:10px;border:1px solid var(--border);transition:all 0.3s}
-        .achievement-card.earned{border-color:rgba(247,151,30,0.4);background:rgba(247,151,30,0.06);box-shadow:0 0 16px rgba(247,151,30,0.15)}
-        .achievement-card.locked{opacity:0.4}
-        .achievement-icon{font-size:36px;min-width:48px;text-align:center}
-        .achievement-info{flex:1}
-        .achievement-name{font-size:14px;font-weight:700}.achievement-desc{font-size:11px;opacity:0.5;margin-top:2px}
-        .achievement-progress{font-size:11px;font-weight:700;margin-top:4px}
-        .achievement-progress-bar{background:rgba(255,255,255,0.08);border-radius:6px;height:5px;margin-top:5px;overflow:hidden}
-        .achievement-progress-fill{background:linear-gradient(90deg,var(--accent),var(--accent2));height:100%;border-radius:6px;transition:width 0.5s}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        .fade-in{animation:fadeIn 0.4s ease}
+        .recent-game-item,.friend-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}.recent-game-item:last-child,.friend-item:last-child{border-bottom:none}.game-item-left,.f-info{display:flex;align-items:center;gap:10px}.game-item-emoji{font-size:26px}.game-item-result{font-weight:800;font-size:14px}.game-item-result.win{color:var(--win)}.game-item-result.lose{color:var(--lose)}
+        .achievement-card{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card-bg);border-radius:16px;margin-bottom:10px;border:1px solid var(--border);transition:all 0.3s}.achievement-card.earned{border-color:rgba(247,151,30,0.4);background:rgba(247,151,30,0.06);box-shadow:0 0 16px rgba(247,151,30,0.15)}.achievement-card.locked{opacity:0.4}.achievement-icon{font-size:36px;min-width:48px;text-align:center}.achievement-info{flex:1}.achievement-name{font-size:14px;font-weight:700}.achievement-desc{font-size:11px;opacity:0.5;margin-top:2px}.achievement-progress{font-size:11px;font-weight:700;margin-top:4px}.achievement-progress-bar{background:rgba(255,255,255,0.08);border-radius:6px;height:5px;margin-top:5px;overflow:hidden}.achievement-progress-fill{background:linear-gradient(90deg,var(--accent),var(--accent2));height:100%;border-radius:6px;transition:width 0.5s}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.fade-in{animation:fadeIn 0.4s ease}
         .payment-banner{background:linear-gradient(135deg,rgba(247,151,30,0.2),rgba(255,210,0,0.1));border:1px solid rgba(247,151,30,0.3);border-radius:18px;padding:14px;margin-bottom:16px;text-align:center;animation:fadeIn 0.4s ease}
-        .referral-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
-        .referral-card{background:var(--card-bg);border-radius:18px;padding:18px;text-align:center;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.2)}
-        .referral-link-box{background:rgba(0,0,0,0.35);border-radius:18px;padding:16px;margin-bottom:16px;text-align:center;border:1px solid var(--border)}
-        .referral-link-box .ref-link{font-size:11px;word-break:break-all;opacity:0.5;margin:10px 0;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px}
-        .friend-item .f-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#f7971e,#e65100);display:flex;align-items:center;justify-content:center;font-size:18px}
-        input[type="text"]{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:white;font-size:15px;margin-bottom:18px;outline:none;text-align:center}
-        input[type="text"]::placeholder{color:rgba(255,255,255,0.25)}
-        .sparkle{position:absolute;pointer-events:none;font-size:20px;animation:sparkle 0.6s ease-out forwards}
-        .coin-rain{position:fixed;pointer-events:none;font-size:24px;animation:coinRain 2s ease-in forwards;z-index:50}
-        @media(max-width:400px){.games-menu{gap:8px}.game-emoji{font-size:34px}.game-name{font-size:11px}.game-card{padding:16px 6px}.reel{width:60px;height:60px;font-size:34px}.bet-option{padding:10px 14px;font-size:13px}.tab-btn{font-size:11px;padding:10px 4px}.roulette-wheel{width:130px;height:130px}}
+        .referral-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}.referral-card{background:var(--card-bg);border-radius:18px;padding:18px;text-align:center;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.2)}.referral-link-box{background:rgba(0,0,0,0.35);border-radius:18px;padding:16px;margin-bottom:16px;text-align:center;border:1px solid var(--border)}.referral-link-box .ref-link{font-size:11px;word-break:break-all;opacity:0.5;margin:10px 0;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px}.friend-item .f-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#f7971e,#e65100);display:flex;align-items:center;justify-content:center;font-size:18px}
+        input[type="text"]{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:white;font-size:15px;margin-bottom:18px;outline:none;text-align:center}input[type="text"]::placeholder{color:rgba(255,255,255,0.25)}
+        .sparkle{position:absolute;pointer-events:none;font-size:20px;animation:sparkle 0.6s ease-out forwards}.coin-rain{position:fixed;pointer-events:none;font-size:24px;animation:coinRain 2.5s ease-in forwards;z-index:50}
+        @media(max-width:400px){.games-menu{gap:8px}.game-emoji{font-size:34px}.game-name{font-size:11px}.game-card{padding:16px 6px}.reel{width:60px;height:60px;font-size:34px}.bet-option{padding:10px 14px;font-size:13px}.tab-btn{font-size:11px;padding:10px 4px}.roulette-table{width:220px;height:220px}.roulette-table .number-ring{width:180px;height:180px}.roulette-table .ball{margin-top:-100px}.dart-board-visual{width:140px;height:140px}}
     </style>
 </head>
 <body>
     <div class="game-container" id="app">
-        <div class="header">
-            <div class="balance"><span class="balance-icon">💎</span><span class="balance-amount" id="balance">0</span></div>
-            <div class="username" id="username">Игрок</div>
-        </div>
+        <div class="header"><div class="balance"><span class="balance-icon">💎</span><span class="balance-amount" id="balance">0</span></div><div class="username" id="username">Игрок</div></div>
         <div class="daily-bonus-banner hidden" id="daily-bonus-banner"><div class="db-info"><span class="db-icon">🎁</span><div><div class="db-text">Ежедневный бонус</div><div style="font-size:10px;opacity:0.5" id="db-streak-text">День 1</div></div></div><button class="db-btn" id="claim-daily-btn">+10 💎</button></div>
-        <div class="tab-nav">
-            <button class="tab-btn active" data-tab="games">🎮 Игры</button>
-            <button class="tab-btn" data-tab="profile">👤 Профиль</button>
-            <button class="tab-btn" data-tab="referral">👥 Друзья</button>
-        </div>
+        <div class="tab-nav"><button class="tab-btn active" data-tab="games">🎮 Игры</button><button class="tab-btn" data-tab="profile">👤 Профиль</button><button class="tab-btn" data-tab="referral">👥 Друзья</button></div>
         <div class="payment-banner hidden" id="pending-payment-banner"><div class="banner-text">⏳ Ожидающий платёж!</div><button class="modal-btn gold" id="check-pending-payment-btn" style="font-size:14px;padding:12px;">🔄 Проверить</button></div>
         <div class="tab-content active" id="tab-games">
             <div id="games-menu">
-                <div class="games-menu">
-                    <div class="game-card" data-game="slots"><div class="game-emoji">🎰</div><div class="game-name">Слоты</div></div>
-                    <div class="game-card" data-game="roulette"><div class="game-emoji">🎡</div><div class="game-name">Рулетка</div></div>
-                    <div class="game-card" data-game="dice"><div class="game-emoji">🎲</div><div class="game-name">Кости</div></div>
-                    <div class="game-card" data-game="blackjack"><div class="game-emoji">🃏</div><div class="game-name">Блэкджек</div></div>
-                    <div class="game-card" data-game="bowling"><div class="game-emoji">🎳</div><div class="game-name">Боулинг</div></div>
-                    <div class="game-card" data-game="darts"><div class="game-emoji">🎯</div><div class="game-name">Дартс</div></div>
-                </div>
+                <div class="games-menu"><div class="game-card" data-game="slots"><div class="game-emoji">🎰</div><div class="game-name">Слоты</div></div><div class="game-card" data-game="roulette"><div class="game-emoji">🎡</div><div class="game-name">Рулетка</div></div><div class="game-card" data-game="dice"><div class="game-emoji">🎲</div><div class="game-name">Кости</div></div><div class="game-card" data-game="blackjack"><div class="game-emoji">🃏</div><div class="game-name">Блэкджек</div></div><div class="game-card" data-game="bowling"><div class="game-emoji">🎳</div><div class="game-name">Боулинг</div></div><div class="game-card" data-game="darts"><div class="game-emoji">🎯</div><div class="game-name">Дартс</div></div></div>
                 <button class="get-coins-btn" id="get-coins-btn">💰 Получить монеты</button>
             </div>
-            <div id="game-area" class="hidden">
-                <div class="game-area">
-                    <div class="game-title" id="game-title">🎰 СЛОТЫ</div>
-                    <div class="bet-buttons" id="global-bet-buttons"><button class="bet-option" data-bet="10">💰10</button><button class="bet-option" data-bet="50">💰50</button><button class="bet-option" data-bet="100">💰100</button><button class="bet-option" data-bet="250">💰250</button></div>
-
-                    <!-- SLOTS -->
-                    <div id="slots-game"><div class="slot-reels"><div class="reel" id="reel1">🍒</div><div class="reel" id="reel2">🍒</div><div class="reel" id="reel3">🍒</div></div><div><button class="spin-btn" id="spin-btn">🎰 КРУТИТЬ</button></div></div>
-
-                    <!-- ROULETTE -->
-                    <div id="roulette-game" class="hidden">
-                        <div class="roulette-wheel" id="roulette-wheel"><div class="roulette-ball" id="roulette-ball"></div></div>
-                        <div class="roulette-number" id="roulette-result">?</div>
-                        <div class="bet-buttons" id="roulette-bets"><button class="bet-option" data-roulette="red">🔴</button><button class="bet-option" data-roulette="black">⚫</button><button class="bet-option" data-roulette="green">🟢0</button><button class="bet-option" data-roulette="even">🟡Чёт</button><button class="bet-option" data-roulette="odd">🔵Нечет</button></div>
-                        <div><button class="spin-btn" id="roulette-spin-btn">🎡 КРУТИТЬ</button></div>
-                    </div>
-
-                    <!-- DICE -->
-                    <div id="dice-game" class="hidden"><div class="dice-container"><div class="dice-anim" id="dice1">⚀</div><div class="dice-anim" id="dice2">⚀</div></div><div class="bet-buttons"><button class="bet-option" data-dice="over">⬆️>7</button><button class="bet-option" data-dice="under">⬇️<7</button></div><div><button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button></div></div>
-
-                    <!-- BLACKJACK -->
-                    <div id="blackjack-game" class="hidden"><div style="margin:18px 0;"><div style="margin:8px 0;">🃏 Вы: <span id="player-cards">—</span> (<span id="player-sum">0</span>)</div><div style="margin:8px 0;">🤖 Дилер: <span id="dealer-cards">—</span> (<span id="dealer-sum">0</span>)</div></div><div class="bet-buttons"><button class="bet-option" id="bj-hit">🎯 Карту</button><button class="bet-option" id="bj-stand">✋ Хватит</button></div><div><button class="spin-btn" id="bj-start-btn">🃏 НАЧАТЬ</button></div></div>
-
-                    <!-- BOWLING -->
-                    <div id="bowling-game" class="hidden"><div class="bowling-lane"><span class="bowling-ball" id="bowling-ball">🎳</span><span class="bowling-pins" id="bowling-pins">🎳🎳🎳🎳🎳🎳</span></div><div class="bet-buttons"><button class="bet-option" data-bowling="over">⬆️>3</button><button class="bet-option" data-bowling="under">⬇️<4</button></div><div><button class="spin-btn" id="bowling-spin-btn">🎳 БРОСИТЬ</button></div></div>
-
-                    <!-- DARTS -->
-                    <div id="darts-game" class="hidden"><div class="dart-board" id="dart-board"></div><div id="dart-result" style="font-size:18px;font-weight:700;margin:10px 0;"></div><div class="bet-buttons"><button class="bet-option" data-darts="even">🟡Чёт</button><button class="bet-option" data-darts="odd">🔵Нечет</button></div><div><button class="spin-btn" id="darts-spin-btn">🎯 БРОСИТЬ</button></div></div>
-
-                    <div id="result-message" class="result-message"></div>
-                    <button class="back-btn" id="back-to-menu">🔙 Назад</button>
-                </div>
-            </div>
+            <div id="game-area" class="hidden"><div class="game-area">
+                <div class="game-title" id="game-title">🎰 СЛОТЫ</div>
+                <div class="bet-buttons" id="global-bet-buttons"><button class="bet-option" data-bet="10">💰10</button><button class="bet-option" data-bet="50">💰50</button><button class="bet-option" data-bet="100">💰100</button><button class="bet-option" data-bet="250">💰250</button></div>
+                <div id="slots-game"><div class="slot-reels"><div class="reel" id="reel1">🍒</div><div class="reel" id="reel2">🍒</div><div class="reel" id="reel3">🍒</div></div><div><button class="spin-btn" id="spin-btn">🎰 КРУТИТЬ</button></div></div>
+                <div id="roulette-game" class="hidden"><div class="roulette-table" id="roulette-table"><div class="ball" id="roulette-ball"></div><div class="center">🎡</div></div><div class="roulette-result-display" id="roulette-result">?</div><div class="bet-buttons" id="roulette-bets"><button class="bet-option" data-roulette="red">🔴</button><button class="bet-option" data-roulette="black">⚫</button><button class="bet-option" data-roulette="green">🟢0</button><button class="bet-option" data-roulette="even">🟡Чёт</button><button class="bet-option" data-roulette="odd">🔵Нечет</button></div><div><button class="spin-btn" id="roulette-spin-btn">🎡 КРУТИТЬ</button></div></div>
+                <div id="dice-game" class="hidden"><div class="dice-container"><div class="dice-anim" id="dice1">⚀</div><div class="dice-anim" id="dice2">⚀</div></div><div class="bet-buttons"><button class="bet-option" data-dice="over">⬆️>7</button><button class="bet-option" data-dice="under">⬇️<7</button></div><div><button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button></div></div>
+                <div id="blackjack-game" class="hidden"><div class="card-table"><div class="card-row"><span class="label">🤖 Дилер</span><div id="dealer-cards"><span class="card-slot">🂠</span></div><span id="dealer-sum" style="margin-left:8px;font-weight:700">0</span></div><div class="card-row"><span class="label">🃏 Вы</span><div id="player-cards"><span class="card-slot">🂠</span></div><span id="player-sum" style="margin-left:8px;font-weight:700">0</span></div></div><div class="bet-buttons"><button class="bet-option" id="bj-hit">🎯 Карту</button><button class="bet-option" id="bj-stand">✋ Хватит</button></div><div><button class="spin-btn" id="bj-start-btn">🃏 НАЧАТЬ</button></div></div>
+                <div id="bowling-game" class="hidden"><div class="bowling-scene"><div class="bowling-ball" id="bowling-ball">🎳</div><div class="bowling-pins-container" id="bowling-pins"><span class="bowling-pin">🎳</span><span class="bowling-pin">🎳</span><span class="bowling-pin">🎳</span><span class="bowling-pin" style="margin-left:-6px">🎳</span><span class="bowling-pin" style="margin-left:-6px">🎳</span><span class="bowling-pin">🎳</span></div><div class="bowling-lane"></div></div><div class="bet-buttons"><button class="bet-option" data-bowling="over">⬆️>3</button><button class="bet-option" data-bowling="under">⬇️<4</button></div><div><button class="spin-btn" id="bowling-spin-btn">🎳 БРОСИТЬ</button></div></div>
+                <div id="darts-game" class="hidden"><div class="darts-scene"><div class="dart-board-visual" id="dart-board"><div class="inner-ring"></div><div class="bullseye"></div></div><div class="dart-arrow-anim" id="dart-arrow" style="top:50%;left:50%;transform:translate(-50%,-50%);display:none;">🎯</div></div><div id="dart-result-text" style="font-size:18px;font-weight:700;min-height:30px;margin:8px 0;"></div><div class="bet-buttons"><button class="bet-option" data-darts="even">🟡Чёт</button><button class="bet-option" data-darts="odd">🔵Нечет</button></div><div><button class="spin-btn" id="darts-spin-btn">🎯 БРОСИТЬ</button></div></div>
+                <div id="result-message" class="result-message"></div><button class="back-btn" id="back-to-menu">🔙 Назад</button>
+            </div></div>
         </div>
-        <div class="tab-content" id="tab-profile"><div class="fade-in">
-            <div class="profile-header"><div class="profile-avatar" id="profile-avatar-display">🦊</div><div class="profile-username" id="profile-username">Игрок</div><div class="profile-id" id="profile-id">ID: —</div><button class="back-btn" id="edit-profile-btn" style="margin-top:12px;font-size:13px;padding:10px 18px;">✏️ Редактировать</button></div>
-            <div class="stat-cards"><div class="stat-card"><div class="stat-icon">💎</div><div class="stat-value" id="profile-balance">0</div><div class="stat-label">Баланс</div></div><div class="stat-card"><div class="stat-icon">🎮</div><div class="stat-value" id="profile-games">0</div><div class="stat-label">Игр</div></div><div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-value" id="profile-wins">0</div><div class="stat-label">Побед</div></div><div class="stat-card"><div class="stat-icon">📊</div><div class="stat-value" id="profile-winrate">0%</div><div class="stat-label">Винрейт</div><div class="winrate-bar"><div class="winrate-fill" id="winrate-fill" style="width:0%"></div></div></div></div>
-            <div class="games-section" id="achievements-section"><div class="section-title">🏆 Достижения</div><div id="achievements-list"><div class="loading-text">Загрузка...</div></div></div>
-            <div class="games-section" id="recent-games-section"><div class="section-title">🕐 Игры</div><div id="recent-games-list"><div class="loading-text">Загрузка...</div></div></div>
-        </div></div>
-        <div class="tab-content" id="tab-referral"><div class="fade-in">
-            <div class="profile-header" style="padding:18px;"><div style="font-size:52px;margin-bottom:8px;">👥</div><div style="font-size:18px;font-weight:800;">Рефералы</div><div style="font-size:12px;opacity:0.5;margin-top:4px;">Приглашайте друзей!</div></div>
-            <div class="referral-stats"><div class="referral-card"><div class="r-icon">👤</div><div class="r-value" id="ref-total">0</div><div class="r-label">Друзей</div></div><div class="referral-card"><div class="r-icon">🎮</div><div class="r-value" id="ref-played">0</div><div class="r-label">Играют</div></div></div>
-            <div class="referral-link-box"><div style="font-size:12px;opacity:0.6;">🔗 Ваша ссылка</div><div class="ref-link" id="ref-link-text">Загрузка...</div><button class="modal-btn gold" id="copy-ref-link" style="font-size:13px;padding:12px;">📋 Копировать</button><button class="modal-btn green" id="share-ref-link" style="font-size:13px;padding:12px;">📤 Поделиться</button></div>
-            <div style="text-align:center;opacity:0.6;font-size:11px;margin-bottom:12px;">💡 За друга — <b>+100 💎</b> | Друг получит <b>+25 💎</b></div>
-            <div class="games-section"><div class="section-title">👥 Друзья</div><div id="friends-list"><div class="loading-text">Загрузка...</div></div></div>
-        </div></div>
+        <div class="tab-content" id="tab-profile"><div class="fade-in"><div class="profile-header"><div class="profile-avatar" id="profile-avatar-display">🦊</div><div class="profile-username" id="profile-username">Игрок</div><div class="profile-id" id="profile-id">ID: —</div><button class="back-btn" id="edit-profile-btn" style="margin-top:12px;font-size:13px;padding:10px 18px;">✏️ Редактировать</button></div><div class="stat-cards"><div class="stat-card"><div class="stat-icon">💎</div><div class="stat-value" id="profile-balance">0</div><div class="stat-label">Баланс</div></div><div class="stat-card"><div class="stat-icon">🎮</div><div class="stat-value" id="profile-games">0</div><div class="stat-label">Игр</div></div><div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-value" id="profile-wins">0</div><div class="stat-label">Побед</div></div><div class="stat-card"><div class="stat-icon">📊</div><div class="stat-value" id="profile-winrate">0%</div><div class="stat-label">Винрейт</div><div class="winrate-bar"><div class="winrate-fill" id="winrate-fill" style="width:0%"></div></div></div></div><div class="games-section" id="achievements-section"><div class="section-title">🏆 Достижения</div><div id="achievements-list"><div style="text-align:center;opacity:0.4;padding:12px;">Загрузка...</div></div></div><div class="games-section" id="recent-games-section"><div class="section-title">🕐 Игры</div><div id="recent-games-list"><div style="text-align:center;opacity:0.4;padding:12px;">Загрузка...</div></div></div></div></div>
+        <div class="tab-content" id="tab-referral"><div class="fade-in"><div class="profile-header" style="padding:18px;"><div style="font-size:52px;margin-bottom:8px;">👥</div><div style="font-size:18px;font-weight:800;">Рефералы</div></div><div class="referral-stats"><div class="referral-card"><div class="r-icon">👤</div><div class="r-value" id="ref-total">0</div></div><div class="referral-card"><div class="r-icon">🎮</div><div class="r-value" id="ref-played">0</div></div></div><div class="referral-link-box"><div class="ref-link" id="ref-link-text">Загрузка...</div><button class="modal-btn gold" id="copy-ref-link" style="font-size:13px;padding:12px;">📋 Копировать</button><button class="modal-btn green" id="share-ref-link" style="font-size:13px;padding:12px;">📤 Поделиться</button></div><div class="games-section"><div class="section-title">👥 Друзья</div><div id="friends-list"><div style="text-align:center;opacity:0.4;padding:12px;">Загрузка...</div></div></div></div></div>
     </div>
     <div class="modal-overlay" id="coins-modal"><div class="modal"><div class="modal-title">💰 Монеты</div><button class="modal-btn green" id="watch-ad-btn">📺 Ролик — 25</button><button class="modal-btn gold" id="buy-coins-btn">💳 Купить</button><button class="modal-btn red" id="close-coins-modal">❌ Закрыть</button></div></div>
     <div class="modal-overlay" id="buy-modal"><div class="modal"><div class="modal-title">💳 Пополнение</div><div class="price-list"><div class="price-item" data-amount="250" data-price="20"><span>💎250</span><span style="color:#ffd700;font-weight:700;">20 USDT</span></div><div class="price-item" data-amount="500" data-price="35"><span>💎500</span><span style="color:#ffd700;font-weight:700;">35 USDT</span></div><div class="price-item" data-amount="750" data-price="50"><span>💎750</span><span style="color:#ffd700;font-weight:700;">50 USDT</span></div><div class="price-item" data-amount="1000" data-price="65"><span>💎1000</span><span style="color:#ffd700;font-weight:700;">65 USDT</span></div></div><button class="modal-btn gold" id="confirm-purchase-btn" disabled>💳 Оплатить</button><button class="modal-btn red" id="close-buy-modal">🔙 Назад</button></div></div>
-    <div class="modal-overlay" id="edit-profile-modal"><div class="modal"><div class="modal-title">✏️ Профиль</div><p style="font-size:12px;opacity:0.6;margin-bottom:6px;">Аватар:</p><div id="avatar-picker" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px;"></div><p style="font-size:12px;opacity:0.6;margin-bottom:6px;">Никнейм:</p><input type="text" id="display-name-input" placeholder="Никнейм..." maxlength="30"><button class="modal-btn gold" id="save-profile-btn">💾 Сохранить</button><button class="modal-btn red" id="close-edit-profile-modal">❌ Отмена</button></div></div>
-    <div class="modal-overlay" id="no-balance-modal"><div class="modal"><div class="modal-title">😞 Мало средств</div><p style="text-align:center;margin-bottom:18px;opacity:0.7;font-size:14px;">Недостаточно баллов!</p><button class="modal-btn gold" id="go-buy-coins-btn">💳 Пополнить</button><button class="modal-btn red" id="close-no-balance-modal">❌ Закрыть</button></div></div>
+    <div class="modal-overlay" id="edit-profile-modal"><div class="modal"><div class="modal-title">✏️ Профиль</div><div id="avatar-picker" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px;"></div><input type="text" id="display-name-input" placeholder="Никнейм..." maxlength="30"><button class="modal-btn gold" id="save-profile-btn">💾 Сохранить</button><button class="modal-btn red" id="close-edit-profile-modal">❌ Отмена</button></div></div>
+    <div class="modal-overlay" id="no-balance-modal"><div class="modal"><div class="modal-title">😞 Мало средств</div><p style="text-align:center;margin-bottom:18px;opacity:0.7;">Недостаточно баллов!</p><button class="modal-btn gold" id="go-buy-coins-btn">💳 Пополнить</button><button class="modal-btn red" id="close-no-balance-modal">❌ Закрыть</button></div></div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg=window.Telegram.WebApp;tg.expand();tg.enableClosingConfirmation()
         const BOT_API_URL='https://game-bar-bot.onrender.com';const webAppUser=tg.initDataUnsafe?.user
         let currentGame=null,currentBet=100,balance=0,isLoading=false,userProfile=null,selectedAmount=null
-        const WIN_RATE=0.50
+        const WIN_RATE=0.50;const GAME_RESULT_DELAY=3000 // 3 секунды на просмотр результата
         function getUserId(){if(webAppUser&&webAppUser.id)return webAppUser.id;const p=new URLSearchParams(window.location.search);const uid=p.get('user_id');return uid?parseInt(uid):null}
         const userId=getUserId();const username=webAppUser?.username||webAppUser?.first_name||'Игрок'
         document.getElementById('username').innerText=username
-
         function vibrate(){if(navigator.vibrate)navigator.vibrate(15)}
         document.querySelectorAll('button,.game-card,.price-item,.daily-bonus-banner').forEach(el=>el.addEventListener('click',vibrate))
+        function spawnSparkles(x,y,count=8){for(let i=0;i<count;i++){const s=document.createElement('div');s.className='sparkle';s.innerText=['✨','💫','⭐','🌟'][Math.floor(Math.random()*4)];s.style.cssText=`left:${x+Math.random()*80-40}px;top:${y+Math.random()*60-30}px;animation-delay:${Math.random()*0.3}s`;document.body.appendChild(s);setTimeout(()=>s.remove(),800)}}
+        function spawnWinCoins(count=10){for(let i=0;i<count;i++){const c=document.createElement('div');c.className='coin-rain';c.innerText='💎';c.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*1}s;animation-duration:${1.5+Math.random()*2}s`;document.body.appendChild(c);setTimeout(()=>c.remove(),3500)}}
 
-        function spawnSparkles(x,y,count=8){
-            for(let i=0;i<count;i++){
-                const s=document.createElement('div');s.className='sparkle'
-                s.innerText=['✨','💫','⭐','🌟'][Math.floor(Math.random()*4)]
-                s.style.cssText=`left:${x+Math.random()*80-40}px;top:${y+Math.random()*60-30}px;animation-delay:${Math.random()*0.3}s`
-                document.body.appendChild(s);setTimeout(()=>s.remove(),800)
-            }
-        }
-
-        function spawnWinCoins(count=10){
-            for(let i=0;i<count;i++){
-                const c=document.createElement('div');c.className='coin-rain';c.innerText='💎'
-                c.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*1}s;animation-duration:${1.5+Math.random()*2}s`
-                document.body.appendChild(c);setTimeout(()=>c.remove(),3000)
-            }
-        }
-
-        async function checkPendingPaymentOnLoad(){
-            if(!userId)return;const ppId=localStorage.getItem('pending_payment_id'),ppUid=localStorage.getItem('pending_user_id')
-            if(ppId&&ppUid&&parseInt(ppUid)===userId){document.getElementById('pending-payment-banner').classList.remove('hidden')
-                try{const r=await fetch(`${BOT_API_URL}/api/check_payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});const d=await r.json()
-                if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance()}}catch(e){}}
-        }
-        document.getElementById('check-pending-payment-btn').addEventListener('click',async()=>{
-            const btn=document.getElementById('check-pending-payment-btn');btn.disabled=true;btn.innerText='⏳'
-            const ppId=localStorage.getItem('pending_payment_id')
-            try{const r=await fetch(`${BOT_API_URL}/api/check_payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});const d=await r.json()
-            if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance();tg.showAlert('✅ Оплата прошла!')}else{tg.showAlert(d.message||'⏳')}}catch(e){}
-            finally{btn.disabled=false;btn.innerText='🔄 Проверить'}
-        })
-
+        async function checkPendingPaymentOnLoad(){if(!userId)return;const ppId=localStorage.getItem('pending_payment_id'),ppUid=localStorage.getItem('pending_user_id');if(ppId&&ppUid&&parseInt(ppUid)===userId){document.getElementById('pending-payment-banner').classList.remove('hidden');try{const r=await fetch(`${BOT_API_URL}/api/check_payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});const d=await r.json();if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance()}}catch(e){}}}
+        document.getElementById('check-pending-payment-btn').addEventListener('click',async()=>{const btn=document.getElementById('check-pending-payment-btn');btn.disabled=true;btn.innerText='⏳';const ppId=localStorage.getItem('pending_payment_id');try{const r=await fetch(`${BOT_API_URL}/api/check_payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});const d=await r.json();if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance();tg.showAlert('✅ Оплата прошла!')}else{tg.showAlert(d.message||'⏳')}}catch(e){}finally{btn.disabled=false;btn.innerText='🔄 Проверить'}})
         async function loadDailyBonus(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/daily_bonus_status`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){const s=d.status;if(s.can_claim){document.getElementById('daily-bonus-banner').classList.remove('hidden');document.getElementById('claim-daily-btn').innerText=`+${s.next_bonus} 💎`;document.getElementById('db-streak-text').innerText=`День ${s.streak+1}`}}}catch(e){}}
-        document.getElementById('claim-daily-btn').addEventListener('click',async()=>{
-            const btn=document.getElementById('claim-daily-btn');btn.disabled=true;btn.innerText='⏳'
-            try{const r=await fetch(`${BOT_API_URL}/api/daily_bonus`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json()
-            if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;document.getElementById('daily-bonus-banner').classList.add('hidden');tg.showAlert(`🎁 +${d.bonus} 💎! Дней: ${d.streak}`)}else{tg.showAlert('⏳ Уже получали')}}catch(e){}
-            finally{btn.disabled=false;btn.innerText='+10 💎'}
-        })
-
+        document.getElementById('claim-daily-btn').addEventListener('click',async()=>{const btn=document.getElementById('claim-daily-btn');btn.disabled=true;btn.innerText='⏳';try{const r=await fetch(`${BOT_API_URL}/api/daily_bonus`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;document.getElementById('daily-bonus-banner').classList.add('hidden');tg.showAlert(`🎁 +${d.bonus} 💎! Дней: ${d.streak}`)}else{tg.showAlert('⏳ Уже получали')}}catch(e){}finally{btn.disabled=false;btn.innerText='+10 💎'}})
         function showNoBalance(){document.getElementById('no-balance-modal').classList.add('active')}
         document.getElementById('go-buy-coins-btn').addEventListener('click',()=>{document.getElementById('no-balance-modal').classList.remove('active');document.getElementById('buy-modal').classList.add('active')})
         document.getElementById('close-no-balance-modal').addEventListener('click',()=>document.getElementById('no-balance-modal').classList.remove('active'))
-
         document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{const t=b.dataset.tab;document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(`tab-${t}`).classList.add('active');if(t==='profile'){loadProfile();loadAchievements()}if(t==='referral')loadReferralData()}))
-
         document.getElementById('get-coins-btn').addEventListener('click',()=>document.getElementById('coins-modal').classList.add('active'))
         document.getElementById('close-coins-modal').addEventListener('click',()=>document.getElementById('coins-modal').classList.remove('active'))
         document.getElementById('watch-ad-btn').addEventListener('click',()=>{document.getElementById('coins-modal').classList.remove('active');tg.showAlert('📺 Скоро')})
@@ -305,153 +204,59 @@
         document.querySelectorAll('.price-item').forEach(i=>i.addEventListener('click',()=>{document.querySelectorAll('.price-item').forEach(x=>x.classList.remove('selected'));i.classList.add('selected');selectedAmount={points:parseInt(i.dataset.amount),price:parseFloat(i.dataset.price)};document.getElementById('confirm-purchase-btn').disabled=false}))
         document.getElementById('confirm-purchase-btn').addEventListener('click',async()=>{if(!selectedAmount)return;const btn=document.getElementById('confirm-purchase-btn');btn.disabled=true;btn.innerText='⏳';try{const r=await fetch(`${BOT_API_URL}/api/create_invoice`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,amount_points:selectedAmount.points})});const d=await r.json();if(d.success&&d.invoice_url){localStorage.setItem('pending_payment_id',d.payment_id);localStorage.setItem('pending_user_id',userId);document.getElementById('buy-modal').classList.remove('active');document.getElementById('pending-payment-banner').classList.remove('hidden');tg.openLink(d.invoice_url)}else{tg.showAlert('❌ Ошибка')}}catch(e){}finally{btn.innerText='💳 Оплатить';btn.disabled=true;selectedAmount=null;document.querySelectorAll('#buy-modal .price-item').forEach(i=>i.classList.remove('selected'))}})
         document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('active')}))
-
         const avatarEmojis=['🦊','🐺','🦁','🐯','🐻','🐼','🐨','🐰','🦄','🐲','🎃','🤖','👑','💀','👻'];let selectedAvatar='🦊',currentDisplayName=''
-        const avatarPicker=document.getElementById('avatar-picker')
-        avatarEmojis.forEach(emoji=>{const s=document.createElement('span');s.innerText=emoji;s.style.cssText='font-size:32px;cursor:pointer;padding:6px;border-radius:12px;transition:all 0.15s;border:2px solid transparent';s.addEventListener('click',()=>{document.querySelectorAll('#avatar-picker span').forEach(x=>{x.style.border='2px solid transparent';x.style.background='transparent'});s.style.border='2px solid #f7971e';s.style.background='rgba(247,151,30,0.2)';selectedAvatar=emoji});avatarPicker.appendChild(s)})
+        const avatarPicker=document.getElementById('avatar-picker');avatarEmojis.forEach(emoji=>{const s=document.createElement('span');s.innerText=emoji;s.style.cssText='font-size:32px;cursor:pointer;padding:6px;border-radius:12px;transition:all 0.15s;border:2px solid transparent';s.addEventListener('click',()=>{document.querySelectorAll('#avatar-picker span').forEach(x=>{x.style.border='2px solid transparent';x.style.background='transparent'});s.style.border='2px solid #f7971e';s.style.background='rgba(247,151,30,0.2)';selectedAvatar=emoji});avatarPicker.appendChild(s)})
         document.getElementById('edit-profile-btn').addEventListener('click',()=>{document.getElementById('display-name-input').value=currentDisplayName||'';document.querySelectorAll('#avatar-picker span').forEach(s=>{s.style.border='2px solid transparent';s.style.background='transparent';if(s.innerText===selectedAvatar){s.style.border='2px solid #f7971e';s.style.background='rgba(247,151,30,0.2)'}});document.getElementById('edit-profile-modal').classList.add('active')})
         document.getElementById('close-edit-profile-modal').addEventListener('click',()=>document.getElementById('edit-profile-modal').classList.remove('active'))
         document.getElementById('save-profile-btn').addEventListener('click',async()=>{const dn=document.getElementById('display-name-input').value.trim(),btn=document.getElementById('save-profile-btn');btn.disabled=true;btn.innerText='⏳';try{const r=await fetch(`${BOT_API_URL}/api/save_profile`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,display_name:dn,avatar_emoji:selectedAvatar})});const d=await r.json();if(d.success){currentDisplayName=dn;document.getElementById('profile-avatar-display').innerText=selectedAvatar;document.getElementById('profile-username').innerText=dn||username;document.getElementById('edit-profile-modal').classList.remove('active');tg.showAlert('✅ Сохранено!')}else{tg.showAlert('❌ '+(d.error||'Ошибка'))}}catch(e){}finally{btn.disabled=false;btn.innerText='💾 Сохранить'}})
-
         async function loadAchievements(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_achievements`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success)renderAchievements(d.achievements)}catch(e){}}
-        function renderAchievements(a){const c=document.getElementById('achievements-list');if(!a||a.length===0){c.innerHTML='<div class="loading-text">Нет</div>';return}c.innerHTML=a.map(x=>{const p=Math.min(100,Math.round((x.progress/x.target)*100));return`<div class="achievement-card ${x.earned?'earned':'locked'}"><div class="achievement-icon">${x.earned?x.icon:'🔒'}</div><div class="achievement-info"><div class="achievement-name">${x.name}</div><div class="achievement-desc">${x.desc}</div><div class="achievement-progress">${x.earned?'✅':x.progress+'/'+x.target}</div><div class="achievement-progress-bar"><div class="achievement-progress-fill" style="width:${x.earned?100:p}%"></div></div></div></div>`}).join('')}
-
+        function renderAchievements(a){const c=document.getElementById('achievements-list');if(!a||a.length===0){c.innerHTML='<div style="text-align:center;opacity:0.4;padding:12px;">Нет</div>';return}c.innerHTML=a.map(x=>{const p=Math.min(100,Math.round((x.progress/x.target)*100));return`<div class="achievement-card ${x.earned?'earned':'locked'}"><div class="achievement-icon">${x.earned?x.icon:'🔒'}</div><div class="achievement-info"><div class="achievement-name">${x.name}</div><div class="achievement-desc">${x.desc}</div><div class="achievement-progress">${x.earned?'✅':x.progress+'/'+x.target}</div><div class="achievement-progress-bar"><div class="achievement-progress-fill" style="width:${x.earned?100:p}%"></div></div></div></div>`}).join('')}
         async function loadProfile(){if(!userId)return;document.getElementById('profile-id').innerText=`ID: ${userId}`;try{const r=await fetch(`${BOT_API_URL}/api/get_profile`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){userProfile=d.profile;renderProfile(userProfile)}}catch(e){}}
-        function renderProfile(p){document.getElementById('profile-balance').innerText=p.balance;document.getElementById('profile-games').innerText=p.total_games;document.getElementById('profile-wins').innerText=p.wins;document.getElementById('profile-winrate').innerText=p.winrate+'%';document.getElementById('winrate-fill').style.width=p.winrate+'%';if(p.display_name){currentDisplayName=p.display_name;document.getElementById('profile-username').innerText=p.display_name}else{document.getElementById('profile-username').innerText=username};if(p.avatar_emoji){selectedAvatar=p.avatar_emoji;document.getElementById('profile-avatar-display').innerText=p.avatar_emoji};const rl=document.getElementById('recent-games-list');if(p.recent_games&&p.recent_games.length>0){const ge={slots:'🎰',roulette:'🎡',dice:'🎲',blackjack:'🃏',bowling:'🎳',darts:'🎯'};rl.innerHTML=p.recent_games.map(g=>`<div class="recent-game-item"><div class="game-item-left"><span class="game-item-emoji">${ge[g.game]||'🎮'}</span>${g.game}</div><span class="game-item-result ${g.result}">${g.result==='win'?'+'+g.win_amount:'-'+g.bet} 💎</span></div>`).join('')}else{rl.innerHTML='<div class="loading-text">Нет игр</div>'}}
-
-        let referralLink=''
-        async function loadReferralData(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_referral_link`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){referralLink=d.link;document.getElementById('ref-link-text').innerText=d.link}}catch(e){};try{const r=await fetch(`${BOT_API_URL}/api/get_referral_stats`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){document.getElementById('ref-total').innerText=d.stats.total;document.getElementById('ref-played').innerText=d.stats.played;const fl=document.getElementById('friends-list');if(d.stats.friends.length>0){fl.innerHTML=d.stats.friends.map(f=>`<div class="friend-item"><div class="f-info"><div class="f-avatar">👤</div><div><div style="font-size:14px;font-weight:600;">${f.username}</div><div style="font-size:10px;opacity:0.4;">ID:${f.user_id}</div></div></div><div style="font-size:13px;">🎮${f.games}</div></div>`).join('')}else{fl.innerHTML='<div style="text-align:center;opacity:0.4;padding:12px;">Пока нет</div>'}}}catch(e){}}
+        function renderProfile(p){document.getElementById('profile-balance').innerText=p.balance;document.getElementById('profile-games').innerText=p.total_games;document.getElementById('profile-wins').innerText=p.wins;document.getElementById('profile-winrate').innerText=p.winrate+'%';document.getElementById('winrate-fill').style.width=p.winrate+'%';if(p.display_name){currentDisplayName=p.display_name;document.getElementById('profile-username').innerText=p.display_name}else{document.getElementById('profile-username').innerText=username};if(p.avatar_emoji){selectedAvatar=p.avatar_emoji;document.getElementById('profile-avatar-display').innerText=p.avatar_emoji};const rl=document.getElementById('recent-games-list');if(p.recent_games&&p.recent_games.length>0){const ge={slots:'🎰',roulette:'🎡',dice:'🎲',blackjack:'🃏',bowling:'🎳',darts:'🎯'};rl.innerHTML=p.recent_games.map(g=>`<div class="recent-game-item"><div class="game-item-left"><span class="game-item-emoji">${ge[g.game]||'🎮'}</span>${g.game}</div><span class="game-item-result ${g.result}">${g.result==='win'?'+'+g.win_amount:'-'+g.bet} 💎</span></div>`).join('')}else{rl.innerHTML='<div style="text-align:center;opacity:0.4;padding:12px;">Нет игр</div>'}}
+        let referralLink='';async function loadReferralData(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_referral_link`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){referralLink=d.link;document.getElementById('ref-link-text').innerText=d.link}}catch(e){};try{const r=await fetch(`${BOT_API_URL}/api/get_referral_stats`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){document.getElementById('ref-total').innerText=d.stats.total;document.getElementById('ref-played').innerText=d.stats.played;const fl=document.getElementById('friends-list');if(d.stats.friends.length>0){fl.innerHTML=d.stats.friends.map(f=>`<div class="friend-item"><div class="f-info"><div class="f-avatar">👤</div><div><div style="font-size:14px;font-weight:600;">${f.username}</div></div></div><div style="font-size:13px;">🎮${f.games}</div></div>`).join('')}else{fl.innerHTML='<div style="text-align:center;opacity:0.4;padding:12px;">Пока нет</div>'}}}catch(e){}}
         document.getElementById('copy-ref-link').addEventListener('click',()=>{if(referralLink){navigator.clipboard.writeText(referralLink).then(()=>tg.showAlert('✅ Скопировано!'))}})
         document.getElementById('share-ref-link').addEventListener('click',()=>{if(referralLink){tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent('🎮 Game Bar Casino!')}`)}})
         async function handleReferralJoin(){const urlParams=new URLSearchParams(window.location.search);const sa=urlParams.get('startapp')||urlParams.get('tgWebAppStartParam');if(sa&&sa.startsWith('ref_')&&userId){const inviterId=sa.replace('ref_','');const stored=localStorage.getItem('referral_processed');if(stored!==inviterId&&parseInt(inviterId)!==userId){try{const r=await fetch(`${BOT_API_URL}/api/referral_join`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,inviter_id:parseInt(inviterId)})});const d=await r.json();if(d.success){localStorage.setItem('referral_processed',inviterId);await loadBalance();tg.showAlert(`🎉 ${d.message}`)}}catch(e){}}}}
 
-        const symbols=['🍒','🍋','💎','7️⃣','BAR']
-        function initBetButtons(){document.querySelectorAll('.bet-option[data-bet]').forEach(b=>b.addEventListener('click',()=>{currentBet=parseInt(b.dataset.bet);document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}));const d=document.querySelector('.bet-option[data-bet="100"]');if(d)d.classList.add('selected')}
+        const symbols=['🍒','🍋','💎','7️⃣','BAR'];const cardSuits=['♠️','♥️','♦️','♣️']
+        function initBetButtons(){document.querySelectorAll('.bet-option[data-bet]').forEach(b=>b.addEventListener('click',()=>{currentBet=parseInt(b.dataset.bet);document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}));document.querySelector('.bet-option[data-bet="100"]')?.classList.add('selected')}
         async function loadBalance(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_balance`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.balance;document.getElementById('balance').innerText=balance}}catch(e){}}
         async function sendGameResult(game,bet,win,wa,details){if(isLoading)return;isLoading=true;try{const r=await fetch(`${BOT_API_URL}/api/game_result`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,game,bet,win,win_amount:wa,details})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance}return d}catch(e){}finally{isLoading=false}}
-        async function afterGame(){await loadBalance();backToMenu()}
-        function showGame(game){currentGame=game;document.getElementById('games-menu').classList.add('hidden');document.getElementById('game-area').classList.remove('hidden');['slots','roulette','dice','blackjack','bowling','darts'].forEach(g=>document.getElementById(`${g}-game`).classList.add('hidden'));document.getElementById(`${game}-game`).classList.remove('hidden');const t={slots:'🎰 СЛОТЫ',roulette:'🎡 РУЛЕТКА',dice:'🎲 КОСТИ',blackjack:'🃏 БЛЭКДЖЕК',bowling:'🎳 БОУЛИНГ',darts:'🎯 ДАРТС'};document.getElementById('game-title').innerHTML=t[game];document.getElementById('result-message').innerHTML=''}
+        async function afterGame(win){await loadBalance();setTimeout(()=>backToMenu(),win?GAME_RESULT_DELAY:GAME_RESULT_DELAY)}
+        function showGame(game){currentGame=game;document.getElementById('games-menu').classList.add('hidden');document.getElementById('game-area').classList.remove('hidden');['slots','roulette','dice','blackjack','bowling','darts'].forEach(g=>document.getElementById(`${g}-game`).classList.add('hidden'));document.getElementById(`${game}-game`).classList.remove('hidden');const t={slots:'🎰 СЛОТЫ',roulette:'🎡 РУЛЕТКА',dice:'🎲 КОСТИ',blackjack:'🃏 БЛЭКДЖЕК',bowling:'🎳 БОУЛИНГ',darts:'🎯 ДАРТС'};document.getElementById('game-title').innerHTML=t[game];document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message'}
         function backToMenu(){document.getElementById('games-menu').classList.remove('hidden');document.getElementById('game-area').classList.add('hidden');currentGame=null}
 
-        // ===== 🎰 СЛОТЫ — анимация спиннинга с blur =====
+        // ===== 🎰 СЛОТЫ (без изменений) =====
         let slotSpinning=false
-        function spinSlots(){
-            if(balance<currentBet){showNoBalance();return}
-            if(slotSpinning)return;slotSpinning=true
-            const r1=document.getElementById('reel1'),r2=document.getElementById('reel2'),r3=document.getElementById('reel3'),rd=document.getElementById('result-message')
-            const spinBtn=document.getElementById('spin-btn');spinBtn.disabled=true
-            r1.classList.add('spinning');r2.classList.add('spinning');r3.classList.add('spinning')
-            const spinDuration=1200;const totalFrames=24;const frameInterval=spinDuration/totalFrames
-            let frame=0
-            const interval=setInterval(()=>{
-                r1.innerText=symbols[Math.floor(Math.random()*5)];r2.innerText=symbols[Math.floor(Math.random()*5)];r3.innerText=symbols[Math.floor(Math.random()*5)];frame++
-                if(frame>=totalFrames-3)r1.classList.remove('spinning')
-                if(frame>=totalFrames-2)r2.classList.remove('spinning')
-                if(frame>=totalFrames)r3.classList.remove('spinning')
-                if(frame>=totalFrames){clearInterval(interval)
-                    const a=symbols[Math.floor(Math.random()*5)],b=symbols[Math.floor(Math.random()*5)],c=symbols[Math.floor(Math.random()*5)]
-                    r1.innerText=a;r2.innerText=b;r3.innerText=c
-                    const win=Math.random()<WIN_RATE;let wa=0
-                    if(win){let m=2;if(a===b&&b===c){if(a==='7️⃣')m=10;else if(a==='💎')m=5;else if(a==='BAR')m=3}else if(a===b||a===c||b===c)m=1.5;wa=Math.floor(currentBet*m)}
-                    if(win){r1.classList.add('win-anim');r2.classList.add('win-anim');r3.classList.add('win-anim');spawnWinCoins(8)}
-                    rd.innerHTML=win?`🎉 +${wa} 💎`:'😞 Проигрыш';rd.className=`result-message ${win?'win':'lose'}`
-                    sendGameResult('slots',currentBet,win,wa,{reel1:a,reel2:b,reel3:c}).then(()=>{afterGame();spinBtn.disabled=false;slotSpinning=false})
-                }
-            },frameInterval)
-        }
+        function spinSlots(){if(balance<currentBet){showNoBalance();return};if(slotSpinning)return;slotSpinning=true;const r1=document.getElementById('reel1'),r2=document.getElementById('reel2'),r3=document.getElementById('reel3'),rd=document.getElementById('result-message'),sb=document.getElementById('spin-btn');sb.disabled=true;r1.classList.add('spinning');r2.classList.add('spinning');r3.classList.add('spinning');const sd=1200,tf=24,fi=sd/tf;let f=0;const iv=setInterval(()=>{r1.innerText=symbols[Math.floor(Math.random()*5)];r2.innerText=symbols[Math.floor(Math.random()*5)];r3.innerText=symbols[Math.floor(Math.random()*5)];f++;if(f>=tf-3)r1.classList.remove('spinning');if(f>=tf-2)r2.classList.remove('spinning');if(f>=tf){r3.classList.remove('spinning');clearInterval(iv);const a=symbols[Math.floor(Math.random()*5)],b=symbols[Math.floor(Math.random()*5)],c=symbols[Math.floor(Math.random()*5)];r1.innerText=a;r2.innerText=b;r3.innerText=c;const win=Math.random()<WIN_RATE;let wa=0;if(win){let m=2;if(a===b&&b===c){if(a==='7️⃣')m=10;else if(a==='💎')m=5;else if(a==='BAR')m=3}else if(a===b||a===c||b===c)m=1.5;wa=Math.floor(currentBet*m);r1.classList.add('win-anim');r2.classList.add('win-anim');r3.classList.add('win-anim');spawnWinCoins(8)};rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:'😞 ПРОИГРЫШ';rd.className=`result-message ${win?'win':'lose'}`;sendGameResult('slots',currentBet,win,wa,{reel1:a,reel2:b,reel3:c}).then(()=>{afterGame(win);sb.disabled=false;slotSpinning=false})}},fi)}
 
-        // ===== 🎡 РУЛЕТКА — вращение колеса и шарика =====
+        // ===== 🎡 РУЛЕТКА (новая — вращение стола) =====
         let crb=null,rouletteSpinning=false
-        async function spinRoulette(){
-            if(!crb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
-            if(balance<currentBet){showNoBalance();return}
-            if(rouletteSpinning)return;rouletteSpinning=true
-            const rd=document.getElementById('result-message'),wheel=document.getElementById('roulette-wheel'),ball=document.getElementById('roulette-ball')
-            const spinBtn=document.getElementById('roulette-spin-btn');spinBtn.disabled=true
-            const n=Math.floor(Math.random()*37);document.getElementById('roulette-result').innerHTML='🎡'
-            const angle=1800+Math.random()*360;wheel.style.transform=`rotate(${angle}deg)`
-            ball.style.transform=`rotate(${-angle}deg)`
-            setTimeout(()=>{
-                let col='';if(n===0)col='green';else if([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n))col='red';else col='black'
-                document.getElementById('roulette-result').innerHTML=n
-                const win=Math.random()<WIN_RATE;let wa=0
-                if(win){let m=2;if(crb==='green'&&n===0)m=35;wa=Math.floor(currentBet*m)}
-                if(win)spawnSparkles(wheel.offsetLeft+80,wheel.offsetTop+80,12)
-                rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${n})`;rd.className=`result-message ${win?'win':'lose'}`
-                sendGameResult('roulette',currentBet,win,wa,{number:n,bet:crb}).then(()=>{afterGame();spinBtn.disabled=false;rouletteSpinning=false})
-            },3000)
-        }
+        async function spinRoulette(){if(!crb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return};if(balance<currentBet){showNoBalance();return};if(rouletteSpinning)return;rouletteSpinning=true;const table=document.getElementById('roulette-table'),ball=document.getElementById('roulette-ball'),rd=document.getElementById('result-message'),rr=document.getElementById('roulette-result'),sb=document.getElementById('roulette-spin-btn');sb.disabled=true;rr.innerHTML='🎡';const n=Math.floor(Math.random()*37);const tableAngle=1440+Math.random()*720;const ballAngle=-(1440+Math.random()*720);table.style.transform=`rotate(${tableAngle}deg)`;ball.style.transform=`translate(-50%,-50%) rotate(${ballAngle}deg)`;setTimeout(()=>{let col='';if(n===0)col='🟢';else if([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n))col='🔴';else col='⚫';rr.innerHTML=`${col} ${n}`;const win=Math.random()<WIN_RATE;let wa=0;if(win){let m=2;if(crb==='green'&&n===0)m=35;wa=Math.floor(currentBet*m);spawnWinCoins(6)};rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${n})`;rd.className=`result-message ${win?'win':'lose'}`;sendGameResult('roulette',currentBet,win,wa,{number:n,bet:crb}).then(()=>{afterGame(win);sb.disabled=false;rouletteSpinning=false;table.style.transform='';ball.style.transform=''})},4000)}
 
-        // ===== 🎲 КОСТИ — анимация броска =====
+        // ===== 🎲 КОСТИ (без изменений) =====
         let cdb=null,diceSpinning=false
-        async function rollDice(){
-            if(!cdb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
-            if(balance<currentBet){showNoBalance();return}
-            if(diceSpinning)return;diceSpinning=true
-            const d1El=document.getElementById('dice1'),d2El=document.getElementById('dice2'),rd=document.getElementById('result-message')
-            const spinBtn=document.getElementById('dice-spin-btn');spinBtn.disabled=true
-            d1El.classList.add('rolling');d2El.classList.add('rolling')
-            const diceFaces=['⚀','⚁','⚂','⚃','⚄','⚅']
-            let count=0;const iv=setInterval(()=>{d1El.innerText=diceFaces[Math.floor(Math.random()*6)];d2El.innerText=diceFaces[Math.floor(Math.random()*6)];count++;if(count>=12)clearInterval(iv)},60)
-            setTimeout(()=>{
-                d1El.classList.remove('rolling');d2El.classList.remove('rolling')
-                const d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,t=d1+d2
-                d1El.innerText=diceFaces[d1-1];d2El.innerText=diceFaces[d2-1]
-                const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0
-                if(win){d1El.style.transform='scale(1.2)';d2El.style.transform='scale(1.2)';setTimeout(()=>{d1El.style.transform='';d2El.style.transform=''},300);spawnWinCoins(6)}
-                rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${t})`;rd.className=`result-message ${win?'win':'lose'}`
-                sendGameResult('dice',currentBet,win,wa,{dice1:d1,dice2:d2,total:t}).then(()=>{afterGame();spinBtn.disabled=false;diceSpinning=false})
-            },800)
-        }
+        async function rollDice(){if(!cdb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return};if(balance<currentBet){showNoBalance();return};if(diceSpinning)return;diceSpinning=true;const d1El=document.getElementById('dice1'),d2El=document.getElementById('dice2'),rd=document.getElementById('result-message'),sb=document.getElementById('dice-spin-btn');sb.disabled=true;d1El.classList.add('rolling');d2El.classList.add('rolling');const df=['⚀','⚁','⚂','⚃','⚄','⚅'];let c=0;const iv=setInterval(()=>{d1El.innerText=df[Math.floor(Math.random()*6)];d2El.innerText=df[Math.floor(Math.random()*6)];c++;if(c>=12)clearInterval(iv)},60);setTimeout(()=>{d1El.classList.remove('rolling');d2El.classList.remove('rolling');const d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,t=d1+d2;d1El.innerText=df[d1-1];d2El.innerText=df[d2-1];const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;if(win){d1El.style.transform='scale(1.2)';d2El.style.transform='scale(1.2)';setTimeout(()=>{d1El.style.transform='';d2El.style.transform=''},300);spawnWinCoins(6)};rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${t})`;rd.className=`result-message ${win?'win':'lose'}`;sendGameResult('dice',currentBet,win,wa,{dice1:d1,dice2:d2,total:t}).then(()=>{afterGame(win);sb.disabled=false;diceSpinning=false})},800)}
 
-        // ===== 🃏 БЛЭКДЖЕК — анимация раздачи =====
-        let bjd=[],ph=[],dh=[],ga=false,bjAnimating=false
-        const cardSuits=['♠️','♥️','♦️','♣️']
-        function getCardDisplay(v){if(v===11)return 'A';if(v===10)return ['K','Q','J','10'][Math.floor(Math.random()*4)];return v}
+        // ===== 🃏 БЛЭКДЖЕК (новая — красивая раздача карт) =====
+        let bjd=[],ph=[],dh=[],ga=false
+        function getCardName(v){if(v===11)return'A';if(v===10)return['K','Q','J','10'][Math.floor(Math.random()*4)];return String(v)}
+        function renderCards(){const pc=document.getElementById('player-cards'),dc=document.getElementById('dealer-cards');pc.innerHTML=ph.map((v,i)=>`<span class="card-slot ${i===ph.length-1?'new-card':''}" style="animation-delay:${i*0.2}s"><span class="card-inner">${cardSuits[i%4]}${getCardName(v)}</span></span>`).join('');dc.innerHTML=dh.map((v,i)=>`<span class="card-slot dealer-card" style="animation-delay:${i*0.2}s"><span class="card-inner">${cardSuits[i%4]}${getCardName(v)}</span></span>`).join('');document.getElementById('player-sum').innerText=ph.reduce((a,b)=>a+b,0);document.getElementById('dealer-sum').innerText=dh.reduce((a,b)=>a+b,0)}
         function ibd(){const d=[];for(let i=0;i<4;i++){for(let v of[2,3,4,5,6,7,8,9,10,10,10,10,11])d.push(v)}for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
-        function ubj(){const ps=ph.reduce((a,b)=>a+b,0),ds=dh.reduce((a,b)=>a+b,0);document.getElementById('player-cards').innerHTML=ph.map(v=>`<span class="card-display">${cardSuits[Math.floor(Math.random()*4)]}${getCardDisplay(v)}</span>`).join(' ');document.getElementById('player-sum').innerHTML=ps;document.getElementById('dealer-cards').innerHTML=dh.map(v=>`<span class="card-display">${cardSuits[Math.floor(Math.random()*4)]}${getCardDisplay(v)}</span>`).join(' ');document.getElementById('dealer-sum').innerHTML=ds}
-        async function ebj(hw){if(!ga)return;ga=false;bjAnimating=false;const win=hw&&Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;if(win)spawnSparkles(window.innerWidth/2,300,15);document.getElementById('result-message').innerHTML=win?`🎉 +${wa} 💎`:'😞 Проигрыш';document.getElementById('result-message').className=`result-message ${win?'win':'lose'}`;await sendGameResult('blackjack',currentBet,win,wa,{playerHand:ph,dealerHand:dh});await afterGame()}
-        async function bjh(){if(!ga||bjAnimating)return;if(balance<currentBet){showNoBalance();return}bjAnimating=true;const card=bjd.pop();ph.push(card);ubj();await new Promise(r=>setTimeout(r,400));bjAnimating=false;if(ph.reduce((a,b)=>a+b,0)>21)ebj(false)}
-        async function bjs(){if(!ga||bjAnimating)return;bjAnimating=true;let ds=dh.reduce((a,b)=>a+b,0);while(ds<17){dh.push(bjd.pop());ds=dh.reduce((a,b)=>a+b,0);ubj();await new Promise(r=>setTimeout(r,600))}bjAnimating=false;const ps=ph.reduce((a,b)=>a+b,0);if(ds>21||ps>ds)ebj(true);else ebj(false)}
-        function sbj(){if(balance<currentBet){showNoBalance();return}bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;ubj();document.getElementById('result-message').innerHTML=''}
+        async function ebj(hw){if(!ga)return;ga=false;const win=hw&&Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;if(win)spawnSparkles(window.innerWidth/2,300,15);document.getElementById('result-message').innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:'😞 ПРОИГРЫШ';document.getElementById('result-message').className=`result-message ${win?'win':'lose'}`;await sendGameResult('blackjack',currentBet,win,wa,{playerHand:ph,dealerHand:dh});await afterGame(win)}
+        async function bjh(){if(!ga)return;if(balance<currentBet){showNoBalance();return};const card=bjd.pop();ph.push(card);renderCards();await new Promise(r=>setTimeout(r,500));if(ph.reduce((a,b)=>a+b,0)>21)ebj(false)}
+        async function bjs(){if(!ga)return;let ds=dh.reduce((a,b)=>a+b,0);while(ds<17){dh.push(bjd.pop());ds=dh.reduce((a,b)=>a+b,0);renderCards();await new Promise(r=>setTimeout(r,700))};const ps=ph.reduce((a,b)=>a+b,0);if(ds>21||ps>ds)ebj(true);else ebj(false)}
+        function sbj(){if(balance<currentBet){showNoBalance();return};bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;renderCards();document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message'}
 
-        // ===== 🎳 БОУЛИНГ — анимация катящегося шара =====
+        // ===== 🎳 БОУЛИНГ (исправлен — шар и кегли раздельно) =====
         let cbb=null,bowlingAnimating=false
-        async function playBowling(){
-            if(!cbb){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
-            if(balance<currentBet){showNoBalance();return}
-            if(bowlingAnimating)return;bowlingAnimating=true
-            const ball=document.getElementById('bowling-ball'),pins=document.getElementById('bowling-pins'),rd=document.getElementById('result-message')
-            const spinBtn=document.getElementById('bowling-spin-btn');spinBtn.disabled=true
-            ball.style.left='-40px';ball.style.transform='rotate(0deg)';pins.style.transform=''
-            setTimeout(()=>{ball.style.left='calc(100% - 60px)';ball.style.transform='rotate(720deg)'},100)
-            setTimeout(()=>{const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0
-                if(win){pins.innerHTML=pins.innerHTML.replace(/🎳/g,'💥');pins.style.transform='rotate(15deg) scale(0.7)';setTimeout(()=>{pins.innerHTML='🎳🎳🎳🎳🎳🎳';pins.style.transform=''},1000);spawnWinCoins(5)}
-                rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${v})`;rd.className=`result-message ${win?'win':'lose'}`
-                sendGameResult('bowling',currentBet,win,wa,{result:v}).then(()=>{afterGame();spinBtn.disabled=false;bowlingAnimating=false})
-            },1200)
-        }
+        async function playBowling(){if(!cbb){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return};if(balance<currentBet){showNoBalance();return};if(bowlingAnimating)return;bowlingAnimating=true;const ball=document.getElementById('bowling-ball'),pins=document.querySelectorAll('.bowling-pin'),rd=document.getElementById('result-message'),sb=document.getElementById('bowling-spin-btn');sb.disabled=true;ball.style.left='30px';ball.style.transform='rotate(0deg)';pins.forEach(p=>{p.classList.remove('knocked');p.style.opacity='1';p.style.transform=''});setTimeout(()=>{ball.style.left='calc(100% - 60px)';ball.style.transform='rotate(720deg)'},200);setTimeout(()=>{const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;if(win){pins.forEach((p,i)=>{setTimeout(()=>{p.classList.add('knocked');p.style.setProperty('--dx',`${-10+Math.random()*20}px`);p.style.setProperty('--dy',`${Math.random()*15}px`);p.style.setProperty('--dr',`${-30+Math.random()*60}deg`)},i*80)});spawnWinCoins(5)};rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${win?'win':'lose'}`;sendGameResult('bowling',currentBet,win,wa,{result:v}).then(()=>{afterGame(win);sb.disabled=false;bowlingAnimating=false})},1400)}
 
-        // ===== 🎯 ДАРТС — анимация полёта дротика =====
+        // ===== 🎯 ДАРТС (новая — прицеливание + бросок) =====
         let cdab=null,dartsAnimating=false
-        async function playDarts(){
-            if(!cdab){document.getElementById('result-message').innerHTML='❌ Ставка!';return}
-            if(balance<currentBet){showNoBalance();return}
-            if(dartsAnimating)return;dartsAnimating=true
-            const rd=document.getElementById('result-message'),dr=document.getElementById('dart-result')
-            const spinBtn=document.getElementById('darts-spin-btn');spinBtn.disabled=true
-            dr.innerHTML='<span class="dart-arrow" style="font-size:48px;">🎯</span>'
-            setTimeout(()=>{dr.innerHTML='<span style="font-size:48px;">💥</span>'},400)
-            setTimeout(()=>{const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0
-                dr.innerHTML=win?`🎯 ${v} — Попадание!`:`💨 ${v} — Мимо!`
-                if(win)spawnSparkles(document.getElementById('dart-board').offsetLeft+60,document.getElementById('dart-board').offsetTop+60,8)
-                rd.innerHTML=win?`🎉 +${wa} 💎`:`😞 (${v})`;rd.className=`result-message ${win?'win':'lose'}`
-                sendGameResult('darts',currentBet,win,wa,{result:v}).then(()=>{afterGame();spinBtn.disabled=false;dartsAnimating=false})
-            },700)
-        }
+        async function playDarts(){if(!cdab){document.getElementById('result-message').innerHTML='❌ Сделайте ставку!';return};if(balance<currentBet){showNoBalance();return};if(dartsAnimating)return;dartsAnimating=true;const arrow=document.getElementById('dart-arrow'),dr=document.getElementById('dart-result-text'),rd=document.getElementById('result-message'),sb=document.getElementById('darts-spin-btn');sb.disabled=true;arrow.style.display='block';arrow.style.animation='dartAim 0.4s ease-in-out 3';setTimeout(()=>{arrow.style.animation='dartHit 0.5s ease-out forwards';arrow.style.transform='translate(-50%,-50%) scale(1.2)'},1200);setTimeout(()=>{const v=Math.floor(Math.random()*6)+1;const win=Math.random()<WIN_RATE;const wa=win?Math.floor(currentBet*2):0;arrow.style.display='none';dr.innerHTML=win?`🎯 ${v} — Попадание!`:`💨 ${v} — Мимо!`;if(win)spawnSparkles(arrow.offsetLeft,arrow.offsetTop,10);rd.innerHTML=win?`🎉 ВЫИГРЫШ: +${wa} 💎`:`😞 ПРОИГРЫШ (${v})`;rd.className=`result-message ${win?'win':'lose'}`;sendGameResult('darts',currentBet,win,wa,{result:v}).then(()=>{afterGame(win);sb.disabled=false;dartsAnimating=false;dr.innerHTML=''})},1800)}
 
-        document.querySelectorAll('.game-card').forEach(c=>c.addEventListener('click',()=>showGame(c.dataset.game)))
-        document.getElementById('back-to-menu').addEventListener('click',backToMenu)
+        document.querySelectorAll('.game-card').forEach(c=>c.addEventListener('click',()=>showGame(c.dataset.game)));document.getElementById('back-to-menu').addEventListener('click',backToMenu)
         document.querySelectorAll('[data-roulette]').forEach(b=>b.addEventListener('click',()=>{crb=b.dataset.roulette;document.querySelectorAll('[data-roulette]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
         document.querySelectorAll('[data-dice]').forEach(b=>b.addEventListener('click',()=>{cdb=b.dataset.dice;document.querySelectorAll('[data-dice]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
         document.querySelectorAll('[data-bowling]').forEach(b=>b.addEventListener('click',()=>{cbb=b.dataset.bowling;document.querySelectorAll('[data-bowling]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
