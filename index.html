@@ -151,8 +151,11 @@
         document.getElementById('share-ref-link').addEventListener('click',()=>{if(referralLink){tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}`)}})
         
         async function handleReferralJoin(){
-            const urlParams = new URLSearchParams(window.location.search);
-            const sa = urlParams.get('startapp') || urlParams.get('tgWebAppStartParam');
+            // Читаем ВСЕ возможные источники параметра startapp
+            const fullUrl = window.location.href;
+            const urlObj = new URL(fullUrl);
+            const sa = urlObj.searchParams.get('startapp') || urlObj.searchParams.get('tgWebAppStartParam');
+            
             if(sa && sa.startsWith('ref_') && userId){
                 const inviterId = sa.replace('ref_', '');
                 const stored = localStorage.getItem('referral_processed');
