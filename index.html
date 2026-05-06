@@ -90,10 +90,8 @@
 
         const ads = window.TelegaIn.AdsController.create_miniapp({ token: 'ae08cdf4-66be-4922-b4f2-832afbe70916' });
 
-        // Начисление +25 после реальной рекламы
         async function giveAdReward(){try{const r=await fetch(`${BOT_API_URL}/api/claim_ad_reward`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;tg.showAlert('✅ +25 баллов за просмотр рекламы!')}else{tg.showAlert('⏳ Подождите 20 секунд')}}catch(e){}}
 
-        // Бесплатные +10 если реклама недоступна
         async function giveFreeAdReward(){try{const r=await fetch(`${BOT_API_URL}/api/claim_free_bonus`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;tg.showAlert('🎁 +10 баллов! Реклама пока недоступна')}else{tg.showAlert('⏳ Подождите 20 секунд')}}catch(e){}}
 
         async function checkPendingPaymentOnLoad(){if(!userId)return;const ppId=localStorage.getItem('pending_payment_id'),ppUid=localStorage.getItem('pending_user_id');if(ppId&&ppUid&&parseInt(ppUid)===userId){document.getElementById('pending-payment-banner').classList.remove('hidden');try{const r=await fetch(`${BOT_API_URL}/api/check_payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});const d=await r.json();if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance()}}catch(e){}}}
@@ -123,7 +121,6 @@
             }
         });
 
-        // Кнопка рекламы
         document.getElementById('watch-ad-btn').addEventListener('click', async ()=>{
             document.getElementById('coins-modal').classList.remove('active');
             if(window.TelegaIn&&ads){
@@ -152,6 +149,7 @@
         let referralLink='';async function loadReferralData(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_referral_link`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){referralLink=d.link;document.getElementById('ref-link-text').innerText=d.link}}catch(e){};try{const r=await fetch(`${BOT_API_URL}/api/get_referral_stats`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){document.getElementById('ref-total').innerText=d.stats.total;document.getElementById('ref-played').innerText=d.stats.played;const fl=document.getElementById('friends-list');fl.innerHTML=d.stats.friends.length>0?d.stats.friends.map(f=>`<div class="friend-item"><div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#f7971e,#e65100);display:flex;align-items:center;justify-content:center">👤</div><div style="font-size:14px;font-weight:600">${f.username}</div></div><div>🎮${f.games}</div></div>`).join(''):'<div style="text-align:center;opacity:0.4;padding:12px">Пока нет</div>'}}catch(e){}}
         document.getElementById('copy-ref-link').addEventListener('click',()=>{if(referralLink){navigator.clipboard.writeText(referralLink).then(()=>tg.showAlert('✅'))}})
         document.getElementById('share-ref-link').addEventListener('click',()=>{if(referralLink){tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}`)}})
+        
         async function handleReferralJoin(){
             const urlParams = new URLSearchParams(window.location.search);
             const sa = urlParams.get('startapp') || urlParams.get('tgWebAppStartParam');
