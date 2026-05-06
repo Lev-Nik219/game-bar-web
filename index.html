@@ -77,7 +77,7 @@
     <script src="https://inapp.telega.io/sdk/v1/sdk.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        const tg=window.Telegram.WebApp;tg.expand();tg.enableClosingConfirmation()
+        const tg=window.Telegram.WebApp;tg.expand();console.log('TG INIT DATA:', JSON.stringify(tg.initDataUnsafe));console.log('START PARAM:', tg.initDataUnsafe?.start_param);tg.enableClosingConfirmation()
         const BOT_API_URL='https://game-bar-bot.onrender.com';const webAppUser=tg.initDataUnsafe?.user
         let currentGame=null,currentBet=100,balance=0,isLoading=false,userProfile=null,selectedAmount=null
         const GAME_RESULT_DELAY=3000
@@ -138,8 +138,45 @@
         let referralLink='';async function loadReferralData(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_referral_link`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){referralLink=d.link;document.getElementById('ref-link-text').innerText=d.link}}catch(e){};try{const r=await fetch(`${BOT_API_URL}/api/get_referral_stats`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){document.getElementById('ref-total').innerText=d.stats.total;document.getElementById('ref-played').innerText=d.stats.played;const fl=document.getElementById('friends-list');fl.innerHTML=d.stats.friends.length>0?d.stats.friends.map(f=>`<div class="friend-item"><div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#f7971e,#e65100);display:flex;align-items:center;justify-content:center">👤</div><div style="font-size:14px;font-weight:600">${f.username}</div></div><div>🎮${f.games}</div></div>`).join(''):'<div style="text-align:center;opacity:0.4;padding:12px">Пока нет</div>'}}catch(e){}}
         document.getElementById('copy-ref-link').addEventListener('click',()=>{if(referralLink){navigator.clipboard.writeText(referralLink).then(()=>tg.showAlert('✅'))}})
         document.getElementById('share-ref-link').addEventListener('click',()=>{if(referralLink){tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}`)}})
-        async function handleReferralJoin(){const sa=tg.initDataUnsafe?.start_param||new URLSearchParams(window.location.search).get('startapp')||new URLSearchParams(window.location.search).get('tgWebAppStartParam');if(sa&&sa.startsWith('ref_')&&userId){const inviterId=sa.replace('ref_','');const stored=localStorage.getItem('referral_processed');if(stored!==inviterId&&parseInt(inviterId)!==userId){try{const r=await fetch(`${BOT_API_URL}/api/referral_join`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,inviter_id:parseInt(inviterId)})});const d=await r.json();if(d.success){localStorage.setItem('referral_processed',inviterId);await loadBalance();tg.showAlert(`🎉 ${d.message}`)}}catch(e){}}}}
-
+        async function handleReferralJoin(){
+            // Пробуем получить параметр из всех возможных источников
+            const sa = tg.initDataUnsafe?.start_param 
+                || new URLSearchParams(window.location.search).get('startapp') 
+                || new URLSearchParams(window.location.search).get('tgWebAppStartParam')
+                || new URLSearchParams(window.location.hash.replace('#','?')).get('startapp')
+                || new URLSearchParams(window.location.hash.replace('#','?')).get('tgWebAppStartParam');
+            
+            console.log('handleReferralJoin: sa=', sa, 'userId=', userId);
+            console.log('initDataUnsafe:', JSON.stringify(tg.initDataUnsafe));
+            console.log('location.search:', window.location.search);
+            console.log('location.hash:', window.location.hash);
+            
+            if(sa && sa.startsWith('ref_') && userId){
+                const inviterId = sa.replace('ref_', '');
+                const stored = localStorage.getItem('referral_processed');
+                console.log('inviterId:', inviterId, 'stored:', stored);
+                
+                if(stored !== inviterId && parseInt(inviterId) !== userId){
+                    try{
+                        console.log('Calling referral_join API...');
+                        const r = await fetch(`${BOT_API_URL}/api/referral_join`, {
+                            method:'POST',
+                            headers:{'Content-Type':'application/json'},
+                            body:JSON.stringify({user_id:userId, inviter_id:parseInt(inviterId)})
+                        });
+                        const d = await r.json();
+                        console.log('referral_join response:', d);
+                        if(d.success){
+                            localStorage.setItem('referral_processed', inviterId);
+                            await loadBalance();
+                            tg.showAlert(`🎉 ${d.message}`);
+                        }
+                    }catch(e){
+                        console.error('referral_join error:', e);
+                    }
+                }
+            }
+        }
         const symbols=['🍒','🍋','💎','7️⃣','BAR'];const cardSuits=['♠️','♥️','♦️','♣️']
         function initBetButtons(){document.querySelectorAll('.bet-option[data-bet]').forEach(b=>b.addEventListener('click',()=>{currentBet=parseInt(b.dataset.bet);document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}));document.querySelector('.bet-option[data-bet="100"]')?.classList.add('selected')}
         async function loadBalance(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_balance`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.balance;document.getElementById('balance').innerText=balance}}catch(e){}}
