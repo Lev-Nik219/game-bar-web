@@ -58,9 +58,9 @@
         <div class="daily-bonus-banner hidden" id="daily-bonus-banner"><div><span>🎁</span> Ежедневный бонус <span style="font-size:10px;opacity:0.5" id="db-streak-text">День 1</span></div><button class="db-btn" id="claim-daily-btn">+10 💎</button></div>
         <div class="tab-nav">
             <button class="tab-btn active" data-tab="games">🎮 Игры</button>
-            <button class="tab-btn" data-tab="shop">🛒 Магазин</button>
-            <button class="tab-btn" data-tab="referral">👥 Друзья</button>
             <button class="tab-btn" data-tab="profile">👤 Профиль</button>
+            <button class="tab-btn" data-tab="referral">👥 Друзья</button>
+            <button class="tab-btn" data-tab="shop">🛒 Магазин</button>
         </div>
         <div class="payment-banner hidden" id="pending-payment-banner" style="background:linear-gradient(135deg,rgba(247,151,30,0.2),rgba(255,210,0,0.1));border:1px solid rgba(247,151,30,0.3);border-radius:18px;padding:14px;margin-bottom:16px;text-align:center"><span style="font-size:13px;opacity:0.8">⏳ Ожидающий платёж!</span><button class="modal-btn gold" id="check-pending-payment-btn" style="font-size:14px;padding:12px;margin-top:8px">🔄 Проверить</button></div>
         <div class="tab-content active" id="tab-games">
@@ -94,7 +94,10 @@
                 <div style="background:var(--card-bg);border-radius:16px;padding:16px;margin-bottom:14px;border:1px solid var(--border)">
                     <div style="font-size:12px;opacity:0.4;margin-bottom:6px">Твоя реферальная ссылка</div>
                     <div id="ref-link" style="font-size:11px;word-break:break-all;opacity:0.8;margin-bottom:10px">Загрузка...</div>
-                    <button class="shop-buy-btn" onclick="copyRefLink()">📋 Копировать</button>
+                    <div style="display:flex;gap:8px">
+    <button class="shop-buy-btn" onclick="copyRefLink()" style="flex:1">📋 Копировать</button>
+    <button class="shop-buy-btn" onclick="shareRefLink()" style="flex:1;background:linear-gradient(180deg,#4CAF50,#2E7D32)">📤 Поделиться</button>
+</div>
                 </div>
                 <div class="stat-card" style="margin-bottom:10px"><div style="font-size:30px">👥</div><div id="ref-count" style="font-size:24px;font-weight:800">0</div><div style="font-size:11px;opacity:0.5">Друзей приглашено</div></div>
                 <div style="font-size:11px;opacity:0.3">Работает при первом запуске бота другом</div>
@@ -403,6 +406,17 @@
         }
 
         document.querySelectorAll('.shop-cat-btn').forEach(btn=>{btn.addEventListener('click',()=>{loadShop(btn.dataset.cat);vibrate()})});
+
+        function shareRefLink(){
+    if(!refLink)return;
+    const text = `🎰 Game Bar Casino — играй и выигрывай!\n\nПрисоединяйся по моей ссылке и получи 50 бонусных баллов!\n\n${refLink}`;
+    if(navigator.share){
+        navigator.share({title:'Game Bar Casino',text:text}).catch(()=>{});
+    }else{
+        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent('🎰 Заходи в Game Bar Casino! Получи 50 бонусных баллов!')}`);
+    }
+}
+
     </script>
 </body>
 </html>
