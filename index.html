@@ -45,6 +45,10 @@
         .recent-game-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}.achievement-card{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card-bg);border-radius:16px;margin-bottom:10px;border:1px solid var(--border)}.achievement-card.earned{border-color:rgba(247,151,30,0.4);background:rgba(247,151,30,0.06)}.achievement-card.locked{opacity:0.4}
         .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:100;justify-content:center;align-items:center;padding:20px}.modal-overlay.active{display:flex}.modal{background:linear-gradient(180deg,#1e1e3a,#12122a);border-radius:24px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border);animation:modalIn 0.3s ease}@keyframes modalIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}.modal-btn{width:100%;padding:16px;border:none;border-radius:16px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px}.modal-btn.gold{background:linear-gradient(180deg,#f7971e,#e65100);color:white}.modal-btn.green{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white}.modal-btn.red{background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)}
         input[type="text"]{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:white;font-size:15px;margin-bottom:18px;outline:none;text-align:center}
+    
+        /* ===== СТИЛИ МАГАЗИНА ===== */
+        .shop-categories{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding:2px}.shop-cat-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}.shop-cat-btn.active{background:linear-gradient(180deg,rgba(247,151,30,0.25),rgba(255,210,0,0.15));color:white;border-color:#f7971e}.shop-items{display:grid;gap:10px;max-height:55vh;overflow-y:auto;padding:2px}.shop-item-card{background:linear-gradient(180deg,rgba(42,42,74,0.9),rgba(26,26,58,0.95));border-radius:18px;padding:16px;display:flex;align-items:center;gap:14px;border:1px solid var(--border);position:relative;animation:cardIn 0.3s ease}.shop-item-card.owned{border-color:rgba(76,175,80,0.5);background:rgba(76,175,80,0.06)}.shop-item-card.owned::after{content:'✅';position:absolute;top:10px;right:12px;font-size:18px}.shop-item-icon{font-size:36px;min-width:44px;text-align:center}.shop-item-info{flex:1}.shop-item-name{font-size:14px;font-weight:700;margin-bottom:2px}.shop-item-desc{font-size:11px;opacity:0.5}.shop-item-price{font-size:16px;font-weight:800;color:#ffd700;display:flex;align-items:center;gap:3px}.shop-item-price s{font-size:11px;opacity:0.4}.shop-buy-btn{background:linear-gradient(180deg,#f7971e,#e65100);border:none;color:white;font-weight:700;padding:10px 16px;border-radius:20px;font-size:13px;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(247,151,30,0.3)}.shop-buy-btn:active{transform:scale(0.94)}.shop-buy-btn:disabled{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);box-shadow:none;cursor:not-allowed}.active-boost-badge{position:absolute;top:8px;right:8px;background:#4CAF50;color:white;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;animation:pulse 2s ease-in-out infinite}.no-items{text-align:center;opacity:0.4;padding:20px;font-size:14px}
+
     </style>
 </head>
 <body>
@@ -53,6 +57,7 @@
         <div class="daily-bonus-banner hidden" id="daily-bonus-banner"><div class="db-info"><span>🎁</span><div><div style="font-size:13px;font-weight:600">Ежедневный бонус</div><div style="font-size:10px;opacity:0.5" id="db-streak-text">День 1</div></div></div><button class="db-btn" id="claim-daily-btn">+10 💎</button></div>
         <div class="tab-nav">
             <button class="tab-btn active" data-tab="games">🎮 Игры</button>
+            <button class="tab-btn" data-tab="shop">🛒 Магазин</button>
             <button class="tab-btn" data-tab="profile">👤 Профиль</button>
         </div>
         <div class="payment-banner hidden" id="pending-payment-banner" style="background:linear-gradient(135deg,rgba(247,151,30,0.2),rgba(255,210,0,0.1));border:1px solid rgba(247,151,30,0.3);border-radius:18px;padding:14px;margin-bottom:16px;text-align:center"><span style="font-size:13px;opacity:0.8">⏳ Ожидающий платёж!</span><button class="modal-btn gold" id="check-pending-payment-btn" style="font-size:14px;padding:12px;margin-top:8px">🔄 Проверить</button></div>
@@ -69,6 +74,22 @@
                 <div id="darts-game" class="hidden"><div class="darts-scene" id="darts-scene-el"><div class="dartboard-swing" id="dartboard-swing"><div class="ring"></div><div class="ring2"></div><div class="bull"></div></div><div class="dart-arrow" id="dart-arrow">➶</div><div class="hit-effect" id="hit-effect">⊹</div><div class="tap-hint" id="tap-hint">Тапни когда яблочко по центру!</div></div><div style="height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin:8px 0;overflow:hidden"><div id="accuracy-bar" style="height:100%;background:linear-gradient(90deg,#e74c3c,#f7971e,#4CAF50);border-radius:2px;width:0%"></div></div><div class="bet-buttons"><button class="bet-option" data-darts="even">🟡Чёт</button><button class="bet-option" data-darts="odd">🔵Нечет</button></div></div>
                 <div id="result-message" class="result-message"></div><button class="back-btn" id="back-to-menu">🔙 Назад</button>
             </div></div>
+                </div>
+                <!-- ===== ВКЛАДКА МАГАЗИН ===== -->
+        <div class="tab-content" id="tab-shop">
+            <!-- Категории -->
+            <div class="shop-categories" id="shop-categories">
+                <button class="shop-cat-btn active" data-cat="all">🛍️ Все</button>
+                <button class="shop-cat-btn" data-cat="skins">🎨 Скины</button>
+                <button class="shop-cat-btn" data-cat="avatars">🦊 Аватарки</button>
+                <button class="shop-cat-btn" data-cat="boosts">⚡ Бонусы</button>
+                <button class="shop-cat-btn" data-cat="services">🔧 Услуги</button>
+            </div>
+            
+            <!-- Товары -->
+            <div class="shop-items" id="shop-items">
+                <div class="no-items">🔄 Загрузка...</div>
+            </div>
         </div>
         <div class="tab-content" id="tab-profile"><div class="fade-in">
             <div class="profile-header">
@@ -142,7 +163,17 @@
         document.getElementById('go-buy-coins-btn').addEventListener('click',()=>{document.getElementById('no-balance-modal').classList.remove('active');document.getElementById('buy-modal').classList.add('active')})
         document.getElementById('close-no-balance-modal').addEventListener('click',()=>document.getElementById('no-balance-modal').classList.remove('active'))
 
-        document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{const t=b.dataset.tab;document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(`tab-${t}`).classList.add('active');if(t==='profile'){loadProfile();loadAchievements()}if(t==='games')loadBalance()}))
+        document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+            const t=b.dataset.tab;
+            document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+            b.classList.add('active');
+            document.getElementById(`tab-${t}`).classList.add('active');
+            if(t==='profile'){loadProfile();loadAchievements()}
+            if(t==='games')loadBalance()
+            if(t==='shop')loadShop('all')
+        }));
+        
         document.getElementById('get-coins-btn').addEventListener('click',()=>document.getElementById('coins-modal').classList.add('active'))
         document.getElementById('close-coins-modal').addEventListener('click',()=>document.getElementById('coins-modal').classList.remove('active'))
 
@@ -325,6 +356,199 @@ async function afterGame(win){
         document.querySelectorAll('[data-dice]').forEach(b=>b.addEventListener('click',()=>{cdb=b.dataset.dice;document.querySelectorAll('[data-dice]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
         document.getElementById('spin-btn').addEventListener('click',spinSlots);document.getElementById('roulette-spin-btn').addEventListener('click',spinRoulette);document.getElementById('dice-spin-btn').addEventListener('click',rollDice);document.getElementById('bj-start-btn').addEventListener('click',sbj);document.getElementById('bj-hit').addEventListener('click',bjh);document.getElementById('bj-stand').addEventListener('click',bjs)
         initBetButtons();loadBalance();loadDailyBonus();checkPendingPaymentOnLoad();tg.ready()
+        // ========== МАГАЗИН ==========
+let shopItems = [];
+let currentShopCategory = 'all';
+
+// Загрузка товаров магазина
+async function loadShop(category = 'all') {
+    if (!userId) return;
+    currentShopCategory = category;
+    
+    // Подсвечиваем активную категорию
+    document.querySelectorAll('.shop-cat-btn').forEach(b => b.classList.remove('active'));
+    const activeCatBtn = document.querySelector(`.shop-cat-btn[data-cat="${category}"]`);
+    if (activeCatBtn) activeCatBtn.classList.add('active');
+    
+    try {
+        const r = await fetch(`${BOT_API_URL}/api/shop/items`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, category: category })
+        });
+        const d = await r.json();
+        if (d.success) {
+            shopItems = d.items;
+            renderShopItems(shopItems);
+        }
+    } catch (e) {
+        console.error('Shop load error:', e);
+    }
+}
+
+// Отрисовка товаров
+function renderShopItems(items) {
+    const container = document.getElementById('shop-items');
+    if (!items || items.length === 0) {
+        container.innerHTML = '<div class="no-items">😔 Товаров пока нет</div>';
+        return;
+    }
+    
+    container.innerHTML = items.map(item => {
+        let actionBtn = '';
+        let ownedClass = '';
+        let activeBadge = '';
+        
+        if (item.owned) {
+            ownedClass = 'owned';
+            if (item.type === 'skin') {
+                actionBtn = `<button class="shop-buy-btn" onclick="activateSkin('${item.id}')" style="background:linear-gradient(180deg,#4CAF50,#2E7D32)">✅ Выбрать</button>`;
+            } else if (item.type === 'avatar') {
+                actionBtn = `<button class="shop-buy-btn" onclick="activateAvatar('${item.id}')" style="background:linear-gradient(180deg,#4CAF50,#2E7D32)">✅ Выбрать</button>`;
+            } else {
+                actionBtn = `<button class="shop-buy-btn" disabled>✅ Куплено</button>`;
+            }
+        } else {
+            actionBtn = `<button class="shop-buy-btn" onclick="buyShopItem('${item.id}')">💎 ${item.price}</button>`;
+        }
+        
+        // Бусты: показываем активность
+        if (item.active && item.type === 'boost') {
+            activeBadge = '<span class="active-boost-badge">⚡ АКТИВЕН</span>';
+            if (item.uses_left) {
+                actionBtn = `<button class="shop-buy-btn" disabled>Осталось: ${item.uses_left}</button>`;
+            }
+        }
+        
+        // Услуги (смена никнейма) всегда доступны для повторной покупки
+        if (item.id === 'nickname_change' && item.owned) {
+            actionBtn = `<button class="shop-buy-btn" onclick="buyShopItem('${item.id}')">💎 ${item.price} (ещё)</button>`;
+        }
+        
+        let icon = item.emoji || item.id.split('_').pop() || '🎁';
+        
+        return `
+            <div class="shop-item-card ${ownedClass}">
+                ${activeBadge}
+                <div class="shop-item-icon">${icon}</div>
+                <div class="shop-item-info">
+                    <div class="shop-item-name">${item.name}</div>
+                    <div class="shop-item-desc">${item.desc}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                    ${!item.owned ? `<div class="shop-item-price">💎 ${item.price}</div>` : ''}
+                    ${actionBtn}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Купить товар
+async function buyShopItem(itemId) {
+    if (!userId) return;
+    
+    const item = shopItems.find(i => i.id === itemId);
+    if (!item) return;
+    
+    // Проверяем баланс
+    if (balance < item.price) {
+        document.getElementById('no-balance-modal').classList.add('active');
+        return;
+    }
+    
+    try {
+        const r = await fetch(`${BOT_API_URL}/api/shop/buy`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, item_id: itemId })
+        });
+        const d = await r.json();
+        
+        if (d.success) {
+            balance = d.new_balance;
+            document.getElementById('balance').innerText = balance;
+            tg.showAlert(d.message);
+            
+            // Если купили смену никнейма — сразу открываем редактор профиля
+            if (itemId === 'nickname_change') {
+                setTimeout(() => {
+                    document.getElementById('edit-profile-btn').click();
+                }, 500);
+            }
+            
+            // Обновляем магазин
+            loadShop(currentShopCategory);
+        } else {
+            tg.showAlert(d.error || '❌ Ошибка покупки');
+        }
+    } catch (e) {
+        console.error('Buy error:', e);
+    }
+}
+
+// Активировать скин
+async function activateSkin(itemId) {
+    if (!userId) return;
+    
+    const item = shopItems.find(i => i.id === itemId);
+    const game = item ? item.game : null;
+    
+    try {
+        const r = await fetch(`${BOT_API_URL}/api/shop/activate_skin`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, item_id: itemId, game: game })
+        });
+        const d = await r.json();
+        
+        if (d.success) {
+            tg.showAlert('✅ ' + d.message);
+            loadShop(currentShopCategory);
+        } else {
+            tg.showAlert(d.error || '❌ Ошибка');
+        }
+    } catch (e) {
+        console.error('Activate error:', e);
+    }
+}
+
+// Активировать аватарку
+async function activateAvatar(itemId) {
+    if (!userId) return;
+    
+    const item = shopItems.find(i => i.id === itemId);
+    if (!item || !item.emoji) return;
+    
+    // Устанавливаем аватарку
+    selectedAvatar = item.emoji;
+    
+    try {
+        // Сохраняем через API профиля
+        const r = await fetch(`${BOT_API_URL}/api/save_profile`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, avatar_emoji: item.emoji })
+        });
+        const d = await r.json();
+        
+        if (d.success) {
+            document.getElementById('profile-avatar-display').innerText = item.emoji;
+            tg.showAlert('✅ Аватарка установлена!');
+        }
+    } catch (e) {
+        console.error('Avatar activate error:', e);
+    }
+}
+
+// Обработчики категорий
+document.querySelectorAll('.shop-cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const cat = btn.dataset.cat;
+        loadShop(cat);
+        vibrate();
+    });
+});
     </script>
 </body>
 </html>
