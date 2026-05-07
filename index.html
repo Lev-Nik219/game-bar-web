@@ -136,9 +136,39 @@
 
         const ads = window.TelegaIn.AdsController.create_miniapp({ token: 'ae08cdf4-66be-4922-b4f2-832afbe70916' })
 
-        async function giveAdReward(){try{const r=await fetch(`${BOT_API_URL}/api/claim_ad_reward`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;tg.showAlert('✅ +25 баллов!')}else{tg.showAlert('⏳ Подождите 20 секунд')}}catch(e){}}
-        async function giveFreeAdReward(){try{const r=await fetch(`${BOT_API_URL}/api/claim_free_bonus`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;tg.showAlert('🎁 +10 баллов!')}else{tg.showAlert('⏳ Подождите 20 секунд')}}catch(e){}}
+        async function giveAdReward(){
+            try{
+                const r=await fetch(`${BOT_API_URL}/api/claim_ad_reward`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});
+                const d=await r.json();
+                if(d.success){
+                    balance=d.new_balance;
+                    document.getElementById('balance').innerText=balance;
+                    tg.showAlert('✅ +25 баллов за просмотр рекламы!');
+                }else if(d.error==='cooldown'){
+                    const sec = d.remaining || 20;
+                    tg.showAlert(`⏳ Подожди ещё ${sec} сек. перед следующим просмотром`);
+                }else{
+                    tg.showAlert('⏳ Подожди немного перед следующим просмотром');
+                }
+            }catch(e){}
+        }        
 
+        async function giveFreeAdReward(){
+            try{
+                const r=await fetch(`${BOT_API_URL}/api/claim_free_bonus`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});
+                const d=await r.json();
+                if(d.success){
+                    balance=d.new_balance;
+                    document.getElementById('balance').innerText=balance;
+                    tg.showAlert('📺 Реклама сейчас недоступна, но мы дарим тебе +10 баллов! Попробуй позже.');
+                }else if(d.error==='cooldown'){
+                    const sec = d.remaining || 20;
+                    tg.showAlert(`⏳ Подожди ещё ${sec} сек. перед следующим просмотром рекламы`);
+                }else{
+                    tg.showAlert('⏳ Подожди немного перед следующим просмотром');
+                }
+            }catch(e){}
+        }
         async function checkPendingPaymentOnLoad(){if(!userId)return;const ppId=localStorage.getItem('pending_payment_id'),ppUid=localStorage.getItem('pending_user_id');if(ppId&&ppUid&&parseInt(ppUid)===userId){document.getElementById('pending-payment-banner').classList.remove('hidden');try{const r=await fetch(`${BOT_API_URL}/api/check_payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});const d=await r.json();if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance()}}catch(e){}}}
         document.getElementById('check-pending-payment-btn').addEventListener('click',async()=>{const btn=document.getElementById('check-pending-payment-btn');btn.disabled=true;btn.innerText='⏳';const ppId=localStorage.getItem('pending_payment_id');try{const r=await fetch(`${BOT_API_URL}/api/check_payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});const d=await r.json();if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance();tg.showAlert('✅ Оплата!')}else{tg.showAlert(d.message||'⏳')}}catch(e){}finally{btn.disabled=false;btn.innerText='🔄 Проверить'}})
 
@@ -164,7 +194,24 @@
         document.getElementById('close-coins-modal').addEventListener('click',()=>document.getElementById('coins-modal').classList.remove('active'))
         document.getElementById('watch-ad-btn').addEventListener('click', async ()=>{
             document.getElementById('coins-modal').classList.remove('active');
-            if(window.TelegaIn&&ads){try{const result=await ads.ad_show({adBlockUuid:"7e6181f8-680d-4165-8516-5dcb2372f52b"});if(!result||result.error){await giveFreeAdReward()}else{await giveAdReward()}}catch(e){await giveFreeAdReward()}}else{await giveFreeAdReward()}
+            if(window.TelegaIn&&ads){
+                try{
+                    const result=await ads.ad_show({adBlockUuid:"7e6181f8-680d-4165-8516-5dcb2372f52b"});
+                    if(!result||result.error){
+                        // Реклама не загрузилась — показываем сообщение
+                        tg.showAlert('📺 Сейчас нет доступной рекламы. Попробуй через минуту!');
+                        await giveFreeAdReward();
+                    }else{
+                        await giveAdReward();
+                    }
+                }catch(e){
+                    tg.showAlert('📺 Ошибка загрузки рекламы. Попробуй позже!');
+                    await giveFreeAdReward();
+                }
+            }else{
+                tg.showAlert('📺 Рекламный модуль не загружен. Дарим +10 баллов!');
+                await giveFreeAdReward();
+            }
         })
         document.getElementById('buy-coins-btn').addEventListener('click',()=>{document.getElementById('coins-modal').classList.remove('active');document.getElementById('buy-modal').classList.add('active')})
         document.getElementById('close-buy-modal').addEventListener('click',()=>{document.getElementById('buy-modal').classList.remove('active');selectedAmount=null;document.getElementById('confirm-purchase-btn').disabled=true;document.querySelectorAll('#buy-modal .price-item').forEach(i=>i.classList.remove('selected'))})
