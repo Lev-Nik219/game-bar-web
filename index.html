@@ -128,7 +128,8 @@
                 }catch(e){}
             }
             if(referralLink){
-                tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent('🎮 Game Bar Casino — играй и выигрывай! Присоединяйся и получи +25 бонусных баллов!')}`);
+                // Открываем Telegram Share с ссылкой на бота
+                tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent('🎮 Game Bar Casino — играй и выигрывай!')}`);
             } else {
                 tg.showAlert('⏳ Загрузка ссылки...');
             }
