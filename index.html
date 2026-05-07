@@ -135,7 +135,49 @@
         function initBetButtons(){document.querySelectorAll('.bet-option[data-bet]').forEach(b=>b.addEventListener('click',()=>{currentBet=parseInt(b.dataset.bet);document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))}
         async function loadBalance(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_balance`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.balance;document.getElementById('balance').innerText=balance}}catch(e){}}
         async function sendGameResult(game,bet,win,wa,details){if(isLoading)return;isLoading=true;try{const r=await fetch(`${BOT_API_URL}/api/game_result`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,game,bet,win,win_amount:wa,details})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance}return d}catch(e){}finally{isLoading=false}}
-        async function afterGame(win){await loadBalance();currentBet=0;document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message'}
+        async function afterGame(win){
+    await loadBalance();
+    // Сбрасываем ставки
+    currentBet=0;
+    document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));
+    document.getElementById('result-message').innerHTML='';
+    document.getElementById('result-message').className='result-message';
+    
+    // Сбрасываем состояние конкретной игры
+    if(currentGame==='roulette'){
+        crb=null;
+        document.querySelectorAll('[data-roulette]').forEach(x=>x.classList.remove('selected'));
+        buildRouletteRing();
+        document.getElementById('roulette-result-display').innerHTML='?';
+    }
+    if(currentGame==='dice'){
+        cdb=null;
+        document.querySelectorAll('[data-dice]').forEach(x=>x.classList.remove('selected'));
+        document.getElementById('dice1').innerHTML='⚀';
+        document.getElementById('dice2').innerHTML='⚀';
+    }
+    if(currentGame==='bowling'){
+        bowlingBet=null;
+        resetBowlingPins();
+        document.querySelectorAll('[data-bowling]').forEach(x=>x.classList.remove('selected'));
+    }
+    if(currentGame==='darts'){
+        dartsBet=null;
+        document.querySelectorAll('[data-darts]').forEach(x=>x.classList.remove('selected'));
+        document.getElementById('dartboard-swing').style.transform='translateX(0)';
+        document.getElementById('accuracy-bar').style.width='0%';
+        document.getElementById('tap-hint').style.display='';
+        if(dartSwingActive){dartSwingActive=false;cancelAnimationFrame(dartSwingAnimFrame)}
+        initDarts();
+    }
+    if(currentGame==='blackjack'){
+        ga=false;
+        document.getElementById('player-cards').innerHTML='<span class="card-slot">🂠</span>';
+        document.getElementById('dealer-cards').innerHTML='<span class="card-slot">🂠</span>';
+        document.getElementById('player-sum').innerHTML='0';
+        document.getElementById('dealer-sum').innerHTML='0';
+    }
+}
         function showGame(game){currentGame=game;document.getElementById('games-menu').classList.add('hidden');document.getElementById('game-area').classList.remove('hidden');['slots','roulette','dice','blackjack','bowling','darts'].forEach(g=>document.getElementById(`${g}-game`).classList.add('hidden'));document.getElementById(`${game}-game`).classList.remove('hidden');const t={slots:'🎰 СЛОТЫ',roulette:'🎡 РУЛЕТКА',dice:'🎲 КОСТИ',blackjack:'🃏 БЛЭКДЖЕК',bowling:'🎳 БОУЛИНГ',darts:'🎯 ДАРТС'};document.getElementById('game-title').innerHTML=t[game];document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message';currentBet=0;document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'))}
         function backToMenu(){document.getElementById('games-menu').classList.remove('hidden');document.getElementById('game-area').classList.add('hidden');currentGame=null}
 
@@ -175,8 +217,7 @@
         let dartsBet=null,dartsLock=false,dartSwingActive=false,dartSwingPos=0,dartSwingDir=1,dartSwingAnimFrame
         document.querySelectorAll('[data-darts]').forEach(b=>b.addEventListener('click',()=>{dartsBet=b.dataset.darts;document.querySelectorAll('[data-darts]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message'}))
         function startDartSwing(){if(!dartSwingActive)return;dartSwingPos+=dartSwingDir*2.5;if(Math.abs(dartSwingPos)>40)dartSwingDir*=-1;document.getElementById('dartboard-swing').style.transform=`translateX(${dartSwingPos}px)`;document.getElementById('accuracy-bar').style.width=(100-Math.abs(dartSwingPos)/40*100)+'%';dartSwingAnimFrame=requestAnimationFrame(startDartSwing)}
-        function initDarts(){if(dartsLock)return;document.getElementById('tap-hint').style.display='';document.getElementById('dart-arrow').style.display='none';document.getElementById('hit-effect').style.display='none';dartSwingPos=0;dartSwingDir=1;dartSwingActive=true;startDartSwing()}
-        document.getElementById('darts-scene-el').addEventListener('click',(e)=>{if(dartsLock||!dartSwingActive)return;if(!dartsBet||currentBet===0){const result=document.getElementById('result-message');result.innerHTML='❌ Ставка!';result.className='result-message lose';return}dartSwingActive=false;dartsLock=true;cancelAnimationFrame(dartSwingAnimFrame);const v=Math.floor(Math.random()*6)+1;const isEven=v%2===0;const win=(dartsBet==='even'&&isEven)||(dartsBet==='odd'&&!isEven);const wa=win?Math.floor(currentBet*1.5):0;const dart=document.getElementById('dart-arrow');const hit=document.getElementById('hit-effect');const board=document.getElementById('dartboard-swing');const result=document.getElementById('result-message');document.getElementById('tap-hint').style.display='none';dart.style.display='block';dart.style.transition='all 0.1s ease-out';dart.style.left=`${50+dartSwingPos/40*8}%`;dart.style.top='58%';dart.style.transform='rotate(-25deg)';setTimeout(()=>{dart.style.top='52%';dart.style.left=`${50+dartSwingPos/40*4}%`;dart.style.transform='rotate(-10deg)'},120);setTimeout(()=>{dart.style.top='49%';dart.style.left=`${50+dartSwingPos/40*1.5}%`;dart.style.transform='rotate(0deg)'},240);setTimeout(()=>{if(win){dart.style.display='none';hit.style.display='block';hit.style.left=`${50+dartSwingPos/40*1.5}%`;hit.style.top='49%';hit.style.animation='none';hit.offsetHeight;hit.style.animation='hitPop 0.5s ease-out forwards';board.style.boxShadow='0 0 60px rgba(255,215,0,0.8)';setTimeout(()=>board.style.boxShadow='',700);spawnWinCoins(6);result.innerHTML=`🎯 В яблочко! +${wa} 💎 (${v})`;result.className='result-message win'}else{dart.style.transition='all 0.4s ease-in';dart.style.top='22%';dart.style.left='78%';dart.style.transform='rotate(70deg)';result.innerHTML=`💨 Мимо (${v}) -${currentBet} 💎`;result.className='result-message lose'}sendGameResult('darts',currentBet,win,wa,{}).then(()=>{setTimeout(()=>{dart.style.display='none';hit.style.display='none';dart.style.transition='none';dart.style.top='58%';dart.style.left='50%';dart.style.transform='rotate(-25deg)';board.style.transform='translateX(0)';document.getElementById('accuracy-bar').style.width='0%';dartsLock=false;afterGame(win)},1000)})},450)})
+        function initDarts(){if(dartsLock)return;if(dartSwingActive){dartSwingActive=false;cancelAnimationFrame(dartSwingAnimFrame)}document.getElementById('tap-hint').style.display='';document.getElementById('dart-arrow').style.display='none';document.getElementById('hit-effect').style.display='none';dartSwingPos=0;dartSwingDir=1;dartSwingActive=true;startDartSwing()}        document.getElementById('darts-scene-el').addEventListener('click',(e)=>{if(dartsLock||!dartSwingActive)return;if(!dartsBet||currentBet===0){const result=document.getElementById('result-message');result.innerHTML='❌ Ставка!';result.className='result-message lose';return}dartSwingActive=false;dartsLock=true;cancelAnimationFrame(dartSwingAnimFrame);const v=Math.floor(Math.random()*6)+1;const isEven=v%2===0;const win=(dartsBet==='even'&&isEven)||(dartsBet==='odd'&&!isEven);const wa=win?Math.floor(currentBet*1.5):0;const dart=document.getElementById('dart-arrow');const hit=document.getElementById('hit-effect');const board=document.getElementById('dartboard-swing');const result=document.getElementById('result-message');document.getElementById('tap-hint').style.display='none';dart.style.display='block';dart.style.transition='all 0.1s ease-out';dart.style.left=`${50+dartSwingPos/40*8}%`;dart.style.top='58%';dart.style.transform='rotate(-25deg)';setTimeout(()=>{dart.style.top='52%';dart.style.left=`${50+dartSwingPos/40*4}%`;dart.style.transform='rotate(-10deg)'},120);setTimeout(()=>{dart.style.top='49%';dart.style.left=`${50+dartSwingPos/40*1.5}%`;dart.style.transform='rotate(0deg)'},240);setTimeout(()=>{if(win){dart.style.display='none';hit.style.display='block';hit.style.left=`${50+dartSwingPos/40*1.5}%`;hit.style.top='49%';hit.style.animation='none';hit.offsetHeight;hit.style.animation='hitPop 0.5s ease-out forwards';board.style.boxShadow='0 0 60px rgba(255,215,0,0.8)';setTimeout(()=>board.style.boxShadow='',700);spawnWinCoins(6);result.innerHTML=`🎯 В яблочко! +${wa} 💎 (${v})`;result.className='result-message win'}else{dart.style.transition='all 0.4s ease-in';dart.style.top='22%';dart.style.left='78%';dart.style.transform='rotate(70deg)';result.innerHTML=`💨 Мимо (${v}) -${currentBet} 💎`;result.className='result-message lose'}sendGameResult('darts',currentBet,win,wa,{}).then(()=>{setTimeout(()=>{dart.style.display='none';hit.style.display='none';dart.style.transition='none';dart.style.top='58%';dart.style.left='50%';dart.style.transform='rotate(-25deg)';board.style.transform='translateX(0)';document.getElementById('accuracy-bar').style.width='0%';dartsLock=false;afterGame(win)},1000)})},450)})
 
         document.querySelectorAll('.game-card').forEach(c=>c.addEventListener('click',()=>{const g=c.dataset.game;showGame(g);if(g==='darts')initDarts()}))
         document.getElementById('back-to-menu').addEventListener('click',backToMenu)
