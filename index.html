@@ -165,45 +165,28 @@
         document.getElementById('share-ref-link').addEventListener('click',()=>{if(referralLink){tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}`)}})
         
     async function handleReferralJoin(){
-        console.log('=== handleReferralJoin START ===');
-        
-        // Способ 1: tg.initDataUnsafe.start_param (работает внутри Telegram)
-        const startParam = tg.initDataUnsafe?.start_param;
-        console.log('start_param:', startParam);
-        
-        // Способ 2: URL params (работает в браузере)
         const urlParams = new URLSearchParams(window.location.search);
-        const urlStartapp = urlParams.get('startapp') || urlParams.get('tgWebAppStartParam');
-        console.log('url startapp:', urlStartapp);
+        const ref = urlParams.get('ref');
         
-        // Берём первый доступный
-        const sa = startParam || urlStartapp;
-        console.log('final sa:', sa, 'userId:', userId);
-        
-        if(sa && sa.startsWith('ref_') && userId){
-            const inviterId = sa.replace('ref_', '');
+        if(ref && userId){
+            const inviterId = ref;
             const stored = localStorage.getItem('referral_processed');
-            console.log('inviterId:', inviterId, 'stored:', stored);
-            
             if(stored !== inviterId && parseInt(inviterId) !== userId){
                 try{
-                    console.log('Calling referral_join API...');
                     const r = await fetch(`${BOT_API_URL}/api/referral_join`, {
                         method:'POST',
                         headers:{'Content-Type':'application/json'},
                         body:JSON.stringify({user_id:userId, inviter_id:parseInt(inviterId)})
                     });
                     const d = await r.json();
-                    console.log('referral_join response:', d);
                     if(d.success){
                         localStorage.setItem('referral_processed', inviterId);
                         await loadBalance();
                         tg.showAlert(`🎉 ${d.message}`);
                     }
-                }catch(e){console.error('referral_join error:', e)}
+                }catch(e){}
             }
         }
-        console.log('=== handleReferralJoin END ===');
     }
 
         const symbols=['🍒','🍋','💎','7️⃣','BAR'];const cardSuits=['♠️','♥️','♦️','♣️']
