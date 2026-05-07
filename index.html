@@ -78,8 +78,9 @@
     <script src="https://inapp.telega.io/sdk/v1/sdk.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        const tg=window.Telegram.WebApp;tg.expand();tg.enableClosingConfirmation()
-        const BOT_API_URL='https://game-bar-bot.onrender.com';const webAppUser=tg.initDataUnsafe?.user
+        const tg=window.Telegram.WebApp;tg.ready();tg.expand();tg.enableClosingConfirmation()
+        const BOT_API_URL='https://game-bar-bot.onrender.com';
+        const webAppUser = tg.initDataUnsafe?.user;
         let currentGame=null,currentBet=0,balance=0,isLoading=false,userProfile=null,selectedAmount=null
         function getUserId(){
     // Сначала пробуем Telegram WebApp user
@@ -276,7 +277,7 @@
         document.querySelectorAll('[data-roulette]').forEach(b=>b.addEventListener('click',()=>{crb=b.dataset.roulette;document.querySelectorAll('[data-roulette]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
         document.querySelectorAll('[data-dice]').forEach(b=>b.addEventListener('click',()=>{cdb=b.dataset.dice;document.querySelectorAll('[data-dice]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
         document.getElementById('spin-btn').addEventListener('click',spinSlots);document.getElementById('roulette-spin-btn').addEventListener('click',spinRoulette);document.getElementById('dice-spin-btn').addEventListener('click',rollDice);document.getElementById('bj-start-btn').addEventListener('click',sbj);document.getElementById('bj-hit').addEventListener('click',bjh);document.getElementById('bj-stand').addEventListener('click',bjs)
-        initBetButtons();loadBalance();loadDailyBonus();checkPendingPaymentOnLoad();handleReferralJoin();tg.ready()
+        initBetButtons();loadBalance();loadDailyBonus();checkPendingPaymentOnLoad();handleReferralJoin();
     </script>
 </body>
 </html>
