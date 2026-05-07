@@ -46,6 +46,9 @@
         .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:100;justify-content:center;align-items:center;padding:20px}.modal-overlay.active{display:flex}.modal{background:linear-gradient(180deg,#1e1e3a,#12122a);border-radius:24px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border);animation:modalIn 0.3s ease}@keyframes modalIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}.modal-btn{width:100%;padding:16px;border:none;border-radius:16px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px}.modal-btn.gold{background:linear-gradient(180deg,#f7971e,#e65100);color:white}.modal-btn.green{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white}.modal-btn.red{background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)}
         input[type="text"]{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:white;font-size:15px;margin-bottom:18px;outline:none;text-align:center}
         .shop-categories{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding:2px}.shop-cat-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}.shop-cat-btn.active{background:linear-gradient(180deg,rgba(247,151,30,0.25),rgba(255,210,0,0.15));color:white;border-color:#f7971e}.shop-items{display:grid;gap:10px;max-height:55vh;overflow-y:auto;padding:2px}.shop-item-card{background:linear-gradient(180deg,rgba(42,42,74,0.9),rgba(26,26,58,0.95));border-radius:18px;padding:16px;display:flex;align-items:center;gap:14px;border:1px solid var(--border);position:relative;animation:cardIn 0.3s ease}.shop-item-card.owned{border-color:rgba(76,175,80,0.5);background:rgba(76,175,80,0.06)}.shop-item-card.owned::after{content:'✅';position:absolute;top:10px;right:12px;font-size:18px}.shop-item-icon{font-size:36px;min-width:44px;text-align:center}.shop-item-info{flex:1}.shop-item-name{font-size:14px;font-weight:700;margin-bottom:2px}.shop-item-desc{font-size:11px;opacity:0.5}.shop-item-price{font-size:16px;font-weight:800;color:#ffd700;display:flex;align-items:center;gap:3px}.shop-buy-btn{background:linear-gradient(180deg,#f7971e,#e65100);border:none;color:white;font-weight:700;padding:10px 16px;border-radius:20px;font-size:13px;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(247,151,30,0.3)}.shop-buy-btn:active{transform:scale(0.94)}.shop-buy-btn:disabled{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);box-shadow:none;cursor:not-allowed}.active-boost-badge{position:absolute;top:8px;right:8px;background:#4CAF50;color:white;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;animation:pulse 2s ease-in-out infinite}.no-items{text-align:center;opacity:0.4;padding:20px;font-size:14px}
+        .shop-buy-btn.ghost{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);box-shadow:none;border:1px solid rgba(255,255,255,0.15)}
+        .shop-buy-btn.ghost:hover{background:rgba(255,255,255,0.12);color:white}
+        .shop-buy-btn.active-green{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white;box-shadow:0 4px 12px rgba(76,175,80,0.3)}
     </style>
 </head>
 <body>
@@ -288,36 +291,181 @@
             }catch(e){}
         }
 
-        function renderShopItems(items){
-            const container=document.getElementById('shop-items');
-            if(!items||items.length===0){container.innerHTML='<div class="no-items">😔 Товаров пока нет</div>';return}
-            container.innerHTML=items.map(item=>{
-                let actionBtn='',ownedClass='',activeBadge='';
-                if(item.owned){ownedClass='owned';if(item.type==='avatar'){actionBtn=`<button class="shop-buy-btn" onclick="activateAvatar('${item.id}')" style="background:linear-gradient(180deg,#4CAF50,#2E7D32)">✅ Выбрать</button>`}else{actionBtn=`<button class="shop-buy-btn" disabled>✅ Куплено</button>`}}
-                else{actionBtn=`<button class="shop-buy-btn" onclick="buyShopItem('${item.id}')">💎 ${item.price}</button>`}
-                if(item.active&&item.type==='boost'){activeBadge='<span class="active-boost-badge">⚡ АКТИВЕН</span>';if(item.uses_left)actionBtn=`<button class="shop-buy-btn" disabled>Осталось: ${item.uses_left}</button>`}
-                if(item.id==='nickname_change'&&item.owned)actionBtn=`<button class="shop-buy-btn" onclick="buyShopItem('${item.id}')">💎 ${item.price} (ещё)</button>`
-                return `<div class="shop-item-card ${ownedClass}">${activeBadge}<div class="shop-item-icon">${item.emoji||'🎁'}</div><div class="shop-item-info"><div class="shop-item-name">${item.name}</div><div class="shop-item-desc">${item.desc}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">${!item.owned?`<div class="shop-item-price">💎 ${item.price}</div>`:''}${actionBtn}</div></div>`
-            }).join('')
+        // Тихое обновление магазина (без мерцания)
+async function loadShopSilent(category = 'all') {
+    if (!userId) return;
+    currentShopCategory = category;
+    
+    document.querySelectorAll('.shop-cat-btn').forEach(b => b.classList.remove('active'));
+    const activeCatBtn = document.querySelector(`.shop-cat-btn[data-cat="${category}"]`);
+    if (activeCatBtn) activeCatBtn.classList.add('active');
+    
+    try {
+        const r = await fetch(`${BOT_API_URL}/api/shop/items`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, category: category })
+        });
+        const d = await r.json();
+        if (d.success) {
+            shopItems = d.items;
+            // Обновляем только содержимое, без пересоздания всей вкладки
+            const container = document.getElementById('shop-items');
+            const newHTML = generateShopHTML(shopItems);
+            container.innerHTML = newHTML;
         }
+    } catch (e) {
+        console.error('Shop silent load error:', e);
+    }
+}
 
-        async function buyShopItem(itemId){
-            if(!userId)return;const item=shopItems.find(i=>i.id===itemId);if(!item)return;
-            if(balance<item.price){document.getElementById('no-balance-modal').classList.add('active');return}
-            try{
-                const r=await fetch(`${BOT_API_URL}/api/shop/buy`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,item_id:itemId})});
-                const d=await r.json();
-                if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;tg.showAlert(d.message);if(itemId==='nickname_change'){setTimeout(()=>{document.getElementById('nickname-input').value=currentDisplayName||'';document.getElementById('nickname-modal').classList.add('active')},300)}loadShop(currentShopCategory)}else{tg.showAlert(d.error||'❌ Ошибка')}
-            }catch(e){}
+// Генерация HTML (чистая функция)
+function generateShopHTML(items) {
+    if (!items || items.length === 0) {
+        return '<div class="no-items">😔 Товаров пока нет</div>';
+    }
+    
+    return items.map(item => {
+        let actionBtn = '';
+        let ownedClass = '';
+        let activeBadge = '';
+        
+        if (item.type === 'avatar') {
+            if (item.active) {
+                // Выбрана и активна
+                ownedClass = 'owned';
+                actionBtn = `<button class="shop-buy-btn" style="background:linear-gradient(180deg,#4CAF50,#2E7D32)" disabled>✅ Выбрана</button>`;
+            } else if (item.owned) {
+                // Куплена, но не выбрана — показываем кнопку "Выбрать"
+                actionBtn = `<button class="shop-buy-btn" onclick="activateAvatar('${item.id}')" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);box-shadow:none">☑️ Выбрать</button>`;
+            } else {
+                // Не куплена
+                actionBtn = `<button class="shop-buy-btn" onclick="buyShopItem('${item.id}')">💎 ${item.price}</button>`;
+            }
+        } else if (item.owned) {
+            ownedClass = 'owned';
+            if (item.type === 'boost') {
+                actionBtn = `<button class="shop-buy-btn" disabled>✅ Куплено</button>`;
+            } else {
+                actionBtn = `<button class="shop-buy-btn" disabled>✅ Куплено</button>`;
+            }
+        } else {
+            actionBtn = `<button class="shop-buy-btn" onclick="buyShopItem('${item.id}')">💎 ${item.price}</button>`;
         }
+        
+        if (item.active && item.type === 'boost') {
+            activeBadge = '<span class="active-boost-badge">⚡ АКТИВЕН</span>';
+            if (item.uses_left) {
+                actionBtn = `<button class="shop-buy-btn" disabled>Осталось: ${item.uses_left}</button>`;
+            }
+        }
+        
+        // Услуги (смена никнейма) всегда доступны для повторной покупки
+        if (item.id === 'nickname_change' && item.owned) {
+            actionBtn = `<button class="shop-buy-btn" onclick="buyShopItem('${item.id}')">💎 ${item.price} (ещё)</button>`;
+        }
+        
+        let icon = item.emoji || '🎁';
+        
+        return `
+            <div class="shop-item-card ${ownedClass}">
+                ${activeBadge}
+                <div class="shop-item-icon">${icon}</div>
+                <div class="shop-item-info">
+                    <div class="shop-item-name">${item.name}</div>
+                    <div class="shop-item-desc">${item.desc}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                    ${!item.owned ? `<div class="shop-item-price">💎 ${item.price}</div>` : ''}
+                    ${actionBtn}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
-        async function activateAvatar(itemId){
-            if(!userId)return;const item=shopItems.find(i=>i.id===itemId);if(!item||!item.emoji)return;selectedAvatar=item.emoji;
-            try{
-                const r=await fetch(`${BOT_API_URL}/api/save_profile`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,avatar_emoji:item.emoji})});
-                const d=await r.json();if(d.success){document.getElementById('profile-avatar-display').innerText=item.emoji;tg.showAlert('✅ Аватарка установлена!')}
-            }catch(e){}
+// Отрисовка (использует генератор)
+function renderShopItems(items) {
+    const container = document.getElementById('shop-items');
+    container.innerHTML = generateShopHTML(items);
+}
+
+async function buyShopItem(itemId) {
+    if (!userId) return;
+    const item = shopItems.find(i => i.id === itemId);
+    if (!item) return;
+    
+    if (balance < item.price) {
+        document.getElementById('no-balance-modal').classList.add('active');
+        return;
+    }
+    
+    // Находим кнопку по itemId
+const btn = document.querySelector(`.shop-buy-btn[onclick*="${itemId}"]`);
+if (!btn) return;
+    btn.disabled = true;
+    btn.innerText = '⏳';
+    
+    try {
+        const r = await fetch(`${BOT_API_URL}/api/shop/buy`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, item_id: itemId })
+        });
+        const d = await r.json();
+        
+        if (d.success) {
+            balance = d.new_balance;
+            document.getElementById('balance').innerText = balance;
+            
+            // Обновляем магазин тихо (без переключения вкладок)
+            await loadShopSilent(currentShopCategory);
+            
+            tg.showAlert(d.message);
+            
+            // Если купили смену никнейма — открываем редактор
+            if (itemId === 'nickname_change') {
+                setTimeout(() => {
+                    document.getElementById('nickname-input').value = currentDisplayName || '';
+                    document.getElementById('nickname-modal').classList.add('active');
+                }, 300);
+            }
+        } else {
+            tg.showAlert(d.error || '❌ Ошибка покупки');
         }
+    } catch (e) {
+        console.error('Buy error:', e);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = '💎 ' + item.price;
+    }
+}
+
+async function activateAvatar(itemId) {
+    if (!userId) return;
+    
+    const item = shopItems.find(i => i.id === itemId);
+    if (!item || !item.emoji) return;
+    
+    selectedAvatar = item.emoji;
+    
+    try {
+        const r = await fetch(`${BOT_API_URL}/api/save_profile`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, avatar_emoji: item.emoji })
+        });
+        const d = await r.json();
+        if (d.success) {
+            document.getElementById('profile-avatar-display').innerText = item.emoji;
+            tg.showAlert('✅ Аватарка установлена!');
+            // Тихо обновляем магазин
+            await loadShopSilent(currentShopCategory);
+        }
+    } catch (e) {
+        console.error('Avatar activate error:', e);
+    }
+}
 
         document.querySelectorAll('.shop-cat-btn').forEach(btn=>{btn.addEventListener('click',()=>{loadShop(btn.dataset.cat);vibrate()})});
     </script>
