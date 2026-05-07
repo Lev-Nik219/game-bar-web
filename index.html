@@ -51,6 +51,10 @@
         .shop-buy-btn.active-green{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white;box-shadow:0 4px 12px rgba(76,175,80,0.3)}
         /* Карусель уровней */
         .level-carousel{position:relative;overflow:hidden;border-radius:20px;margin-bottom:16px;background:linear-gradient(135deg,rgba(247,151,30,0.15),rgba(255,210,0,0.1));border:1px solid rgba(247,151,30,0.3)}.level-track{display:flex;transition:transform 0.3s ease}.level-slide{min-width:100%;padding:24px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0.5;transform:scale(0.85);transition:all 0.3s ease}.level-slide.active{opacity:1;transform:scale(1)}.level-slide .lvl-num{font-size:64px;font-weight:800;line-height:1}.level-slide .lvl-icon{font-size:36px}.level-slide .lvl-name{font-size:16px;font-weight:700}.level-slide .lvl-bonus{font-size:11px;opacity:0.5}.level-slide .lvl-xp{font-size:10px;opacity:0.3}.level-nav{display:flex;justify-content:space-between;padding:8px 16px}.level-nav button{background:rgba(255,255,255,0.08);border:none;color:white;padding:8px 14px;border-radius:20px;cursor:pointer;font-size:16px}.level-dots{display:flex;justify-content:center;gap:6px;padding-bottom:12px}.level-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.3s}.level-dot.active{background:#f7971e;width:20px;border-radius:10px}
+        .level-slide.current-user-level{border:2px solid #f7971e;box-shadow:0 0 30px rgba(247,151,30,0.5);transform:scale(1.05)!important;z-index:2;position:relative}
+        .level-slide.current-user-level::before{content:'⬤';position:absolute;top:8px;right:12px;color:#f7971e;font-size:10px;animation:glow 2s ease-in-out infinite}
+        .xp-progress-bar{width:80%;max-width:200px;height:8px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;margin:8px auto 0}
+        .xp-progress-fill{height:100%;background:linear-gradient(90deg,#f7971e,#ffd200);border-radius:10px;transition:width 0.5s}
     </style>
 </head>
 <body>
@@ -203,17 +207,45 @@
         const levelBonuses={1:'Начальный уровень',2:'+5% к ежедневному бонусу',3:'Открыта смена ника',4:'+10% к выигрышу',5:'Скин рулетки',6:'Аватарка "Тигр"',7:'+15% к ежедневному бонусу',8:'Скин карт',9:'Золотой никнейм',10:'Все бонусы + значок 🌟'};
         let currentLevelIndex=0,userLevel=1;
 
-        function buildLevelSlides(currentLvl){
+        function buildLevelSlides(currentLvl, expInfo){
             userLevel=currentLvl;currentLevelIndex=currentLvl-1;
             const track=document.getElementById('level-track');const dots=document.getElementById('level-dots');
             track.innerHTML='';dots.innerHTML='';
+            
             for(let i=1;i<=10;i++){
-                const isActive=i===currentLvl;
+                const isCurrentUserLevel = i === currentLvl;
+                const isActive = i === currentLevelIndex + 1;
+                
                 const slide=document.createElement('div');
-                slide.className='level-slide'+(isActive?' active':'');
-                slide.innerHTML=`<div class="lvl-icon">${levelIcons[i]}</div><div class="lvl-num">${i}</div><div class="lvl-name">${levelNames[i]}</div><div class="lvl-bonus">${levelBonuses[i]}</div><div class="lvl-xp">${i**2*100} XP</div>`;
+                slide.className='level-slide' + (isCurrentUserLevel ? ' current-user-level' : '') + (isActive ? ' active' : '');
+                
+                let xpHTML = '';
+                if(isCurrentUserLevel && expInfo){
+                    const pct = Math.min(100, Math.round(expInfo.progress / expInfo.needed * 100));
+                    xpHTML = `
+                        <div style="margin-top:8px;width:100%;display:flex;flex-direction:column;align-items:center">
+                            <div class="xp-progress-bar">
+                                <div class="xp-progress-fill" style="width:${pct}%"></div>
+                            </div>
+                            <div style="font-size:10px;opacity:0.5;margin-top:4px">${expInfo.progress} / ${expInfo.needed} XP (${pct}%)</div>
+                        </div>`;
+                }
+                
+                slide.innerHTML = `
+                    ${isCurrentUserLevel ? '<div style="position:absolute;top:6px;right:10px;font-size:9px;color:#f7971e;font-weight:700">ВЫ ТУТ</div>' : ''}
+                    <div class="lvl-icon">${levelIcons[i]}</div>
+                    <div class="lvl-num" style="${isCurrentUserLevel ? 'color:#f7971e;text-shadow:0 0 20px rgba(247,151,30,0.8)' : ''}">${i}</div>
+                    <div class="lvl-name">${levelNames[i]}</div>
+                    <div class="lvl-bonus">${levelBonuses[i]}</div>
+                    ${xpHTML}
+                    ${!isCurrentUserLevel ? `<div class="lvl-xp">${i**2*100} XP</div>` : ''}
+                `;
                 track.appendChild(slide);
-                const dot=document.createElement('div');dot.className='level-dot'+(isActive?' active':'');dots.appendChild(dot);
+                
+                const dot=document.createElement('div');
+                dot.className='level-dot' + (isCurrentUserLevel ? ' active' : '') + (isActive ? ' active' : '');
+                if(isCurrentUserLevel) dot.style.background = '#f7971e';
+                dots.appendChild(dot);
             }
             goToSlide(currentLvl-1);
         }
