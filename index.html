@@ -81,8 +81,20 @@
         const tg=window.Telegram.WebApp;tg.expand();tg.enableClosingConfirmation()
         const BOT_API_URL='https://game-bar-bot.onrender.com';const webAppUser=tg.initDataUnsafe?.user
         let currentGame=null,currentBet=0,balance=0,isLoading=false,userProfile=null,selectedAmount=null
-        function getUserId(){if(webAppUser&&webAppUser.id)return webAppUser.id;const p=new URLSearchParams(window.location.search);const uid=p.get('user_id');return uid?parseInt(uid):null}
+        function getUserId(){
+    // Сначала пробуем Telegram WebApp user
+    if(webAppUser&&webAppUser.id)return webAppUser.id;
+    // Потом user_id из URL
+    const p=new URLSearchParams(window.location.search);
+    const uid=p.get('user_id');
+    if(uid)return parseInt(uid);
+    // Если ничего нет — берём из localStorage (сохраняли при первом входе)
+    const saved=localStorage.getItem('gamebar_user_id');
+    if(saved)return parseInt(saved);
+    return null;
+}
         const userId=getUserId();const username=webAppUser?.username||webAppUser?.first_name||'Игрок'
+        if(userId)localStorage.setItem('gamebar_user_id',userId);
         document.getElementById('username').innerText=username
         function vibrate(){if(navigator.vibrate)navigator.vibrate(15)}
         document.querySelectorAll('button,.game-card,.price-item,.daily-bonus-banner').forEach(el=>el.addEventListener('click',vibrate))
