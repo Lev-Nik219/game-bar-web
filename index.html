@@ -81,6 +81,7 @@
         const tg=window.Telegram.WebApp;tg.ready();tg.expand();tg.enableClosingConfirmation()
         const BOT_API_URL='https://game-bar-bot.onrender.com';
         const webAppUser = tg.initDataUnsafe?.user;
+        console.log('initDataUnsafe:', JSON.stringify(tg.initDataUnsafe));
         let currentGame=null,currentBet=0,balance=0,isLoading=false,userProfile=null,selectedAmount=null
         function getUserId(){
     // Сначала пробуем Telegram WebApp user
@@ -164,13 +165,25 @@
         
     async function handleReferralJoin(){
         console.log('=== handleReferralJoin START ===');
+        
+        // Способ 1: tg.initDataUnsafe.start_param (работает внутри Telegram)
+        const startParam = tg.initDataUnsafe?.start_param;
+        console.log('start_param:', startParam);
+        
+        // Способ 2: URL params (работает в браузере)
         const urlParams = new URLSearchParams(window.location.search);
-        const sa = urlParams.get('startapp') || urlParams.get('tgWebAppStartParam');
-        console.log('sa:', sa, 'userId:', userId, 'url:', window.location.href);
+        const urlStartapp = urlParams.get('startapp') || urlParams.get('tgWebAppStartParam');
+        console.log('url startapp:', urlStartapp);
+        
+        // Берём первый доступный
+        const sa = startParam || urlStartapp;
+        console.log('final sa:', sa, 'userId:', userId);
+        
         if(sa && sa.startsWith('ref_') && userId){
             const inviterId = sa.replace('ref_', '');
             const stored = localStorage.getItem('referral_processed');
             console.log('inviterId:', inviterId, 'stored:', stored);
+            
             if(stored !== inviterId && parseInt(inviterId) !== userId){
                 try{
                     console.log('Calling referral_join API...');
