@@ -42,7 +42,7 @@
         .profile-header{text-align:center;padding:24px;background:var(--card-bg);border-radius:24px;margin-bottom:16px;border:1px solid var(--border)}.profile-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(180deg,#f7971e,#e65100);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 14px;animation:float 4s ease-in-out infinite}
         .stat-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}.stat-card{background:var(--card-bg);border-radius:18px;padding:18px;text-align:center;border:1px solid var(--border)}.winrate-bar{background:rgba(255,255,255,0.08);border-radius:10px;height:8px;margin-top:10px;overflow:hidden}.winrate-fill{background:linear-gradient(90deg,var(--accent),var(--accent2));height:100%;border-radius:10px}
         .games-section{background:var(--card-bg);border-radius:24px;padding:18px;margin-bottom:16px;border:1px solid var(--border)}.section-title{font-size:13px;font-weight:700;opacity:0.5;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
-        .recent-game-item,.friend-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}.achievement-card{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card-bg);border-radius:16px;margin-bottom:10px;border:1px solid var(--border)}.achievement-card.earned{border-color:rgba(247,151,30,0.4);background:rgba(247,151,30,0.06)}.achievement-card.locked{opacity:0.4}
+        .recent-game-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}.achievement-card{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card-bg);border-radius:16px;margin-bottom:10px;border:1px solid var(--border)}.achievement-card.earned{border-color:rgba(247,151,30,0.4);background:rgba(247,151,30,0.06)}.achievement-card.locked{opacity:0.4}
         .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:100;justify-content:center;align-items:center;padding:20px}.modal-overlay.active{display:flex}.modal{background:linear-gradient(180deg,#1e1e3a,#12122a);border-radius:24px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border);animation:modalIn 0.3s ease}@keyframes modalIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}.modal-btn{width:100%;padding:16px;border:none;border-radius:16px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px}.modal-btn.gold{background:linear-gradient(180deg,#f7971e,#e65100);color:white}.modal-btn.green{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white}.modal-btn.red{background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)}
         input[type="text"]{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:white;font-size:15px;margin-bottom:18px;outline:none;text-align:center}
     </style>
@@ -51,7 +51,10 @@
     <div class="game-container" id="app">
         <div class="header"><div class="balance"><span class="balance-icon">💎</span><span class="balance-amount" id="balance">0</span></div><div class="username" id="username">Игрок</div></div>
         <div class="daily-bonus-banner hidden" id="daily-bonus-banner"><div class="db-info"><span>🎁</span><div><div style="font-size:13px;font-weight:600">Ежедневный бонус</div><div style="font-size:10px;opacity:0.5" id="db-streak-text">День 1</div></div></div><button class="db-btn" id="claim-daily-btn">+10 💎</button></div>
-        <div class="tab-nav"><button class="tab-btn active" data-tab="games">🎮 Игры</button><button class="tab-btn" data-tab="profile">👤 Профиль</button><button class="tab-btn" data-tab="referral">👥 Друзья</button></div>
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="games">🎮 Игры</button>
+            <button class="tab-btn" data-tab="profile">👤 Профиль</button>
+        </div>
         <div class="payment-banner hidden" id="pending-payment-banner" style="background:linear-gradient(135deg,rgba(247,151,30,0.2),rgba(255,210,0,0.1));border:1px solid rgba(247,151,30,0.3);border-radius:18px;padding:14px;margin-bottom:16px;text-align:center"><span style="font-size:13px;opacity:0.8">⏳ Ожидающий платёж!</span><button class="modal-btn gold" id="check-pending-payment-btn" style="font-size:14px;padding:12px;margin-top:8px">🔄 Проверить</button></div>
         <div class="tab-content active" id="tab-games">
             <div id="games-menu"><div class="games-menu"><div class="game-card" data-game="slots"><div class="game-emoji">🎰</div><div class="game-name">Слоты</div></div><div class="game-card" data-game="roulette"><div class="game-emoji">🎡</div><div class="game-name">Рулетка</div></div><div class="game-card" data-game="dice"><div class="game-emoji">🎲</div><div class="game-name">Кости</div></div><div class="game-card" data-game="blackjack"><div class="game-emoji">🃏</div><div class="game-name">Блэкджек</div></div><div class="game-card" data-game="bowling"><div class="game-emoji">🎳</div><div class="game-name">Боулинг</div></div><div class="game-card" data-game="darts"><div class="game-emoji">🎯</div><div class="game-name">Дартс</div></div></div><button class="get-coins-btn" id="get-coins-btn">💰 Получить монеты</button></div>
@@ -68,9 +71,8 @@
             </div></div>
         </div>
         <div class="tab-content" id="tab-profile"><div class="fade-in"><div class="profile-header"><div class="profile-avatar" id="profile-avatar-display">🦊</div><div id="profile-username" style="font-size:22px;font-weight:800">Игрок</div><div id="profile-id" style="font-size:12px;opacity:0.4">ID: —</div><button class="back-btn" id="edit-profile-btn" style="margin-top:12px;font-size:13px;padding:10px 18px">✏️ Редактировать</button></div><div class="stat-cards"><div class="stat-card"><div style="font-size:30px">💎</div><div id="profile-balance" style="font-size:24px;font-weight:800">0</div><div style="font-size:11px;opacity:0.5">Баланс</div></div><div class="stat-card"><div style="font-size:30px">🎮</div><div id="profile-games" style="font-size:24px;font-weight:800">0</div><div style="font-size:11px;opacity:0.5">Игр</div></div><div class="stat-card"><div style="font-size:30px">🏆</div><div id="profile-wins" style="font-size:24px;font-weight:800">0</div><div style="font-size:11px;opacity:0.5">Побед</div></div><div class="stat-card"><div style="font-size:30px">📊</div><div id="profile-winrate" style="font-size:24px;font-weight:800">0%</div><div style="font-size:11px;opacity:0.5">Винрейт</div><div class="winrate-bar"><div class="winrate-fill" id="winrate-fill" style="width:0%"></div></div></div></div><div class="games-section"><div class="section-title">🏆 Достижения</div><div id="achievements-list"></div></div><div class="games-section"><div class="section-title">🕐 Игры</div><div id="recent-games-list"></div></div></div></div>
-        <div class="tab-content" id="tab-referral"><div class="fade-in"><div class="profile-header" style="padding:18px"><div style="font-size:52px">👥</div><div style="font-size:18px;font-weight:800">Рефералы</div></div><div class="referral-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px"><div class="stat-card"><div>👤</div><div id="ref-total" style="font-size:24px;font-weight:800">0</div></div><div class="stat-card"><div>🎮</div><div id="ref-played" style="font-size:24px;font-weight:800">0</div></div></div><div style="text-align:center;opacity:0.7;font-size:11px;margin-bottom:12px;">💡 За друга — <b>+100 💎</b> | Друг получит <b>+25 💎</b></div><div style="background:rgba(0,0,0,0.35);border-radius:18px;padding:16px;margin-bottom:16px;text-align:center;border:1px solid var(--border)"><div id="ref-link-text" style="font-size:11px;word-break:break-all;opacity:0.5;margin:10px 0;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px">Загрузка...</div><button class="modal-btn gold" id="copy-ref-link" style="font-size:13px;padding:12px">📋 Копировать</button><button class="modal-btn green" id="share-ref-link" style="font-size:13px;padding:12px">📤 Поделиться</button></div><div class="games-section"><div class="section-title">👥 Друзья</div><div id="friends-list"></div></div></div></div>
     </div>
-    <div class="modal-overlay" id="coins-modal"><div class="modal"><div class="modal-title">💰 Получить монеты</div><button class="modal-btn green" id="invite-friend-btn">👥 Пригласить друга (+100 💎)</button><button class="modal-btn green" id="watch-ad-btn">📺 Смотреть ролик — 25 баллов</button><button class="modal-btn gold" id="buy-coins-btn">💳 Купить баллы</button><button class="modal-btn red" id="close-coins-modal">❌ Закрыть</button></div></div>
+    <div class="modal-overlay" id="coins-modal"><div class="modal"><div class="modal-title">💰 Получить монеты</div><button class="modal-btn green" id="watch-ad-btn">📺 Смотреть ролик — 25 баллов</button><button class="modal-btn gold" id="buy-coins-btn">💳 Купить баллы</button><button class="modal-btn red" id="close-coins-modal">❌ Закрыть</button></div></div>
     <div class="modal-overlay" id="buy-modal"><div class="modal"><div class="modal-title">💳 Пополнение</div><div style="margin:15px 0"><div class="price-item" data-amount="250" data-price="20" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎250</span><span style="color:#ffd700;font-weight:700">20 USDT</span></div><div class="price-item" data-amount="500" data-price="35" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎500</span><span style="color:#ffd700;font-weight:700">35 USDT</span></div><div class="price-item" data-amount="750" data-price="50" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎750</span><span style="color:#ffd700;font-weight:700">50 USDT</span></div><div class="price-item" data-amount="1000" data-price="65" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎1000</span><span style="color:#ffd700;font-weight:700">65 USDT</span></div></div><button class="modal-btn gold" id="confirm-purchase-btn" disabled>💳 Оплатить</button><button class="modal-btn red" id="close-buy-modal">🔙 Назад</button></div></div>
     <div class="modal-overlay" id="edit-profile-modal"><div class="modal"><div class="modal-title">✏️ Профиль</div><div id="avatar-picker" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px"></div><input type="text" id="display-name-input" placeholder="Никнейм..." maxlength="30"><button class="modal-btn gold" id="save-profile-btn">💾 Сохранить</button><button class="modal-btn red" id="close-edit-profile-modal">❌ Отмена</button></div></div>
     <div class="modal-overlay" id="no-balance-modal"><div class="modal"><div class="modal-title">😞 Мало средств</div><p style="text-align:center;margin-bottom:18px;opacity:0.7">Недостаточно баллов!</p><button class="modal-btn gold" id="go-buy-coins-btn">💳 Пополнить</button><button class="modal-btn red" id="close-no-balance-modal">❌ Закрыть</button></div></div>
@@ -79,36 +81,17 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg=window.Telegram.WebApp;tg.ready();tg.expand();tg.enableClosingConfirmation()
-        const BOT_API_URL='https://game-bar-bot.onrender.com';
-        const webAppUser = tg.initDataUnsafe?.user;
-        console.log('initDataUnsafe:', JSON.stringify(tg.initDataUnsafe));
+        const BOT_API_URL='https://game-bar-bot.onrender.com';const webAppUser=tg.initDataUnsafe?.user
         let currentGame=null,currentBet=0,balance=0,isLoading=false,userProfile=null,selectedAmount=null
-        function getUserId(){
-            // Сначала пробуем Telegram WebApp user
-            if(webAppUser && webAppUser.id) {
-                localStorage.setItem('gamebar_user_id', webAppUser.id);
-                return webAppUser.id;
-            }
-            // Потом user_id из URL
-            const p = new URLSearchParams(window.location.search);
-            const uid = p.get('user_id');
-            if(uid && uid !== 'none' && !isNaN(parseInt(uid))) {
-                localStorage.setItem('gamebar_user_id', uid);
-                return parseInt(uid);
-            }
-            // Если ничего нет — берём из localStorage
-            const saved = localStorage.getItem('gamebar_user_id');
-            if(saved) return parseInt(saved);
-            return null;
-        }
+        function getUserId(){if(webAppUser&&webAppUser.id)return webAppUser.id;const p=new URLSearchParams(window.location.search);const uid=p.get('user_id');if(uid)return parseInt(uid);const saved=localStorage.getItem('gamebar_user_id');if(saved)return parseInt(saved);return null}
         const userId=getUserId();const username=webAppUser?.username||webAppUser?.first_name||'Игрок'
-        if(userId)localStorage.setItem('gamebar_user_id',userId);
+        if(userId)localStorage.setItem('gamebar_user_id',userId)
         document.getElementById('username').innerText=username
         function vibrate(){if(navigator.vibrate)navigator.vibrate(15)}
         document.querySelectorAll('button,.game-card,.price-item,.daily-bonus-banner').forEach(el=>el.addEventListener('click',vibrate))
         function spawnWinCoins(count=8){for(let i=0;i<count;i++){const c=document.createElement('div');c.style.cssText=`position:fixed;pointer-events:none;font-size:24px;animation:coinRain ${1.5+Math.random()*2}s ease-in forwards;left:${Math.random()*100}%;top:-20px;z-index:50`;c.innerText='💎';document.body.appendChild(c);setTimeout(()=>c.remove(),3500)}}
 
-        const ads = window.TelegaIn.AdsController.create_miniapp({ token: 'ae08cdf4-66be-4922-b4f2-832afbe70916' });
+        const ads = window.TelegaIn.AdsController.create_miniapp({ token: 'ae08cdf4-66be-4922-b4f2-832afbe70916' })
 
         async function giveAdReward(){try{const r=await fetch(`${BOT_API_URL}/api/claim_ad_reward`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;tg.showAlert('✅ +25 баллов за просмотр рекламы!')}else{tg.showAlert('⏳ Подождите 20 секунд')}}catch(e){}}
         async function giveFreeAdReward(){try{const r=await fetch(`${BOT_API_URL}/api/claim_free_bonus`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;tg.showAlert('🎁 +10 баллов! Реклама пока недоступна')}else{tg.showAlert('⏳ Подождите 20 секунд')}}catch(e){}}
@@ -121,35 +104,16 @@
         document.getElementById('go-buy-coins-btn').addEventListener('click',()=>{document.getElementById('no-balance-modal').classList.remove('active');document.getElementById('buy-modal').classList.add('active')})
         document.getElementById('close-no-balance-modal').addEventListener('click',()=>document.getElementById('no-balance-modal').classList.remove('active'))
 
-        document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{const t=b.dataset.tab;document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(`tab-${t}`).classList.add('active');if(t==='profile'){loadProfile();loadAchievements()}if(t==='referral')loadReferralData();if(t==='games')loadBalance();}))
+        document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{const t=b.dataset.tab;document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(`tab-${t}`).classList.add('active');if(t==='profile'){loadProfile();loadAchievements()}if(t==='games')loadBalance()}))
         document.getElementById('get-coins-btn').addEventListener('click',()=>document.getElementById('coins-modal').classList.add('active'))
         document.getElementById('close-coins-modal').addEventListener('click',()=>document.getElementById('coins-modal').classList.remove('active'))
-        document.getElementById('invite-friend-btn').addEventListener('click', async ()=>{
-            document.getElementById('coins-modal').classList.remove('active');
-            if(!referralLink){
-                try{
-                    const r = await fetch(`${BOT_API_URL}/api/get_referral_link`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});
-                    const d = await r.json();
-                    if(d.success) referralLink = d.link;
-                }catch(e){}
-            }
-            if(referralLink){
-                // Открываем Telegram Share с ссылкой на бота
-                tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent('🎮 Game Bar Casino — играй и выигрывай!')}`);
-            } else {
-                tg.showAlert('⏳ Загрузка ссылки...');
-            }
-        });
 
         document.getElementById('watch-ad-btn').addEventListener('click', async ()=>{
             document.getElementById('coins-modal').classList.remove('active');
             if(window.TelegaIn&&ads){
-                try{
-                    const result=await ads.ad_show({adBlockUuid:"7e6181f8-680d-4165-8516-5dcb2372f52b"});
-                    if(!result||result.error){await giveFreeAdReward()}else{await giveAdReward()}
-                }catch(e){await giveFreeAdReward()}
+                try{const result=await ads.ad_show({adBlockUuid:"7e6181f8-680d-4165-8516-5dcb2372f52b"});if(!result||result.error){await giveFreeAdReward()}else{await giveAdReward()}}catch(e){await giveFreeAdReward()}
             }else{await giveFreeAdReward()}
-        });
+        })
 
         document.getElementById('buy-coins-btn').addEventListener('click',()=>{document.getElementById('coins-modal').classList.remove('active');document.getElementById('buy-modal').classList.add('active')})
         document.getElementById('close-buy-modal').addEventListener('click',()=>{document.getElementById('buy-modal').classList.remove('active');selectedAmount=null;document.getElementById('confirm-purchase-btn').disabled=true;document.querySelectorAll('#buy-modal .price-item').forEach(i=>i.classList.remove('selected'))})
@@ -166,48 +130,12 @@
         async function loadAchievements(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_achievements`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){const c=document.getElementById('achievements-list');const a=d.achievements;if(!a||a.length===0){c.innerHTML='<div style="text-align:center;opacity:0.4;padding:12px">Нет</div>';return}c.innerHTML=a.map(x=>`<div class="achievement-card ${x.earned?'earned':'locked'}"><div style="font-size:36px;min-width:48px;text-align:center">${x.earned?x.icon:'🔒'}</div><div style="flex:1"><div style="font-size:14px;font-weight:700">${x.name}</div><div style="font-size:11px;opacity:0.5;margin-top:2px">${x.desc}</div><div style="font-size:11px;font-weight:700;margin-top:4px">${x.earned?'✅':x.progress+'/'+x.target}</div><div style="background:rgba(255,255,255,0.08);border-radius:6px;height:5px;margin-top:5px;overflow:hidden"><div style="background:linear-gradient(90deg,#f7971e,#ffd200);height:100%;border-radius:6px;width:${x.earned?100:Math.min(100,Math.round(x.progress/x.target*100))}%"></div></div></div></div>`).join('')}}catch(e){}}
         async function loadProfile(){if(!userId)return;document.getElementById('profile-id').innerText=`ID: ${userId}`;try{const r=await fetch(`${BOT_API_URL}/api/get_profile`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){userProfile=d.profile;renderProfile(userProfile)}}catch(e){}}
         function renderProfile(p){document.getElementById('profile-balance').innerText=p.balance;document.getElementById('profile-games').innerText=p.total_games;document.getElementById('profile-wins').innerText=p.wins;document.getElementById('profile-winrate').innerText=p.winrate+'%';document.getElementById('winrate-fill').style.width=p.winrate+'%';if(p.display_name){currentDisplayName=p.display_name;document.getElementById('profile-username').innerText=p.display_name}else{document.getElementById('profile-username').innerText=username};if(p.avatar_emoji){selectedAvatar=p.avatar_emoji;document.getElementById('profile-avatar-display').innerText=p.avatar_emoji};const rl=document.getElementById('recent-games-list');if(p.recent_games&&p.recent_games.length>0){const ge={slots:'🎰',roulette:'🎡',dice:'🎲',blackjack:'🃏',bowling:'🎳',darts:'🎯'};rl.innerHTML=p.recent_games.map(g=>`<div class="recent-game-item"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">${ge[g.game]||'🎮'}</span>${g.game}</div><span class="game-item-result ${g.result}" style="font-weight:800">${g.result==='win'?'+'+g.win_amount:'-'+g.bet} 💎</span></div>`).join('')}else{rl.innerHTML='<div style="text-align:center;opacity:0.4;padding:12px">Нет</div>'}}
-        let referralLink='';async function loadReferralData(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_referral_link`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){referralLink=d.link;document.getElementById('ref-link-text').innerText=d.link}}catch(e){};try{const r=await fetch(`${BOT_API_URL}/api/get_referral_stats`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){document.getElementById('ref-total').innerText=d.stats.total;document.getElementById('ref-played').innerText=d.stats.played;const fl=document.getElementById('friends-list');fl.innerHTML=d.stats.friends.length>0?d.stats.friends.map(f=>`<div class="friend-item"><div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#f7971e,#e65100);display:flex;align-items:center;justify-content:center">👤</div><div style="font-size:14px;font-weight:600">${f.username}</div></div><div>🎮${f.games}</div></div>`).join(''):'<div style="text-align:center;opacity:0.4;padding:12px">Пока нет</div>'}}catch(e){}}
-        document.getElementById('copy-ref-link').addEventListener('click',()=>{if(referralLink){navigator.clipboard.writeText(referralLink).then(()=>tg.showAlert('✅'))}})
-        document.getElementById('share-ref-link').addEventListener('click',()=>{if(referralLink){tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}`)}})
-        
-    async function handleReferralJoin(){
-        const urlParams = new URLSearchParams(window.location.search);
-        const ref = urlParams.get('ref');
-        const uid = userId || localStorage.getItem('gamebar_user_id');
-        
-        if(ref && uid){
-            const inviterId = ref;
-            const stored = localStorage.getItem('referral_processed');
-            if(stored !== inviterId && parseInt(inviterId) !== parseInt(uid)){
-                try{
-                    const r = await fetch(`${BOT_API_URL}/api/referral_join`, {
-                        method:'POST',
-                        headers:{'Content-Type':'application/json'},
-                        body:JSON.stringify({user_id:parseInt(uid), inviter_id:parseInt(inviterId)})
-                    });
-                    const d = await r.json();
-                    if(d.success){
-                        localStorage.setItem('referral_processed', inviterId);
-                        tg.showAlert(`🎉 ${d.message}`);
-                    }
-                }catch(e){}
-            }
-        }
-    }
 
         const symbols=['🍒','🍋','💎','7️⃣','BAR'];const cardSuits=['♠️','♥️','♦️','♣️']
         function initBetButtons(){document.querySelectorAll('.bet-option[data-bet]').forEach(b=>b.addEventListener('click',()=>{currentBet=parseInt(b.dataset.bet);document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))}
         async function loadBalance(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_balance`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.balance;document.getElementById('balance').innerText=balance}}catch(e){}}
         async function sendGameResult(game,bet,win,wa,details){if(isLoading)return;isLoading=true;try{const r=await fetch(`${BOT_API_URL}/api/game_result`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,game,bet,win,win_amount:wa,details})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance}return d}catch(e){}finally{isLoading=false}}
-        // НЕТ АВТОВЫХОДА — пользователь сам решает
-        async function afterGame(win){
-            await loadBalance();
-            // Сбрасываем ставки
-            currentBet=0;
-            document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));
-            document.getElementById('result-message').innerHTML='';
-            document.getElementById('result-message').className='result-message';
-        }
+        async function afterGame(win){await loadBalance();currentBet=0;document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message'}
         function showGame(game){currentGame=game;document.getElementById('games-menu').classList.add('hidden');document.getElementById('game-area').classList.remove('hidden');['slots','roulette','dice','blackjack','bowling','darts'].forEach(g=>document.getElementById(`${g}-game`).classList.add('hidden'));document.getElementById(`${game}-game`).classList.remove('hidden');const t={slots:'🎰 СЛОТЫ',roulette:'🎡 РУЛЕТКА',dice:'🎲 КОСТИ',blackjack:'🃏 БЛЭКДЖЕК',bowling:'🎳 БОУЛИНГ',darts:'🎯 ДАРТС'};document.getElementById('game-title').innerHTML=t[game];document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message';currentBet=0;document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'))}
         function backToMenu(){document.getElementById('games-menu').classList.remove('hidden');document.getElementById('game-area').classList.add('hidden');currentGame=null}
 
@@ -234,53 +162,28 @@
         async function bjs(){if(!ga)return;let ds=dh.reduce((a,b)=>a+b,0);while(ds<17){dh.push(bjd.pop());ds=dh.reduce((a,b)=>a+b,0);rc();await new Promise(r=>setTimeout(r,700))}const ps=ph.reduce((a,b)=>a+b,0);if(ds>21||ps>ds)ebj(true);else ebj(false)}
         function sbj(){if(balance<currentBet||currentBet===0){showNoBalance();return}bjd=ibd();ph=[bjd.pop(),bjd.pop()];dh=[bjd.pop()];ga=true;rc();document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message'}
 
-        // 🎳 БОУЛИНГ — исправлена логика >3/<4
+        // 🎳 БОУЛИНГ
         let bowlingBet=null,bowlingLock=false,bowlingStartY=0
         document.querySelectorAll('[data-bowling]').forEach(b=>b.addEventListener('click',()=>{bowlingBet=b.dataset.bowling;document.querySelectorAll('[data-bowling]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message'}))
         function resetBowlingPins(){document.querySelectorAll('#bowling-pins .pin-el').forEach(p=>{p.classList.remove('fallen');p.style.transform='';p.style.opacity='1'});const ball=document.getElementById('bowling-ball-el');ball.classList.remove('swiped');ball.style.transform='translateY(0)';document.getElementById('swipe-arrow').style.display='';document.getElementById('swipe-hint').style.display=''}
         const bowlingBallEl=document.getElementById('bowling-ball-el')
         bowlingBallEl.addEventListener('pointerdown',(e)=>{if(bowlingLock)return;bowlingStartY=e.clientY;bowlingBallEl.setPointerCapture(e.pointerId)})
         bowlingBallEl.addEventListener('pointermove',(e)=>{if(bowlingLock||bowlingStartY===0)return;const dy=bowlingStartY-e.clientY;if(dy>0)bowlingBallEl.style.transform=`translateY(-${Math.min(dy,200)}px)`})
-        bowlingBallEl.addEventListener('pointerup',(e)=>{if(bowlingLock||bowlingStartY===0)return;if(!bowlingBet){tg.showAlert('❌ Сначала выберите ставку!');bowlingStartY=0;bowlingBallEl.style.transform='translateY(0)';return}const dy=bowlingStartY-e.clientY;bowlingStartY=0;if(dy<30){bowlingBallEl.style.transform='translateY(0)';return}bowlingLock=true;const power=Math.min(dy/200,1);document.getElementById('swipe-arrow').style.display='none';document.getElementById('swipe-hint').style.display='none';bowlingBallEl.classList.add('swiped');bowlingBallEl.style.transform=`translateY(-${220+power*30}px)`;setTimeout(()=>{
-            const v=Math.floor(Math.random()*6)+1;
-            // Правильная логика: >3 — выигрыш при 4,5,6; <4 — выигрыш при 1,2,3
-            const win=(bowlingBet==='over'&&v>3)||(bowlingBet==='under'&&v<4);
-            const wa=win?Math.floor(currentBet*1.5):0;const result=document.getElementById('result-message');
-            if(win){document.querySelectorAll('#bowling-pins .pin-el').forEach((p,i)=>{setTimeout(()=>{p.classList.add('fallen');p.style.setProperty('--fx',`${-12+Math.random()*24}px`);p.style.setProperty('--fy',`${-8+Math.random()*16}px`);p.style.setProperty('--fr',`${-40+Math.random()*80}deg`)},i*40)});spawnWinCoins(5);result.innerHTML=`🎉 ВЫИГРЫШ: +${wa} 💎 (${v})`;result.className='result-message win'}
-            else{result.innerHTML=`😞 ПРОИГРЫШ (${v}) -${currentBet} 💎`;result.className='result-message lose'}
-            sendGameResult('bowling',currentBet,win,wa,{}).then(()=>{setTimeout(()=>{resetBowlingPins();bowlingLock=false;afterGame(win)},1500)})
-        },900)})
+        bowlingBallEl.addEventListener('pointerup',(e)=>{if(bowlingLock||bowlingStartY===0)return;if(!bowlingBet){tg.showAlert('❌ Сначала выберите ставку!');bowlingStartY=0;bowlingBallEl.style.transform='translateY(0)';return}const dy=bowlingStartY-e.clientY;bowlingStartY=0;if(dy<30){bowlingBallEl.style.transform='translateY(0)';return}bowlingLock=true;const power=Math.min(dy/200,1);document.getElementById('swipe-arrow').style.display='none';document.getElementById('swipe-hint').style.display='none';bowlingBallEl.classList.add('swiped');bowlingBallEl.style.transform=`translateY(-${220+power*30}px)`;setTimeout(()=>{const v=Math.floor(Math.random()*6)+1;const win=(bowlingBet==='over'&&v>3)||(bowlingBet==='under'&&v<4);const wa=win?Math.floor(currentBet*1.5):0;const result=document.getElementById('result-message');if(win){document.querySelectorAll('#bowling-pins .pin-el').forEach((p,i)=>{setTimeout(()=>{p.classList.add('fallen');p.style.setProperty('--fx',`${-12+Math.random()*24}px`);p.style.setProperty('--fy',`${-8+Math.random()*16}px`);p.style.setProperty('--fr',`${-40+Math.random()*80}deg`)},i*40)});spawnWinCoins(5);result.innerHTML=`🎉 ВЫИГРЫШ: +${wa} 💎 (${v})`;result.className='result-message win'}else{result.innerHTML=`😞 ПРОИГРЫШ (${v}) -${currentBet} 💎`;result.className='result-message lose'}sendGameResult('bowling',currentBet,win,wa,{}).then(()=>{setTimeout(()=>{resetBowlingPins();bowlingLock=false;afterGame(win)},1500)})},900)})
 
-        // 🎯 ДАРТС — исправлена логика чёт/нечет
+        // 🎯 ДАРТС
         let dartsBet=null,dartsLock=false,dartSwingActive=false,dartSwingPos=0,dartSwingDir=1,dartSwingAnimFrame
         document.querySelectorAll('[data-darts]').forEach(b=>b.addEventListener('click',()=>{dartsBet=b.dataset.darts;document.querySelectorAll('[data-darts]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');document.getElementById('result-message').innerHTML='';document.getElementById('result-message').className='result-message'}))
         function startDartSwing(){if(!dartSwingActive)return;dartSwingPos+=dartSwingDir*2.5;if(Math.abs(dartSwingPos)>40)dartSwingDir*=-1;document.getElementById('dartboard-swing').style.transform=`translateX(${dartSwingPos}px)`;document.getElementById('accuracy-bar').style.width=(100-Math.abs(dartSwingPos)/40*100)+'%';dartSwingAnimFrame=requestAnimationFrame(startDartSwing)}
         function initDarts(){if(dartsLock)return;document.getElementById('tap-hint').style.display='';document.getElementById('dart-arrow').style.display='none';document.getElementById('hit-effect').style.display='none';dartSwingPos=0;dartSwingDir=1;dartSwingActive=true;startDartSwing()}
-        document.getElementById('darts-scene-el').addEventListener('click',(e)=>{if(dartsLock||!dartSwingActive)return;if(!dartsBet){tg.showAlert('❌ Сначала выберите ставку!');return}dartSwingActive=false;dartsLock=true;cancelAnimationFrame(dartSwingAnimFrame);
-            const v=Math.floor(Math.random()*6)+1;
-            const isEven=v%2===0;
-            // Правильная логика: чёт — выигрыш при 2,4,6; нечет — выигрыш при 1,3,5
-            const win=(dartsBet==='even'&&isEven)||(dartsBet==='odd'&&!isEven);
-            const wa=win?Math.floor(currentBet*1.5):0;
-            const dart=document.getElementById('dart-arrow');const hit=document.getElementById('hit-effect');
-            const board=document.getElementById('dartboard-swing');const result=document.getElementById('result-message');
-            document.getElementById('tap-hint').style.display='none';
-            dart.style.display='block';dart.style.transition='all 0.1s ease-out';
-            dart.style.left=`${50+dartSwingPos/40*8}%`;dart.style.top='58%';dart.style.transform='rotate(-25deg)';
-            setTimeout(()=>{dart.style.top='52%';dart.style.left=`${50+dartSwingPos/40*4}%`;dart.style.transform='rotate(-10deg)'},120);
-            setTimeout(()=>{dart.style.top='49%';dart.style.left=`${50+dartSwingPos/40*1.5}%`;dart.style.transform='rotate(0deg)'},240);
-            setTimeout(()=>{
-                if(win){dart.style.display='none';hit.style.display='block';hit.style.left=`${50+dartSwingPos/40*1.5}%`;hit.style.top='49%';hit.style.animation='none';hit.offsetHeight;hit.style.animation='hitPop 0.5s ease-out forwards';board.style.boxShadow='0 0 60px rgba(255,215,0,0.8)';setTimeout(()=>board.style.boxShadow='',700);spawnWinCoins(6);result.innerHTML=`🎯 В яблочко! +${wa} 💎 (${v})`;result.className='result-message win'}
-                else{dart.style.transition='all 0.4s ease-in';dart.style.top='22%';dart.style.left='78%';dart.style.transform='rotate(70deg)';result.innerHTML=`💨 Мимо (${v}) -${currentBet} 💎`;result.className='result-message lose'}
-                sendGameResult('darts',currentBet,win,wa,{}).then(()=>{setTimeout(()=>{dart.style.display='none';hit.style.display='none';dart.style.transition='none';dart.style.top='58%';dart.style.left='50%';dart.style.transform='rotate(-25deg)';board.style.transform='translateX(0)';document.getElementById('accuracy-bar').style.width='0%';dartsLock=false;afterGame(win)},1000)})
-            },450)})
+        document.getElementById('darts-scene-el').addEventListener('click',(e)=>{if(dartsLock||!dartSwingActive)return;if(!dartsBet){tg.showAlert('❌ Сначала выберите ставку!');return}dartSwingActive=false;dartsLock=true;cancelAnimationFrame(dartSwingAnimFrame);const v=Math.floor(Math.random()*6)+1;const isEven=v%2===0;const win=(dartsBet==='even'&&isEven)||(dartsBet==='odd'&&!isEven);const wa=win?Math.floor(currentBet*1.5):0;const dart=document.getElementById('dart-arrow');const hit=document.getElementById('hit-effect');const board=document.getElementById('dartboard-swing');const result=document.getElementById('result-message');document.getElementById('tap-hint').style.display='none';dart.style.display='block';dart.style.transition='all 0.1s ease-out';dart.style.left=`${50+dartSwingPos/40*8}%`;dart.style.top='58%';dart.style.transform='rotate(-25deg)';setTimeout(()=>{dart.style.top='52%';dart.style.left=`${50+dartSwingPos/40*4}%`;dart.style.transform='rotate(-10deg)'},120);setTimeout(()=>{dart.style.top='49%';dart.style.left=`${50+dartSwingPos/40*1.5}%`;dart.style.transform='rotate(0deg)'},240);setTimeout(()=>{if(win){dart.style.display='none';hit.style.display='block';hit.style.left=`${50+dartSwingPos/40*1.5}%`;hit.style.top='49%';hit.style.animation='none';hit.offsetHeight;hit.style.animation='hitPop 0.5s ease-out forwards';board.style.boxShadow='0 0 60px rgba(255,215,0,0.8)';setTimeout(()=>board.style.boxShadow='',700);spawnWinCoins(6);result.innerHTML=`🎯 В яблочко! +${wa} 💎 (${v})`;result.className='result-message win'}else{dart.style.transition='all 0.4s ease-in';dart.style.top='22%';dart.style.left='78%';dart.style.transform='rotate(70deg)';result.innerHTML=`💨 Мимо (${v}) -${currentBet} 💎`;result.className='result-message lose'}sendGameResult('darts',currentBet,win,wa,{}).then(()=>{setTimeout(()=>{dart.style.display='none';hit.style.display='none';dart.style.transition='none';dart.style.top='58%';dart.style.left='50%';dart.style.transform='rotate(-25deg)';board.style.transform='translateX(0)';document.getElementById('accuracy-bar').style.width='0%';dartsLock=false;afterGame(win)},1000)})},450)})
 
         document.querySelectorAll('.game-card').forEach(c=>c.addEventListener('click',()=>{const g=c.dataset.game;showGame(g);if(g==='darts')initDarts()}))
         document.getElementById('back-to-menu').addEventListener('click',backToMenu)
         document.querySelectorAll('[data-roulette]').forEach(b=>b.addEventListener('click',()=>{crb=b.dataset.roulette;document.querySelectorAll('[data-roulette]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
         document.querySelectorAll('[data-dice]').forEach(b=>b.addEventListener('click',()=>{cdb=b.dataset.dice;document.querySelectorAll('[data-dice]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))
         document.getElementById('spin-btn').addEventListener('click',spinSlots);document.getElementById('roulette-spin-btn').addEventListener('click',spinRoulette);document.getElementById('dice-spin-btn').addEventListener('click',rollDice);document.getElementById('bj-start-btn').addEventListener('click',sbj);document.getElementById('bj-hit').addEventListener('click',bjh);document.getElementById('bj-stand').addEventListener('click',bjs)
-        initBetButtons();loadBalance();loadDailyBonus();checkPendingPaymentOnLoad();handleReferralJoin();
+        initBetButtons();loadBalance();loadDailyBonus();checkPendingPaymentOnLoad();tg.ready()
     </script>
 </body>
 </html>
