@@ -135,8 +135,12 @@
         function initBetButtons(){document.querySelectorAll('.bet-option[data-bet]').forEach(b=>b.addEventListener('click',()=>{currentBet=parseInt(b.dataset.bet);document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}))}
         async function loadBalance(){if(!userId)return;try{const r=await fetch(`${BOT_API_URL}/api/get_balance`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});const d=await r.json();if(d.success){balance=d.balance;document.getElementById('balance').innerText=balance}}catch(e){}}
         async function sendGameResult(game,bet,win,wa,details){if(isLoading)return;isLoading=true;try{const r=await fetch(`${BOT_API_URL}/api/game_result`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,game,bet,win,win_amount:wa,details})});const d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance}return d}catch(e){}finally{isLoading=false}}
-        async function afterGame(win){
+async function afterGame(win){
     await loadBalance();
+    
+    // Ждём 3 секунды чтобы игрок увидел результат
+    await new Promise(r => setTimeout(r, 3000));
+    
     // Сбрасываем ставки
     currentBet=0;
     document.querySelectorAll('.bet-option[data-bet]').forEach(x=>x.classList.remove('selected'));
@@ -147,8 +151,16 @@
     if(currentGame==='roulette'){
         crb=null;
         document.querySelectorAll('[data-roulette]').forEach(x=>x.classList.remove('selected'));
+        // Полностью пересоздаём колесо
+        const ring=document.getElementById('roulette-ring');
+        ring.style.transition='none';
+        ring.style.transform='rotate(0deg)';
+        const ball=document.getElementById('roulette-ball-anim');
+        ball.style.transition='none';
+        ball.style.transform='';
         buildRouletteRing();
         document.getElementById('roulette-result-display').innerHTML='?';
+        rouletteSpinning=false;
     }
     if(currentGame==='dice'){
         cdb=null;
@@ -158,8 +170,8 @@
     }
     if(currentGame==='bowling'){
         bowlingBet=null;
-        resetBowlingPins();
         document.querySelectorAll('[data-bowling]').forEach(x=>x.classList.remove('selected'));
+        resetBowlingPins();
     }
     if(currentGame==='darts'){
         dartsBet=null;
