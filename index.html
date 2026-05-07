@@ -182,7 +182,16 @@
             try{
                 const r=await fetch(`${BOT_API_URL}/api/save_profile`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,display_name:dn,avatar_emoji:selectedAvatar})});
                 const d=await r.json();
-                if(d.success){currentDisplayName=dn;document.getElementById('profile-username').innerText=dn||username;document.getElementById('nickname-modal').classList.remove('active');tg.showAlert('✅ Сохранено!')}else{tg.showAlert('❌ Ошибка')}
+                if(d.success){
+                    currentDisplayName=dn;
+                    document.getElementById('profile-username').innerText=dn||username;
+                    document.getElementById('nickname-modal').classList.remove('active');
+                    // Обновляем магазин
+                    await loadShopSilent(currentShopCategory);
+                    // Обновляем профиль если открыт
+                    await loadProfile();
+                    tg.showAlert('✅ Сохранено!');
+                }else{tg.showAlert('❌ Ошибка')}
             }catch(e){}finally{btn.disabled=false;btn.innerText='💾 Сохранить'}
         })
 
