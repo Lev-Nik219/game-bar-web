@@ -84,17 +84,23 @@
         console.log('initDataUnsafe:', JSON.stringify(tg.initDataUnsafe));
         let currentGame=null,currentBet=0,balance=0,isLoading=false,userProfile=null,selectedAmount=null
         function getUserId(){
-    // Сначала пробуем Telegram WebApp user
-    if(webAppUser&&webAppUser.id)return webAppUser.id;
-    // Потом user_id из URL
-    const p=new URLSearchParams(window.location.search);
-    const uid=p.get('user_id');
-    if(uid)return parseInt(uid);
-    // Если ничего нет — берём из localStorage (сохраняли при первом входе)
-    const saved=localStorage.getItem('gamebar_user_id');
-    if(saved)return parseInt(saved);
-    return null;
-}
+            // Сначала пробуем Telegram WebApp user
+            if(webAppUser && webAppUser.id) {
+                localStorage.setItem('gamebar_user_id', webAppUser.id);
+                return webAppUser.id;
+            }
+            // Потом user_id из URL
+            const p = new URLSearchParams(window.location.search);
+            const uid = p.get('user_id');
+            if(uid && uid !== 'none' && !isNaN(parseInt(uid))) {
+                localStorage.setItem('gamebar_user_id', uid);
+                return parseInt(uid);
+            }
+            // Если ничего нет — берём из localStorage
+            const saved = localStorage.getItem('gamebar_user_id');
+            if(saved) return parseInt(saved);
+            return null;
+        }
         const userId=getUserId();const username=webAppUser?.username||webAppUser?.first_name||'Игрок'
         if(userId)localStorage.setItem('gamebar_user_id',userId);
         document.getElementById('username').innerText=username
@@ -167,21 +173,21 @@
     async function handleReferralJoin(){
         const urlParams = new URLSearchParams(window.location.search);
         const ref = urlParams.get('ref');
+        const uid = userId || localStorage.getItem('gamebar_user_id');
         
-        if(ref && userId){
+        if(ref && uid){
             const inviterId = ref;
             const stored = localStorage.getItem('referral_processed');
-            if(stored !== inviterId && parseInt(inviterId) !== userId){
+            if(stored !== inviterId && parseInt(inviterId) !== parseInt(uid)){
                 try{
                     const r = await fetch(`${BOT_API_URL}/api/referral_join`, {
                         method:'POST',
                         headers:{'Content-Type':'application/json'},
-                        body:JSON.stringify({user_id:userId, inviter_id:parseInt(inviterId)})
+                        body:JSON.stringify({user_id:parseInt(uid), inviter_id:parseInt(inviterId)})
                     });
                     const d = await r.json();
                     if(d.success){
                         localStorage.setItem('referral_processed', inviterId);
-                        await loadBalance();
                         tg.showAlert(`🎉 ${d.message}`);
                     }
                 }catch(e){}
