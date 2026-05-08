@@ -51,6 +51,9 @@
         .shop-items{display:flex;flex-direction:column;gap:10px;overflow-y:visible;padding:2px}.shop-item-card{background:linear-gradient(180deg,rgba(42,42,74,0.9),rgba(26,26,58,0.95));border-radius:18px;padding:16px;display:flex;align-items:center;gap:14px;position:relative;animation:cardIn 0.3s ease}.shop-item-card.owned{background:rgba(76,175,80,0.1)}.shop-item-card.owned::after{content:'✅';position:absolute;top:10px;right:12px;font-size:18px}.shop-item-icon{font-size:36px;min-width:44px;text-align:center}.shop-item-info{flex:1}.shop-item-name{font-size:14px;font-weight:700;margin-bottom:2px}.shop-item-desc{font-size:11px;opacity:0.5}.shop-item-price{font-size:16px;font-weight:800;color:#ffd700;display:flex;align-items:center;gap:3px}.shop-buy-btn{background:linear-gradient(180deg,#f7971e,#e65100);border:none;color:white;font-weight:700;padding:10px 16px;border-radius:20px;font-size:13px;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(247,151,30,0.3)}.shop-buy-btn:active{transform:scale(0.94)}.shop-buy-btn:disabled{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);box-shadow:none;cursor:not-allowed}.active-boost-badge{position:absolute;top:8px;right:8px;background:#4CAF50;color:white;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;animation:pulse 2s ease-in-out infinite}.no-items{text-align:center;opacity:0.4;padding:20px;font-size:14px}
         .level-carousel{position:relative;overflow:hidden;border-radius:20px;margin-bottom:16px;background:linear-gradient(135deg,rgba(247,151,30,0.15),rgba(255,210,0,0.1));border:1px solid rgba(247,151,30,0.3)}.level-track{display:flex;transition:transform 0.3s ease}.level-slide{min-width:100%;padding:24px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0.5;transform:scale(0.85);transition:all 0.3s ease}.level-slide.active{opacity:1;transform:scale(1)}.level-slide.current-user-level{border:2px solid #f7971e;box-shadow:0 0 20px rgba(247,151,30,0.4);background:rgba(247,151,30,0.08)}.level-slide.current-user-level .lvl-num{color:#f7971e!important;text-shadow:0 0 15px rgba(247,151,30,0.6)}.level-slide .lvl-num{font-size:64px;font-weight:800;line-height:1}.level-slide .lvl-icon{font-size:36px}.level-slide .lvl-name{font-size:16px;font-weight:700}.level-slide .lvl-bonus{font-size:11px;opacity:0.5}.level-slide .lvl-xp{font-size:10px;opacity:0.3}.level-nav{display:flex;justify-content:space-between;padding:8px 16px}.level-nav button{background:rgba(255,255,255,0.08);border:none;color:white;padding:8px 14px;border-radius:20px;cursor:pointer;font-size:16px}.level-dots{display:flex;justify-content:center;gap:6px;padding-bottom:12px}.level-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.3s}.level-dot.active{background:#f7971e;width:20px;border-radius:10px}.level-dot.passed{background:#4CAF50}
         .promo-section{background:var(--card-bg);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid var(--border)}
+        .price-item{cursor:pointer;transition:all 0.2s}
+        .price-item.selected{border:2px solid #f7971e!important;background:rgba(247,151,30,0.15)!important}
+        .price-item:active{transform:scale(0.97)}
     </style>
 </head>
 <body>
@@ -276,8 +279,32 @@
         async function loadReferral(){if(!userId)return;document.getElementById('my-promo-id').innerText=userId||'—';try{var r=await fetch(BOT_API_URL+'/api/get_referral_link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});var d=await r.json();if(d.success){refLink=d.link;document.getElementById('ref-count').innerText=d.count}}catch(e){}}
         function copyPromoCode(){if(userId){var shareText='🎮 Играй в Game Bar Casino!\nЗарабатывай баллы и получай бонусы!\n\n👉 https://t.me/GamesAsino_bot/GamesAsino\n\n🎁 Введи мой ID-промокод: '+userId+'\n(скопируй и вставь в разделе Друзья)';navigator.clipboard.writeText(shareText).then(function(){tg.showAlert('✅ Ссылка скопирована! Отправь другу.')}).catch(function(){tg.showAlert('📋 Твой ID: '+userId)})}}
         function shareGame(){var shareText='🎮 Играй в Game Bar Casino!\nЗарабатывай баллы и получай бонусы!\n\n👉 https://t.me/GamesAsino_bot/GamesAsino\n\n🎁 Введи мой ID-промокод: '+userId;tg.openLink('https://t.me/share/url?url='+encodeURIComponent('https://t.me/GamesAsino_bot/GamesAsino')+'&text='+encodeURIComponent(shareText))}
-        async function applyPromoCode(){if(!userId)return;var promoInput=document.getElementById('promo-input').value.trim();if(!promoInput){tg.showAlert('❌ Введи ID друга!');return}var refId=parseInt(promoInput);if(!refId||refId===userId){tg.showAlert('❌ Неверный ID! Нельзя ввести свой.');return}if(refId.toString().length<5){tg.showAlert('❌ ID слишком короткий');return}var btn=document.querySelector('#promo-input + .shop-buy-btn');if(btn){btn.disabled=true;btn.innerText='⏳'}try{var r=await fetch(BOT_API_URL+'/api/referral_join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,ref_id:refId})});var d=await r.json();if(d.success){tg.showAlert('🎉 Промокод активирован! +50 баллов тебе и другу!');document.getElementById('promo-input').value='';await loadBalance();await loadReferral()}else{tg.showAlert(d.error||'❌ Не удалось активировать')}}catch(e){tg.showAlert('❌ Ошибка')}if(btn){btn.disabled=false;btn.innerText='🎟️ Активировать'}}
-
+        async function applyPromoCode(){
+            if(!userId)return;
+            var promoInput=document.getElementById('promo-input').value.trim();
+            if(!promoInput){tg.showAlert('❌ Введи ID друга!');return}
+            var refId=parseInt(promoInput);
+            if(!refId||refId===userId){tg.showAlert('❌ Неверный ID! Нельзя ввести свой.');return}
+            if(refId.toString().length<5){tg.showAlert('❌ ID слишком короткий');return}
+            var btn=document.querySelector('#promo-input + .shop-buy-btn');
+            if(btn){btn.disabled=true;btn.innerText='⏳';}
+            try{
+                var r=await fetch(BOT_API_URL+'/api/referral_join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,ref_id:refId})});
+                var d=await r.json();
+                if(d.success){
+                    tg.showAlert('🎉 Промокод активирован! +50 баллов тебе и другу!');
+                    document.getElementById('promo-input').value='';
+                    await loadBalance();
+                    await loadReferral();
+                    if(currentShopCategory) await loadShopSilent(currentShopCategory);
+                }else{
+                    tg.showAlert(d.error||'❌ Не удалось активировать');
+                }
+            }catch(e){
+                tg.showAlert('❌ Ошибка');
+            }
+            if(btn){btn.disabled=false;btn.innerText='🎟️ Активировать';}
+        }
         var shopItems=[],currentShopCategory='all';
         async function loadShop(c){if(!userId)return;currentShopCategory=c||'all';document.querySelectorAll('.shop-cat-btn').forEach(function(b){b.classList.remove('active')});var ab=document.querySelector('.shop-cat-btn[data-cat="'+currentShopCategory+'"]');if(ab)ab.classList.add('active');try{var r=await fetch(BOT_API_URL+'/api/shop/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,category:currentShopCategory})});var d=await r.json();if(d.success){shopItems=d.items;renderShopItems(shopItems)}}catch(e){}}
         async function loadShopSilent(c){if(!userId)return;currentShopCategory=c||'all';document.querySelectorAll('.shop-cat-btn').forEach(function(b){b.classList.remove('active')});var ab=document.querySelector('.shop-cat-btn[data-cat="'+currentShopCategory+'"]');if(ab)ab.classList.add('active');try{var r=await fetch(BOT_API_URL+'/api/shop/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,category:currentShopCategory})});var d=await r.json();if(d.success){shopItems=d.items;document.getElementById('shop-items').innerHTML=generateShopHTML(shopItems)}}catch(e){}}
