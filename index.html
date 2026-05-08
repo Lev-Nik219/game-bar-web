@@ -105,7 +105,7 @@
             <div style="text-align:center;padding:20px">
                 <div style="font-size:48px;margin-bottom:10px">👥</div>
                 <div style="font-size:20px;font-weight:800;margin-bottom:6px">Пригласи друга!</div>
-                <div style="font-size:13px;opacity:0.5;margin-bottom:14px">Поделись ссылкой — получите по 50 💎</div>
+                <div style="font-size:13px;opacity:0.5;margin-bottom:14px">Поделись ссылкой — получите по 25 💎</div>
                 <div class="promo-section">
                     <div style="font-size:12px;opacity:0.4;margin-bottom:6px">Твой ID-промокод</div>
                     <div style="font-size:22px;font-weight:800;color:#ffd700;margin-bottom:8px" id="my-promo-id">—</div>
@@ -292,7 +292,7 @@
                 var r=await fetch(BOT_API_URL+'/api/referral_join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,ref_id:refId})});
                 var d=await r.json();
                 if(d.success){
-                    tg.showAlert('🎉 Промокод активирован! +50 баллов тебе и другу!');
+                    tg.showAlert('🎉 Промокод активирован! +25 баллов вам и другу!');
                     document.getElementById('promo-input').value='';
                     await loadBalance();
                     await loadReferral();
