@@ -395,8 +395,43 @@
         async function giveAdReward(){try{var r=await fetch(BOT_API_URL+'/api/claim_ad_reward',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});var d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;tg.showAlert('✅ +25 баллов!')}else if(d.error==='cooldown'){tg.showAlert('⏳ Жди '+(d.remaining||20)+' сек.')}else{tg.showAlert('⏳ Подожди')}}catch(e){}}
         async function giveFreeAdReward(){try{var r=await fetch(BOT_API_URL+'/api/claim_free_bonus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});var d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;tg.showAlert('📺 Рекламы нет, дарим +10 баллов!')}else if(d.error==='cooldown'){tg.showAlert('⏳ Жди '+(d.remaining||20)+' сек.')}else{tg.showAlert('⏳ Подожди')}}catch(e){}}
 
-        async function checkPendingPaymentOnLoad(){if(!userId)return;var ppId=localStorage.getItem('pending_payment_id'),ppUid=localStorage.getItem('pending_user_id');if(ppId&&ppUid&&parseInt(ppUid)===userId){document.getElementById('pending-payment-banner').classList.remove('hidden');try{var r=await fetch(BOT_API_URL+'/api/check_payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});var d=await r.json();if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance()}}catch(e){}}}
-        document.getElementById('check-pending-payment-btn').addEventListener('click',async function(){var btn=document.getElementById('check-pending-payment-btn');btn.disabled=true;btn.innerText='⏳';var ppId=localStorage.getItem('pending_payment_id');try{var r=await fetch(BOT_API_URL+'/api/check_payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});var d=await r.json();if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance();tg.showAlert('✅ Оплата!')}else{tg.showAlert(d.message||'⏳')}}catch(e){}finally{btn.disabled=false;btn.innerText='🔄 Проверить'}});
+        async function checkPendingPaymentOnLoad(){
+            if(!userId)return;
+            var ppId=localStorage.getItem('pending_payment_id'),ppUid=localStorage.getItem('pending_user_id'),ppTime=localStorage.getItem('pending_payment_time');
+            if(ppId&&ppUid&&parseInt(ppUid)===userId){
+                // Проверяем, не прошло ли 5 минут
+                if(ppTime){
+                    var elapsed=Math.floor(Date.now()/1000)-parseInt(ppTime);
+                    if(elapsed>300){
+                        // Прошло больше 5 минут — удаляем
+                        localStorage.removeItem('pending_payment_id');
+                        localStorage.removeItem('pending_user_id');
+                        localStorage.removeItem('pending_payment_time');
+                        return;
+                    }
+                    // Запускаем таймер автоудаления
+                    var remaining=300-elapsed;
+                    setTimeout(function(){
+                        document.getElementById('pending-payment-banner').classList.add('hidden');
+                        localStorage.removeItem('pending_payment_id');
+                        localStorage.removeItem('pending_user_id');
+                        localStorage.removeItem('pending_payment_time');
+                    },remaining*1000);
+                }
+                document.getElementById('pending-payment-banner').classList.remove('hidden');
+                try{
+                    var r=await fetch(BOT_API_URL+'/api/check_payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});
+                    var d=await r.json();
+                    if(d.status==='paid'||d.status==='already_credited'){
+                        document.getElementById('pending-payment-banner').classList.add('hidden');
+                        localStorage.removeItem('pending_payment_id');
+                        localStorage.removeItem('pending_user_id');
+                        localStorage.removeItem('pending_payment_time');
+                        await loadBalance();
+                    }
+                }catch(e){}
+            }
+        }        document.getElementById('check-pending-payment-btn').addEventListener('click',async function(){var btn=document.getElementById('check-pending-payment-btn');btn.disabled=true;btn.innerText='⏳';var ppId=localStorage.getItem('pending_payment_id');try{var r=await fetch(BOT_API_URL+'/api/check_payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,payment_id:ppId})});var d=await r.json();if(d.status==='paid'||d.status==='already_credited'){document.getElementById('pending-payment-banner').classList.add('hidden');localStorage.removeItem('pending_payment_id');localStorage.removeItem('pending_user_id');await loadBalance();tg.showAlert('✅ Оплата!')}else{tg.showAlert(d.message||'⏳')}}catch(e){}finally{btn.disabled=false;btn.innerText='🔄 Проверить'}});
 
         async function loadDailyBonus(){if(!userId)return;try{var r=await fetch(BOT_API_URL+'/api/daily_bonus_status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});var d=await r.json();if(d.success){var s=d.status;if(s.can_claim){document.getElementById('daily-bonus-banner').classList.remove('hidden');document.getElementById('claim-daily-btn').innerText='+'+s.next_bonus+' 💎';document.getElementById('db-streak-text').innerText='День '+(s.streak+1)}}}catch(e){}}
         document.getElementById('claim-daily-btn').addEventListener('click',async function(){var btn=document.getElementById('claim-daily-btn');btn.disabled=true;btn.innerText='⏳';try{var r=await fetch(BOT_API_URL+'/api/daily_bonus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});var d=await r.json();if(d.success){balance=d.new_balance;document.getElementById('balance').innerText=balance;document.getElementById('daily-bonus-banner').classList.add('hidden');tg.showAlert('🎁 +'+d.bonus+'!')}else{tg.showAlert('⏳ Уже')}}catch(e){}finally{btn.disabled=false;btn.innerText='+10 💎'}});
@@ -416,7 +451,7 @@
         document.getElementById('buy-coins-btn').addEventListener('click',function(){document.getElementById('coins-modal').classList.remove('active');document.getElementById('buy-modal').classList.add('active')});
         document.getElementById('close-buy-modal').addEventListener('click',function(){document.getElementById('buy-modal').classList.remove('active');selectedAmount=null;document.getElementById('confirm-purchase-btn').disabled=true;document.querySelectorAll('#buy-modal .price-item').forEach(function(i){i.classList.remove('selected')})});
         document.querySelectorAll('.price-item').forEach(function(i){i.addEventListener('click',function(){document.querySelectorAll('.price-item').forEach(function(x){x.classList.remove('selected')});i.classList.add('selected');selectedAmount={points:parseInt(i.dataset.amount),price:parseFloat(i.dataset.price)};document.getElementById('confirm-purchase-btn').disabled=false})});
-        document.getElementById('confirm-purchase-btn').addEventListener('click',async function(){if(!selectedAmount)return;var btn=document.getElementById('confirm-purchase-btn');btn.disabled=true;btn.innerText='⏳';try{var r=await fetch(BOT_API_URL+'/api/create_invoice',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,amount_points:selectedAmount.points})});var d=await r.json();if(d.success&&d.invoice_url){localStorage.setItem('pending_payment_id',d.payment_id);localStorage.setItem('pending_user_id',userId);document.getElementById('buy-modal').classList.remove('active');document.getElementById('pending-payment-banner').classList.remove('hidden');tg.openLink(d.invoice_url)}else{tg.showAlert('❌ Ошибка')}}catch(e){}finally{btn.innerText='💳 Оплатить';btn.disabled=true;selectedAmount=null;document.querySelectorAll('#buy-modal .price-item').forEach(function(i){i.classList.remove('selected')})}});
+        document.getElementById('confirm-purchase-btn').addEventListener('click',async function(){if(!selectedAmount)return;var btn=document.getElementById('confirm-purchase-btn');btn.disabled=true;btn.innerText='⏳';try{var r=await fetch(BOT_API_URL+'/api/create_invoice',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,amount_points:selectedAmount.points})});var d=await r.json();if(d.success&&d.invoice_url){localStorage.setItem('pending_payment_id',d.payment_id);localStorage.setItem('pending_user_id',userId);localStorage.setItem('pending_payment_time',Math.floor(Date.now()/1000));document.getElementById('buy-modal').classList.remove('active');document.getElementById('pending-payment-banner').classList.remove('hidden');tg.openLink(d.invoice_url)}else{tg.showAlert('❌ Ошибка')}}catch(e){}finally{btn.innerText='💳 Оплатить';btn.disabled=true;selectedAmount=null;document.querySelectorAll('#buy-modal .price-item').forEach(function(i){i.classList.remove('selected')})}});
         document.querySelectorAll('.modal-overlay').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('active')})});
 
         document.getElementById('close-nickname-modal').addEventListener('click',function(){document.getElementById('nickname-modal').classList.remove('active')});
