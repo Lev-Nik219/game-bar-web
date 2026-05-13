@@ -10,7 +10,7 @@
         @keyframes bgPulse{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
         @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(247,151,30,0.2)}50%{box-shadow:0 0 40px rgba(247,151,30,0.4)}}
-        @keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+        @keyframes cardIn{from{opacity:0;transform:translateY(30px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
         @keyframes popIn{0%{transform:scale(0)}80%{transform:scale(1.15)}100%{transform:scale(1)}}
         @keyframes dice-roll{0%{transform:rotate(0deg) scale(0.5);opacity:0}50%{transform:rotate(180deg) scale(1.2);opacity:1}100%{transform:rotate(360deg) scale(1);opacity:1}}
         @keyframes cardDeal{0%{transform:translateX(-40px) rotate(-10deg);opacity:0}100%{transform:translateX(0) rotate(0);opacity:1}}
@@ -19,105 +19,106 @@
         @keyframes hitPop{0%{transform:translate(-50%,-50%) scale(0);opacity:1}60%{transform:translate(-50%,-50%) scale(1.8);opacity:0.8}100%{transform:translate(-50%,-50%) scale(2.5);opacity:0}}
         @keyframes arrowUp{0%,100%{transform:translateX(-50%) translateY(0);opacity:0.3}50%{transform:translateX(-50%) translateY(-15px);opacity:1}}
         @keyframes pulse{0%,100%{opacity:0.3}50%{opacity:0.7}}
-        @keyframes coinRain{0%{transform:translateY(-100px) rotate(0deg);opacity:1}100%{transform:translateY(400px) rotate(720deg);opacity:0}}
+        @keyframes fountainRain{0%{transform:translateY(0) rotate(0deg) scale(0.5);opacity:0}20%{opacity:1;transform:translateY(-80px) rotate(90deg) scale(1.2)}50%{transform:translateY(-160px) rotate(200deg) scale(1)}80%{transform:translateY(-240px) rotate(320deg) scale(0.7)}100%{transform:translateY(-300px) rotate(400deg) scale(0.3);opacity:0}}
         @keyframes modalIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
         @keyframes neonPulse{0%,100%{text-shadow:0 0 10px #ffd700,0 0 30px #f7971e}50%{text-shadow:0 0 20px #ffd700,0 0 60px #f7971e,0 0 80px #e65100}}
-        @keyframes floatParticle{0%,100%{transform:translateY(0) translateX(0);opacity:0}25%{transform:translateY(-30px) translateX(20px);opacity:1}50%{transform:translateY(-60px) translateX(-10px);opacity:0.5}75%{transform:translateY(-30px) translateX(-20px);opacity:1}}
-        @keyframes balanceWave{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
-        @keyframes flyToWallet{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--fx),var(--fy)) scale(0.3)}}
-        @keyframes leverPull{0%{transform:rotate(0deg)}40%{transform:rotate(-25deg)}100%{transform:rotate(0deg)}}
-        @keyframes bannerIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-        @keyframes bannerOut{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(0.5)}}
+        @keyframes floatParticle{0%,100%{transform:translateY(0) translateX(0);opacity:0}25%{transform:translateY(-50px) translateX(30px);opacity:0.8}50%{transform:translateY(-100px) translateX(-15px);opacity:0.4}75%{transform:translateY(-50px) translateX(-35px);opacity:0.8}}
+        @keyframes balanceWave{0%{transform:scale(1)}30%{transform:scale(1.1)}60%{transform:scale(0.95)}100%{transform:scale(1)}}
+        @keyframes flyToWallet{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--fx),var(--fy)) scale(0.2)}}
+        @keyframes leverPull{0%{transform:rotate(0deg)}40%{transform:rotate(-30deg)}100%{transform:rotate(0deg)}}
+        @keyframes bannerIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5) rotate(-10deg)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.05) rotate(2deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+        @keyframes bannerOut{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(0.5) rotate(10deg)}}
+        @keyframes tabSlideIn{0%{opacity:0;transform:translateY(40px) scale(0.9);filter:blur(10px)}60%{opacity:1;transform:translateY(-5px) scale(1.02);filter:blur(0)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
         
-        body{background:linear-gradient(135deg,#0a1a0a,#1a2a1a 30%,#0d1a0d 60%,#0a1a0a 100%);background-size:400% 400%;animation:bgPulse 12s ease infinite;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:white;min-height:100vh;display:flex;justify-content:center;align-items:center;overflow-x:hidden;touch-action:pan-y}
-        body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 20% 50%,rgba(76,175,80,0.04) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(247,151,30,0.04) 0%,transparent 50%),radial-gradient(circle at 50% 80%,rgba(76,175,80,0.04) 0%,transparent 50%),radial-gradient(circle at 10% 10%,rgba(76,175,80,0.02) 0%,transparent 30%),radial-gradient(circle at 90% 90%,rgba(247,151,30,0.02) 0%,transparent 30%);pointer-events:none;z-index:0}
+        body{background:linear-gradient(135deg,#0a1a0a,#0d1f0d 30%,#0a1a0a 60%,#0d1f0d 100%);background-size:400% 400%;animation:bgPulse 15s ease infinite;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:white;min-height:100vh;display:flex;justify-content:center;align-items:center;overflow-x:hidden;touch-action:pan-y}
+        body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 20%,rgba(76,175,80,0.06) 0%,transparent 60%),radial-gradient(ellipse at 70% 60%,rgba(247,151,30,0.05) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(76,175,80,0.04) 0%,transparent 50%),radial-gradient(ellipse at 10% 10%,rgba(255,210,0,0.03) 0%,transparent 40%),radial-gradient(ellipse at 90% 90%,rgba(76,175,80,0.03) 0%,transparent 40%);pointer-events:none;z-index:0}
         
         .game-container{width:100%;max-width:500px;margin:0 auto;padding:16px;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1}
         
-        .header{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-radius:24px;padding:16px 20px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.05)}
-        .balance{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.5);padding:10px 18px;border-radius:30px;transition:all 0.3s}
-        .balance.wave{animation:balanceWave 0.4s ease}
+        .header{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);backdrop-filter:blur(50px) saturate(200%);-webkit-backdrop-filter:blur(50px) saturate(200%);border-radius:24px;padding:16px 20px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 40px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.04)}
+        .balance{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.5);padding:10px 18px;border-radius:30px;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:1px solid rgba(255,255,255,0.05)}
+        .balance.wave{animation:balanceWave 0.6s cubic-bezier(0.4,0,0.2,1)}
         .balance-icon{font-size:22px;animation:float 3s ease-in-out infinite}
-        .balance-amount{font-size:22px;font-weight:800;background:linear-gradient(180deg,#ffd700,#ff8c00);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:all 0.3s}
+        .balance-amount{font-size:22px;font-weight:800;background:linear-gradient(180deg,#ffd700,#4CAF50);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:all 0.4s}
         .username{font-size:13px;opacity:0.6}
         
-        .daily-bonus-banner{background:linear-gradient(135deg,rgba(76,175,80,0.15),rgba(247,151,30,0.1));border:1px solid rgba(76,175,80,0.3);border-radius:18px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;animation:glow 2s ease-in-out infinite;cursor:pointer}
-        .daily-bonus-banner .db-btn{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white;border:none;padding:10px 18px;border-radius:25px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 4px 15px rgba(76,175,80,0.3)}
+        .daily-bonus-banner{background:linear-gradient(135deg,rgba(76,175,80,0.2),rgba(247,151,30,0.12));border:1px solid rgba(76,175,80,0.35);border-radius:18px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;animation:glow 2s ease-in-out infinite;cursor:pointer;box-shadow:0 4px 20px rgba(76,175,80,0.1)}
+        .daily-bonus-banner .db-btn{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white;border:none;padding:10px 18px;border-radius:25px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 4px 15px rgba(76,175,80,0.4)}
         
-        .tab-nav{display:flex;gap:8px;margin-bottom:16px;background:var(--card-bg);border-radius:20px;padding:6px;border:1px solid var(--border);box-shadow:var(--shadow-3d)}
-        .tab-btn{flex:1;padding:12px 4px;border:none;background:transparent;color:rgba(255,255,255,0.45);border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+        .tab-nav{display:flex;gap:8px;margin-bottom:16px;background:rgba(255,255,255,0.02);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-radius:20px;padding:6px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+        .tab-btn{flex:1;padding:12px 4px;border:none;background:transparent;color:rgba(255,255,255,0.45);border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
+        .tab-btn::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%) scaleX(0);width:60%;height:3px;background:linear-gradient(90deg,#4CAF50,#ffd200);border-radius:3px;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)}
+        .tab-btn.active::after{transform:translateX(-50%) scaleX(1)}
         .tab-btn:hover{transform:translateY(-2px);color:white}
-        .tab-btn.active{background:linear-gradient(180deg,rgba(76,175,80,0.25),rgba(247,151,30,0.15));color:white;transform:scale(1.05)}
-        .tab-content{display:none;flex:1;animation:cardIn 0.4s ease}
-        .tab-content.active{display:block}
+        .tab-btn.active{background:linear-gradient(180deg,rgba(76,175,80,0.2),rgba(247,151,30,0.12));color:white;transform:scale(1.03)}
+        .tab-content{display:none;flex:1}
+        .tab-content.active{display:block;animation:tabSlideIn 0.5s cubic-bezier(0.4,0,0.2,1)}
         
         .games-menu{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-        .game-card{background:linear-gradient(180deg,rgba(42,62,42,0.9),rgba(26,46,26,0.95));border-radius:22px;padding:22px 10px;text-align:center;cursor:pointer;border:1px solid var(--border);box-shadow:0 8px 24px rgba(0,0,0,0.3);position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
-        .game-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.5)}
-        .game-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(76,175,80,0.1) 0%,transparent 70%);opacity:0;transition:opacity 0.3s}
+        .game-card{background:linear-gradient(180deg,rgba(42,62,42,0.85),rgba(26,46,26,0.9));border-radius:22px;padding:22px 10px;text-align:center;cursor:pointer;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 24px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.03);position:relative;overflow:hidden;transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+        .game-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.6),0 0 30px rgba(76,175,80,0.1)}
+        .game-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(76,175,80,0.08) 0%,transparent 70%);opacity:0;transition:opacity 0.4s}
         .game-card:active{transform:scale(0.93)}
         .game-card:active::before{opacity:1}
-        .game-emoji{font-size:44px;margin-bottom:10px}
+        .game-emoji{font-size:44px;margin-bottom:10px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3))}
         .game-name{font-size:13px;font-weight:600;opacity:0.8}
         
-        .game-area{background:rgba(0,0,0,0.35);border-radius:24px;padding:20px;margin-bottom:16px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-3d);min-height:340px;position:relative;overflow:hidden}
-        .game-close{position:absolute;top:12px;right:14px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);border:none;color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;transition:all 0.2s}
-        .game-close:hover{background:rgba(255,107,107,0.3)}
-        .game-title{font-size:22px;font-weight:900;background:linear-gradient(180deg,#ffd700,#4CAF50);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;letter-spacing:1px;margin-top:10px}
+        .game-area{background:rgba(0,0,0,0.3);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;padding:20px;margin-bottom:16px;text-align:center;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 40px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.03);min-height:340px;position:relative;overflow:hidden}
+        .game-close{position:absolute;top:12px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;transition:all 0.3s}
+        .game-close:hover{background:rgba(255,107,107,0.3);border-color:rgba(255,107,107,0.5);transform:rotate(90deg)}
+        .game-title{font-size:22px;font-weight:900;background:linear-gradient(180deg,#ffd700,#4CAF50);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;margin-top:10px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
         
         .slot-reels{display:flex;justify-content:center;gap:14px;margin:20px 0}
-        .reel{width:75px;height:75px;background:linear-gradient(180deg,rgba(255,255,255,0.15),rgba(0,0,0,0.6));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:42px;border:2px solid var(--border);transition:all 0.3s;box-shadow:inset 0 2px 4px rgba(255,255,255,0.1),inset 0 -4px 8px rgba(0,0,0,0.5),0 8px 20px rgba(0,0,0,0.4);overflow:hidden;position:relative}
-        .reel::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.15),transparent);pointer-events:none}
+        .reel{width:75px;height:75px;background:linear-gradient(180deg,rgba(255,255,255,0.12),rgba(0,0,0,0.7));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:42px;border:2px solid rgba(255,255,255,0.08);transition:all 0.3s;box-shadow:inset 0 2px 4px rgba(255,255,255,0.08),inset 0 -6px 12px rgba(0,0,0,0.6),0 8px 24px rgba(0,0,0,0.5);overflow:hidden;position:relative}
+        .reel::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.12),transparent);pointer-events:none}
         .reel.spinning{filter:blur(4px)}
-        .reel.win-anim{animation:popIn 0.5s ease;border-color:#ffd700;box-shadow:0 0 30px rgba(255,215,0,0.6)}
+        .reel.win-anim{animation:popIn 0.6s ease;border-color:#ffd700;box-shadow:0 0 40px rgba(255,215,0,0.7),0 0 80px rgba(255,215,0,0.3)}
         
         .slot-lever-container{display:flex;flex-direction:column;align-items:center;margin:10px 0}
-        .slot-lever{width:40px;height:80px;background:linear-gradient(180deg,#e74c3c,#8B0000);border-radius:20px 20px 8px 8px;cursor:pointer;box-shadow:0 6px 0 #5a0000,0 8px 15px rgba(0,0,0,0.4);position:relative;transition:all 0.1s;top:0}
-        .slot-lever::after{content:'';position:absolute;top:-15px;left:50%;transform:translateX(-50%);width:28px;height:28px;background:radial-gradient(circle,#ff6b6b,#e74c3c);border-radius:50%;box-shadow:0 3px 8px rgba(0,0,0,0.5)}
-        .slot-lever:active{top:8px;box-shadow:0 2px 0 #5a0000,0 4px 8px rgba(0,0,0,0.3)}
-        .slot-lever.pulling{animation:leverPull 0.6s ease}
+        .slot-lever{width:44px;height:90px;background:linear-gradient(180deg,#e74c3c,#8B0000);border-radius:22px 22px 10px 10px;cursor:pointer;box-shadow:0 8px 0 #5a0000,0 12px 20px rgba(0,0,0,0.5);position:relative;transition:all 0.1s;top:0}
+        .slot-lever::after{content:'';position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:32px;height:32px;background:radial-gradient(circle at 40% 40%,#ff6b6b,#c0392b);border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,0.5),inset 0 2px 4px rgba(255,255,255,0.3)}
+        .slot-lever:active{top:10px;box-shadow:0 2px 0 #5a0000,0 4px 8px rgba(0,0,0,0.4)}
+        .slot-lever.pulling{animation:leverPull 0.7s cubic-bezier(0.4,0,0.2,1)}
         
-        .spin-btn{background:linear-gradient(180deg,#ff9d00,#e65100);border:none;color:white;font-weight:900;padding:18px 40px;border-radius:50px;font-size:18px;cursor:pointer;margin:14px 5px;box-shadow:0 8px 0 #bf360c,0 12px 30px rgba(247,151,30,0.5),inset 0 2px 0 rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:2px;transition:all 0.1s;position:relative;top:0}
-        .spin-btn:active{top:4px;box-shadow:0 4px 0 #bf360c,0 8px 20px rgba(247,151,30,0.5),inset 0 2px 0 rgba(255,255,255,0.3)}
+        .spin-btn{background:linear-gradient(180deg,#ff9d00,#e65100);border:none;color:white;font-weight:900;padding:18px 40px;border-radius:50px;font-size:18px;cursor:pointer;margin:14px 5px;box-shadow:0 8px 0 #bf360c,0 12px 30px rgba(247,151,30,0.5),inset 0 2px 0 rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:2px;transition:all 0.1s;position:relative;top:0}
+        .spin-btn:active{top:4px;box-shadow:0 4px 0 #bf360c,0 8px 20px rgba(247,151,30,0.5),inset 0 2px 0 rgba(255,255,255,0.2)}
         
-        .get-coins-btn{background:linear-gradient(180deg,#4CAF50,#2E7D32);width:100%;border:none;color:white;font-weight:800;padding:16px;border-radius:35px;font-size:15px;cursor:pointer;margin-bottom:10px;box-shadow:0 6px 20px rgba(76,175,80,0.3);transition:all 0.3s}
-        .get-coins-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(76,175,80,0.5)}
+        .get-coins-btn{background:linear-gradient(180deg,#4CAF50,#2E7D32);width:100%;border:none;color:white;font-weight:800;padding:16px;border-radius:35px;font-size:15px;cursor:pointer;margin-bottom:10px;box-shadow:0 6px 20px rgba(76,175,80,0.35);transition:all 0.3s}
+        .get-coins-btn:hover{transform:translateY(-2px);box-shadow:0 12px 35px rgba(76,175,80,0.5)}
         
-        .center-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:linear-gradient(180deg,rgba(0,0,0,0.95),rgba(20,20,40,0.95));padding:20px 30px;border-radius:20px;z-index:200;text-align:center;font-weight:800;font-size:22px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 60px rgba(0,0,0,0.8);pointer-events:none;animation:bannerOut 0.3s ease forwards}
-        .center-banner.show{animation:bannerIn 0.4s ease forwards}
-        .center-banner.win{color:#ffd700;text-shadow:0 0 20px rgba(255,215,0,0.6)}
+        .center-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:linear-gradient(180deg,rgba(0,0,0,0.95),rgba(15,25,15,0.95));padding:24px 36px;border-radius:24px;z-index:200;text-align:center;font-weight:800;font-size:24px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 30px 80px rgba(0,0,0,0.8),0 0 60px rgba(76,175,80,0.1);pointer-events:none;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+        .center-banner.show{animation:bannerIn 0.5s cubic-bezier(0.4,0,0.2,1) forwards}
+        .center-banner.win{color:#ffd700;text-shadow:0 0 30px rgba(255,215,0,0.6)}
         .center-banner.lose{color:#ff6b6b}
         .center-banner.bet-warn{color:#f7971e}
         
-        .result-message{display:none}
-        
         .bet-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}
-        .bet-option{background:linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));border:1px solid rgba(255,255,255,0.15);color:white;padding:12px 18px;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s}
-        .bet-option:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px)}
-        .bet-option.selected{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white;font-weight:800;box-shadow:0 4px 15px rgba(76,175,80,0.4)}
+        .bet-option{background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.1);color:white;padding:12px 18px;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .bet-option:hover{background:rgba(255,255,255,0.12);transform:translateY(-2px)}
+        .bet-option.selected{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white;font-weight:800;box-shadow:0 6px 20px rgba(76,175,80,0.5);border-color:#4CAF50}
         
         .hidden{display:none!important}
         
         .roulette-wheel-container{position:relative;width:240px;height:240px;margin:24px auto}
-        .roulette-outer{width:240px;height:240px;border-radius:50%;border:8px solid #5d4037;background:#3e2723;box-shadow:0 0 30px rgba(0,0,0,0.6),0 0 60px rgba(76,175,80,0.1);position:relative;overflow:hidden}
+        .roulette-outer{width:240px;height:240px;border-radius:50%;border:8px solid #5d4037;background:#3e2723;box-shadow:0 0 40px rgba(0,0,0,0.6),0 0 80px rgba(76,175,80,0.15);position:relative;overflow:hidden}
         .roulette-ring{position:absolute;top:10px;left:10px;right:10px;bottom:10px;border-radius:50%;transition:transform 5s cubic-bezier(0.17,0.89,0.32,1.25)}
-        .roulette-ball{position:absolute;width:16px;height:16px;background:radial-gradient(circle at 40% 40%,#fff,#ccc);border-radius:50%;top:50%;left:50%;margin-left:-8px;margin-top:-112px;box-shadow:0 0 10px rgba(255,255,255,0.8),0 0 20px rgba(255,255,255,0.4);transition:all 5s cubic-bezier(0.17,0.89,0.32,1.25);z-index:5}
+        .roulette-ball{position:absolute;width:16px;height:16px;background:radial-gradient(circle at 40% 40%,#fff,#ccc);border-radius:50%;top:50%;left:50%;margin-left:-8px;margin-top:-112px;box-shadow:0 0 12px rgba(255,255,255,0.8),0 0 24px rgba(255,255,255,0.4);transition:all 5s cubic-bezier(0.17,0.89,0.32,1.25);z-index:5}
         .roulette-center{position:absolute;top:50%;left:50%;width:40px;height:40px;margin-left:-20px;margin-top:-20px;background:radial-gradient(circle,#8d6e63,#5d4037);border-radius:50%;border:3px solid #3e2723;z-index:3}
         .roulette-result-num{font-size:44px;font-weight:800;min-height:55px;margin:8px 0}
         
         .card-row{display:flex;align-items:center;gap:8px;justify-content:center;min-height:60px;margin:6px 0}
-        .card-slot{width:48px;height:68px;background:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(0,0,0,0.3));border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;border:2px solid var(--border);margin:0 2px;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+        .card-slot{width:48px;height:68px;background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(0,0,0,0.4));border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;border:2px solid rgba(255,255,255,0.08);margin:0 2px;box-shadow:0 4px 16px rgba(0,0,0,0.4)}
         .card-slot.new-card{animation:cardDeal 0.4s ease}
         .card-slot.dealer-card{animation:cardDealDealer 0.4s ease}
         
-        .bowling-scene{position:relative;width:100%;height:300px;background:linear-gradient(180deg,#1a1a1a 0%,#2a1a10 60%,#3e2723 100%);border-radius:14px;overflow:hidden;touch-action:none;box-shadow:inset 0 0 60px rgba(0,0,0,0.5)}
+        .bowling-scene{position:relative;width:100%;height:300px;background:linear-gradient(180deg,#1a1a1a 0%,#2a1a10 60%,#3e2723 100%);border-radius:14px;overflow:hidden;touch-action:none;box-shadow:inset 0 0 80px rgba(0,0,0,0.6)}
         .bowling-pins{position:absolute;top:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:2}
         .pins-row{display:flex;gap:10px;justify-content:center}
-        .pin-el{font-size:28px;transition:transform 0.4s ease-out,opacity 0.4s;filter:drop-shadow(0 4px 4px rgba(0,0,0,0.5))}
-        .pin-el.fallen{transform:translate(var(--fx),var(--fy)) rotate(var(--fr));opacity:0.6}
+        .pin-el{font-size:28px;transition:transform 0.5s ease-out,opacity 0.5s;filter:drop-shadow(0 6px 6px rgba(0,0,0,0.5))}
+        .pin-el.fallen{transform:translate(var(--fx),var(--fy)) rotate(var(--fr));opacity:0.5}
         .bowling-ball{position:absolute;bottom:30px;left:50%;z-index:5;cursor:grab;transition:transform 0.05s}
         .bowling-ball.swiped{transition:transform 0.8s cubic-bezier(0.25,0.1,0.25,1)}
-        .real-ball{width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4a4aff,#1a1a6e 50%,#0a0a2e 100%);box-shadow:inset 0 -8px 16px rgba(0,0,0,0.5),0 8px 20px rgba(0,0,0,0.7),0 0 20px rgba(74,74,255,0.3);position:relative;transform:translateX(-50%)}
+        .real-ball{width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#5a5aff,#1a1a6e 50%,#0a0a2e 100%);box-shadow:inset 0 -8px 16px rgba(0,0,0,0.5),0 8px 24px rgba(0,0,0,0.7),0 0 24px rgba(74,74,255,0.4);position:relative;transform:translateX(-50%)}
         .real-ball .hole{position:absolute;width:14px;height:14px;background:radial-gradient(circle,#000 40%,#1a1a3a 100%);border-radius:50%;box-shadow:inset 0 2px 3px rgba(0,0,0,0.8)}
         .real-ball .hole:nth-child(1){top:10px;left:50%;transform:translateX(-50%)}
         .real-ball .hole:nth-child(2){bottom:12px;left:14px}
@@ -126,89 +127,88 @@
         .swipe-arrow{position:absolute;bottom:118px;left:50%;transform:translateX(-50%);font-size:22px;animation:arrowUp 1.5s ease-in-out infinite}
         
         .darts-scene{position:relative;width:100%;height:320px;display:flex;align-items:center;justify-content:center;touch-action:none}
-        .dartboard-swing{width:150px;height:150px;border-radius:50%;background:conic-gradient(#1a1a1a 0 30deg,#c0392b 30deg 60deg,#1a1a1a 60deg 90deg,#27ae60 90deg 120deg,#1a1a1a 120deg 150deg,#c0392b 150deg 180deg,#1a1a1a 180deg 210deg,#27ae60 210deg 240deg,#1a1a1a 240deg 270deg,#c0392b 270deg 300deg,#1a1a1a 300deg 330deg,#27ae60 330deg 360deg);border:5px solid #666;box-shadow:0 0 40px rgba(0,0,0,0.5),0 0 80px rgba(76,175,80,0.05);position:relative;transition:none}
-        .dartboard-swing .ring{position:absolute;top:10px;left:10px;right:10px;bottom:10px;border-radius:50%;border:2px solid rgba(255,255,255,0.1)}
-        .dartboard-swing .ring2{position:absolute;top:42px;left:42px;right:42px;bottom:42px;border-radius:50%;border:2px solid rgba(255,255,255,0.06)}
-        .dartboard-swing .bull{position:absolute;top:50%;left:50%;width:28px;height:28px;margin:-14px;background:radial-gradient(circle,#e74c3c,#8B0000);border-radius:50%;border:2px solid #1a1a1a;box-shadow:0 0 15px rgba(231,76,60,0.6)}
-        .dart-arrow{position:absolute;z-index:10;display:none;color:#fff;font-size:42px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6)) drop-shadow(0 0 6px rgba(255,200,50,0.4))}
+        .dartboard-swing{width:150px;height:150px;border-radius:50%;background:conic-gradient(#1a1a1a 0 30deg,#c0392b 30deg 60deg,#1a1a1a 60deg 90deg,#27ae60 90deg 120deg,#1a1a1a 120deg 150deg,#c0392b 150deg 180deg,#1a1a1a 180deg 210deg,#27ae60 210deg 240deg,#1a1a1a 240deg 270deg,#c0392b 270deg 300deg,#1a1a1a 300deg 330deg,#27ae60 330deg 360deg);border:5px solid #666;box-shadow:0 0 50px rgba(0,0,0,0.6),0 0 100px rgba(76,175,80,0.08);position:relative;transition:none}
+        .dartboard-swing .ring{position:absolute;top:10px;left:10px;right:10px;bottom:10px;border-radius:50%;border:2px solid rgba(255,255,255,0.08)}
+        .dartboard-swing .ring2{position:absolute;top:42px;left:42px;right:42px;bottom:42px;border-radius:50%;border:2px solid rgba(255,255,255,0.04)}
+        .dartboard-swing .bull{position:absolute;top:50%;left:50%;width:28px;height:28px;margin:-14px;background:radial-gradient(circle,#e74c3c,#8B0000);border-radius:50%;border:2px solid #1a1a1a;box-shadow:0 0 20px rgba(231,76,60,0.6)}
+        .dart-arrow{position:absolute;z-index:10;display:none;color:#fff;font-size:42px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6)) drop-shadow(0 0 8px rgba(255,200,50,0.4))}
         .hit-effect{position:absolute;z-index:11;display:none;color:#ffd700;font-size:36px;pointer-events:none}
         .tap-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.4);font-size:12px;animation:pulse 2s ease-in-out infinite}
         
-        .profile-header{text-align:center;padding:24px;background:var(--card-bg);border-radius:24px;margin-bottom:16px;border:1px solid var(--border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-        .profile-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(180deg,#4CAF50,#2E7D32);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 14px;animation:float 4s ease-in-out infinite;box-shadow:0 8px 25px rgba(76,175,80,0.3)}
+        .profile-header{text-align:center;padding:24px;background:rgba(255,255,255,0.02);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+        .profile-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(180deg,#4CAF50,#2E7D32);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 14px;animation:float 4s ease-in-out infinite;box-shadow:0 10px 30px rgba(76,175,80,0.4),0 0 40px rgba(76,175,80,0.1)}
         
         .stat-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
-        .stat-card{background:var(--card-bg);border-radius:18px;padding:18px;text-align:center;border:1px solid var(--border);transition:transform 0.2s}
-        .stat-card:hover{transform:translateY(-2px)}
-        .winrate-bar{background:rgba(255,255,255,0.08);border-radius:10px;height:8px;margin-top:10px;overflow:hidden}
-        .winrate-fill{background:linear-gradient(90deg,#4CAF50,#ffd200);height:100%;border-radius:10px;transition:width 0.5s}
+        .stat-card{background:rgba(255,255,255,0.02);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border-radius:18px;padding:18px;text-align:center;border:1px solid rgba(255,255,255,0.05);transition:transform 0.3s}
+        .stat-card:hover{transform:translateY(-3px)}
+        .winrate-bar{background:rgba(255,255,255,0.06);border-radius:10px;height:8px;margin-top:10px;overflow:hidden}
+        .winrate-fill{background:linear-gradient(90deg,#4CAF50,#ffd200);height:100%;border-radius:10px;transition:width 0.6s}
         
-        .games-section{background:var(--card-bg);border-radius:24px;padding:18px;margin-bottom:16px;border:1px solid var(--border)}
+        .games-section{background:rgba(255,255,255,0.02);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border-radius:24px;padding:18px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.05)}
         .section-title{font-size:13px;font-weight:700;opacity:0.5;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
-        .recent-game-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;transition:background 0.2s}
+        .recent-game-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:14px;transition:background 0.2s}
         .recent-game-item:hover{background:rgba(255,255,255,0.02)}
-        .achievement-card{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card-bg);border-radius:16px;margin-bottom:10px;border:1px solid var(--border);transition:all 0.3s}
-        .achievement-card.earned{border-color:rgba(76,175,80,0.4);background:rgba(76,175,80,0.06);box-shadow:0 4px 15px rgba(76,175,80,0.1)}
+        .achievement-card{display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,0.02);border-radius:16px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.05);transition:all 0.3s}
+        .achievement-card.earned{border-color:rgba(76,175,80,0.5);background:rgba(76,175,80,0.08);box-shadow:0 6px 20px rgba(76,175,80,0.15)}
         .achievement-card.locked{opacity:0.4}
         
-        .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:100;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+        .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:100;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
         .modal-overlay.active{display:flex}
-        .modal{background:linear-gradient(135deg,#1e2e1e,#121a12,#1a2a1a);background-size:200% 200%;animation:modalIn 0.3s ease;border-radius:24px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,0.5)}
-        .modal-btn{width:100%;padding:16px;border:none;border-radius:16px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:all 0.3s}
+        .modal{background:linear-gradient(160deg,rgba(25,40,25,0.95),rgba(15,25,15,0.95));border-radius:28px;padding:28px;width:100%;max-width:400px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 30px 80px rgba(0,0,0,0.6);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);animation:modalIn 0.4s cubic-bezier(0.4,0,0.2,1)}
+        .modal-btn{width:100%;padding:16px;border:none;border-radius:18px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
         .modal-btn:hover{transform:translateY(-2px)}
-        .modal-btn.gold{background:linear-gradient(180deg,#f7971e,#e65100);color:white;box-shadow:0 6px 20px rgba(247,151,30,0.4)}
-        .modal-btn.green{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white;box-shadow:0 6px 20px rgba(76,175,80,0.3)}
-        .modal-btn.red{background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)}
+        .modal-btn.gold{background:linear-gradient(180deg,#f7971e,#e65100);color:white;box-shadow:0 8px 25px rgba(247,151,30,0.4)}
+        .modal-btn.green{background:linear-gradient(180deg,#4CAF50,#2E7D32);color:white;box-shadow:0 8px 25px rgba(76,175,80,0.35)}
+        .modal-btn.red{background:rgba(255,255,255,0.06);color:white;border:1px solid rgba(255,255,255,0.1)}
         
-        input[type="text"]{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:white;font-size:15px;margin-bottom:18px;outline:none;text-align:center;transition:all 0.3s}
-        input[type="text"]:focus{border-color:#4CAF50;box-shadow:0 0 20px rgba(76,175,80,0.2)}
+        input[type="text"]{width:100%;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:white;font-size:15px;margin-bottom:18px;outline:none;text-align:center;transition:all 0.3s}
+        input[type="text"]:focus{border-color:#4CAF50;box-shadow:0 0 30px rgba(76,175,80,0.2)}
         
         .shop-categories{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding:2px}
-        .shop-cat-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.3s}
-        .shop-cat-btn:hover{background:rgba(255,255,255,0.1);color:white}
-        .shop-cat-btn.active{background:linear-gradient(180deg,rgba(76,175,80,0.25),rgba(247,151,30,0.15));color:white;border-color:#4CAF50}
+        .shop-cat-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.3s}
+        .shop-cat-btn:hover{background:rgba(255,255,255,0.08);color:white}
+        .shop-cat-btn.active{background:linear-gradient(180deg,rgba(76,175,80,0.3),rgba(247,151,30,0.15));color:white;border-color:rgba(76,175,80,0.5)}
         
         #tab-shop{overflow-y:auto;max-height:calc(100vh - 200px)}
         .shop-items{display:flex;flex-direction:column;gap:10px;overflow-y:visible;padding:2px}
-        .shop-item-card{background:linear-gradient(180deg,rgba(42,62,42,0.9),rgba(26,46,26,0.95));border-radius:18px;padding:16px;display:flex;align-items:center;gap:14px;position:relative;box-shadow:0 4px 20px rgba(0,0,0,0.3),0 1px 3px rgba(255,255,255,0.05) inset;transition:transform 0.2s,box-shadow 0.2s}
-        .shop-item-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.5),0 2px 8px rgba(76,175,80,0.2)}
-        .shop-item-card.owned{background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.3)}
+        .shop-item-card{background:linear-gradient(180deg,rgba(42,62,42,0.8),rgba(26,46,26,0.85));border-radius:18px;padding:16px;display:flex;align-items:center;gap:14px;position:relative;box-shadow:0 4px 24px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.03);transition:transform 0.3s,box-shadow 0.3s;border:1px solid rgba(255,255,255,0.04)}
+        .shop-item-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.6),0 0 20px rgba(76,175,80,0.1)}
+        .shop-item-card.owned{background:rgba(76,175,80,0.08);border:1px solid rgba(76,175,80,0.3)}
         .shop-item-card.owned::after{content:'✅';position:absolute;top:10px;right:12px;font-size:18px}
         .shop-item-icon{font-size:36px;min-width:44px;text-align:center}
         .shop-item-info{flex:1}
         .shop-item-name{font-size:14px;font-weight:700;margin-bottom:2px}
         .shop-item-desc{font-size:11px;opacity:0.5}
         .shop-item-price{font-size:16px;font-weight:800;color:#ffd700}
-        .shop-buy-btn{background:linear-gradient(180deg,#4CAF50,#2E7D32);border:none;color:white;font-weight:700;padding:10px 16px;border-radius:20px;font-size:13px;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(76,175,80,0.3);transition:all 0.3s}
-        .shop-buy-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(76,175,80,0.5)}
+        .shop-buy-btn{background:linear-gradient(180deg,#4CAF50,#2E7D32);border:none;color:white;font-weight:700;padding:10px 16px;border-radius:20px;font-size:13px;cursor:pointer;white-space:nowrap;box-shadow:0 6px 16px rgba(76,175,80,0.3);transition:all 0.3s}
+        .shop-buy-btn:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(76,175,80,0.5)}
         .shop-buy-btn:active{transform:scale(0.94)}
-        .shop-buy-btn:disabled{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);box-shadow:none;cursor:not-allowed;transform:none}
+        .shop-buy-btn:disabled{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.3);box-shadow:none;cursor:not-allowed;transform:none}
         .active-boost-badge{position:absolute;top:8px;right:8px;background:#4CAF50;color:white;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;animation:pulse 2s ease-in-out infinite}
         .no-items{text-align:center;opacity:0.4;padding:20px;font-size:14px}
         
-        .price-item{cursor:pointer;transition:all 0.2s}
-        .price-item.selected{border:2px solid #4CAF50!important;background:rgba(76,175,80,0.15)!important}
+        .price-item{cursor:pointer;transition:all 0.25s}
+        .price-item.selected{border:2px solid #4CAF50!important;background:rgba(76,175,80,0.15)!important;box-shadow:0 0 20px rgba(76,175,80,0.2)}
         
-        .level-carousel{position:relative;overflow:hidden;border-radius:20px;margin-bottom:16px;background:linear-gradient(135deg,rgba(76,175,80,0.15),rgba(247,151,30,0.1));border:1px solid rgba(76,175,80,0.3)}
-        .level-track{display:flex;transition:transform 0.3s ease}
-        .level-slide{min-width:100%;padding:24px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0.5;transform:scale(0.85);transition:all 0.3s ease}
+        .level-carousel{position:relative;overflow:hidden;border-radius:20px;margin-bottom:16px;background:linear-gradient(135deg,rgba(76,175,80,0.15),rgba(247,151,30,0.1));border:1px solid rgba(76,175,80,0.3);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+        .level-track{display:flex;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)}
+        .level-slide{min-width:100%;padding:24px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0.5;transform:scale(0.85);transition:all 0.4s cubic-bezier(0.4,0,0.2,1)}
         .level-slide.active{opacity:1;transform:scale(1)}
-        .level-slide.current-user-level{border:2px solid #4CAF50;box-shadow:0 0 20px rgba(76,175,80,0.4);background:rgba(76,175,80,0.08)}
-        .level-slide.current-user-level .lvl-num{color:#4CAF50!important;text-shadow:0 0 15px rgba(76,175,80,0.6)}
+        .level-slide.current-user-level{border:2px solid #4CAF50;box-shadow:0 0 30px rgba(76,175,80,0.5),inset 0 0 40px rgba(76,175,80,0.05);background:rgba(76,175,80,0.1)}
+        .level-slide.current-user-level .lvl-num{color:#4CAF50!important;text-shadow:0 0 20px rgba(76,175,80,0.6)}
         .level-slide .lvl-num{font-size:64px;font-weight:800;line-height:1}
         .level-slide .lvl-icon{font-size:36px}
         .level-slide .lvl-name{font-size:16px;font-weight:700}
         .level-slide .lvl-bonus{font-size:12px;color:#ffd700;margin-top:4px}
-        .level-slide .lvl-xp{font-size:10px;opacity:0.3}
         .level-nav{display:flex;justify-content:space-between;padding:8px 16px}
-        .level-nav button{background:rgba(255,255,255,0.08);border:none;color:white;padding:8px 14px;border-radius:20px;cursor:pointer;font-size:16px;transition:all 0.3s}
-        .level-nav button:hover{background:rgba(255,255,255,0.15)}
-        .level-dots{display:flex;justify-content:center;gap:6px;padding-bottom:12px}
-        .level-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.3s}
-        .level-dot.active{background:#4CAF50;width:20px;border-radius:10px}
+        .level-nav button{background:rgba(255,255,255,0.06);border:none;color:white;padding:10px 16px;border-radius:20px;cursor:pointer;font-size:16px;transition:all 0.3s}
+        .level-nav button:hover{background:rgba(255,255,255,0.12)}
+        .level-dots{display:flex;justify-content:center;gap:8px;padding-bottom:14px}
+        .level-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.4s}
+        .level-dot.active{background:#4CAF50;width:24px;border-radius:12px;box-shadow:0 0 10px rgba(76,175,80,0.5)}
         .level-dot.passed{background:#2E7D32}
         
-        .promo-section{background:var(--card-bg);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid var(--border)}
+        .promo-section{background:rgba(255,255,255,0.02);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.05)}
         
         ::-webkit-scrollbar{width:4px}
         ::-webkit-scrollbar-track{background:transparent}
@@ -229,7 +229,7 @@
         <div class="tab-content active" id="tab-games">
             <div id="games-menu"><div class="games-menu"><div class="game-card" data-game="slots"><div class="game-emoji">🎰</div><div class="game-name">Слоты</div></div><div class="game-card" data-game="roulette"><div class="game-emoji">🎡</div><div class="game-name">Рулетка</div></div><div class="game-card" data-game="dice"><div class="game-emoji">🎲</div><div class="game-name">Кости</div></div><div class="game-card" data-game="blackjack"><div class="game-emoji">🃏</div><div class="game-name">Блэкджек</div></div><div class="game-card" data-game="bowling"><div class="game-emoji">🎳</div><div class="game-name">Боулинг</div></div><div class="game-card" data-game="darts"><div class="game-emoji">🎯</div><div class="game-name">Дартс</div></div></div><button class="get-coins-btn" id="get-coins-btn">💰 Получить монеты</button></div>
             <div id="game-area" class="hidden"><div class="game-area">
-                <button class="game-close" id="game-close-btn" onclick="backToMenu()">✕</button>
+                <button class="game-close" onclick="backToMenu()">✕</button>
                 <div class="game-title" id="game-title">🎰 СЛОТЫ</div>
                 <div class="bet-buttons"><button class="bet-option" data-bet="10">💰10</button><button class="bet-option" data-bet="50">💰50</button><button class="bet-option" data-bet="100">💰100</button><button class="bet-option" data-bet="250">💰250</button></div>
                 <div id="slots-game"><div class="slot-reels"><div class="reel" id="reel1">🍒</div><div class="reel" id="reel2">🍒</div><div class="reel" id="reel3">🍒</div></div><div class="slot-lever-container"><div class="slot-lever" id="slot-lever" onclick="spinSlotsFromLever()"></div><div style="font-size:10px;opacity:0.4;margin-top:4px">Тяни!</div></div></div>
@@ -237,7 +237,7 @@
                 <div id="dice-game" class="hidden"><div style="display:flex;justify-content:center;gap:24px;margin:24px 0"><div style="font-size:52px" id="dice1">⚀</div><div style="font-size:52px" id="dice2">⚀</div></div><div class="bet-buttons"><button class="bet-option" data-dice="over">⬆️>7</button><button class="bet-option" data-dice="under">⬇️<7</button></div><button class="spin-btn" id="dice-spin-btn">🎲 БРОСИТЬ</button></div>
                 <div id="blackjack-game" class="hidden"><div class="card-row"><span style="font-size:12px;opacity:0.5;width:50px;text-align:right">🤖</span><div id="dealer-cards"><span class="card-slot">🂠</span></div><span id="dealer-sum" style="margin-left:6px;font-weight:700">0</span></div><div class="card-row"><span style="font-size:12px;opacity:0.5;width:50px;text-align:right">🃏</span><div id="player-cards"><span class="card-slot">🂠</span></div><span id="player-sum" style="margin-left:6px;font-weight:700">0</span></div><div class="bet-buttons"><button class="bet-option" id="bj-hit">🎯 Карту</button><button class="bet-option" id="bj-stand">✋ Хватит</button></div><button class="spin-btn" id="bj-start-btn">🃏 НАЧАТЬ</button></div>
                 <div id="bowling-game" class="hidden"><div class="bowling-scene" id="bowling-scene"><div class="bowling-pins" id="bowling-pins"><div class="pins-row"><span class="pin-el">🎯</span></div><div class="pins-row"><span class="pin-el">🎯</span><span class="pin-el">🎯</span></div><div class="pins-row"><span class="pin-el">🎯</span><span class="pin-el">🎯</span><span class="pin-el">🎯</span></div></div><div class="bowling-ball" id="bowling-ball-el"><div class="real-ball"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div></div><div class="swipe-arrow" id="swipe-arrow">⬆️</div><div class="swipe-hint" id="swipe-hint">Свайпни шар вверх</div></div><div class="bet-buttons"><button class="bet-option" data-bowling="over">⬆️>3</button><button class="bet-option" data-bowling="under">⬇️<4</button></div></div>
-                <div id="darts-game" class="hidden"><div class="darts-scene" id="darts-scene-el"><div class="dartboard-swing" id="dartboard-swing"><div class="ring"></div><div class="ring2"></div><div class="bull"></div></div><div class="dart-arrow" id="dart-arrow">➶</div><div class="hit-effect" id="hit-effect">⊹</div><div class="tap-hint" id="tap-hint">Тапни когда яблочко по центру!</div></div><div style="height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin:8px 0;overflow:hidden"><div id="accuracy-bar" style="height:100%;background:linear-gradient(90deg,#e74c3c,#f7971e,#4CAF50);border-radius:2px;width:0%"></div></div><div class="bet-buttons"><button class="bet-option" data-darts="even">🟡Чёт</button><button class="bet-option" data-darts="odd">🔵Нечет</button></div></div>
+                <div id="darts-game" class="hidden"><div class="darts-scene" id="darts-scene-el"><div class="dartboard-swing" id="dartboard-swing"><div class="ring"></div><div class="ring2"></div><div class="bull"></div></div><div class="dart-arrow" id="dart-arrow">➶</div><div class="hit-effect" id="hit-effect">⊹</div><div class="tap-hint" id="tap-hint">Тапни когда яблочко по центру!</div></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin:8px 0;overflow:hidden"><div id="accuracy-bar" style="height:100%;background:linear-gradient(90deg,#e74c3c,#f7971e,#4CAF50);border-radius:2px;width:0%"></div></div><div class="bet-buttons"><button class="bet-option" data-darts="even">🟡Чёт</button><button class="bet-option" data-darts="odd">🔵Нечет</button></div></div>
             </div></div>
         </div>
         <div class="tab-content" id="tab-profile"><div class="fade-in">
@@ -256,7 +256,7 @@
             <div style="font-size:48px;margin-bottom:10px">👥</div><div style="font-size:20px;font-weight:800;margin-bottom:6px">Пригласи друга!</div><div style="font-size:13px;opacity:0.5;margin-bottom:14px">Поделись ссылкой — получите по 25 💎</div>
             <div class="promo-section"><div style="font-size:12px;opacity:0.4;margin-bottom:6px">Твой ID-промокод</div><div style="font-size:22px;font-weight:800;color:#ffd700;margin-bottom:8px" id="my-promo-id">—</div><button class="shop-buy-btn" onclick="copyPromoCode()">📋 Копировать ID и ссылку</button></div>
             <div class="promo-section"><div style="font-size:12px;opacity:0.4;margin-bottom:6px">Поделиться с другом</div><button class="shop-buy-btn" onclick="shareGame()" style="background:linear-gradient(180deg,#4CAF50,#2E7D32);margin-top:6px">📤 Поделиться ссылкой</button></div>
-            <div class="promo-section"><div style="font-size:12px;opacity:0.4;margin-bottom:6px">Введи промокод друга</div><input type="text" id="promo-input" placeholder="Вставь ID друга..." maxlength="20" style="font-size:18px;text-align:center;letter-spacing:2px"><button class="shop-buy-btn" onclick="applyPromoCode()" style="margin-top:6px">🎟️ Активировать</button></div>
+            <div class="promo-section"><div style="font-size:12px;opacity:0.4;margin-bottom:6px">Введи промокод друга</div><input type="text" id="promo-input" placeholder="Вставь ID друга..." maxlength="20" style="font-size:18px;text-align:center;letter-spacing:2px"><button class="shop-buy-btn" onclick="applyPromoCode()" style="margin-top:6px">🎟️ Активировать (+25)</button></div>
             <div class="stat-card"><div style="font-size:30px">👥</div><div id="ref-count" style="font-size:24px;font-weight:800">0</div><div style="font-size:11px;opacity:0.5">Друзей приглашено</div></div>
         </div></div>
         <div class="tab-content" id="tab-shop">
@@ -265,8 +265,8 @@
         </div>
     </div>
     <div class="center-banner" id="center-banner"></div>
-    <div class="modal-overlay" id="coins-modal"><div class="modal"><div style="font-size:24px;font-weight:800;margin-bottom:16px;text-align:center">💰 Получить монеты</div><button class="modal-btn green" id="watch-ad-btn">📺 Смотреть ролик — 25 баллов</button><button class="modal-btn gold" id="buy-coins-btn">💳 Купить баллы</button><button class="modal-btn green" id="invite-friend-btn" onclick="shareGame()" style="margin-top:4px">👥 Пригласить друга</button><button class="modal-btn red" id="close-coins-modal">❌ Закрыть</button></div></div>
-    <div class="modal-overlay" id="buy-modal"><div class="modal"><div style="font-size:24px;font-weight:800;margin-bottom:16px;text-align:center">💳 Пополнение</div><div style="margin:15px 0"><div class="price-item" data-amount="100" data-price="5" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎100</span><span style="color:#ffd700;font-weight:700">5 USDT</span></div><div class="price-item" data-amount="250" data-price="20" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎250</span><span style="color:#ffd700;font-weight:700">20 USDT</span></div><div class="price-item" data-amount="500" data-price="35" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎500</span><span style="color:#ffd700;font-weight:700">35 USDT</span></div><div class="price-item" data-amount="750" data-price="50" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎750</span><span style="color:#ffd700;font-weight:700">50 USDT</span></div><div class="price-item" data-amount="1000" data-price="65" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎1000</span><span style="color:#ffd700;font-weight:700">65 USDT</span></div></div><button class="modal-btn gold" id="confirm-purchase-btn" disabled>💳 Оплатить</button><button class="modal-btn red" id="close-buy-modal">🔙 Назад</button></div></div>
+    <div class="modal-overlay" id="coins-modal"><div class="modal"><div style="font-size:24px;font-weight:800;margin-bottom:16px;text-align:center">💰 Получить монеты</div><button class="modal-btn green" id="watch-ad-btn">📺 Смотреть ролик — 25 баллов</button><button class="modal-btn gold" id="buy-coins-btn">💳 Купить баллы</button><button class="modal-btn green" id="invite-friend-btn" onclick="shareGame()" style="margin-top:4px">👥 Пригласить друга (+25 тебе и другу)</button><button class="modal-btn red" id="close-coins-modal">❌ Закрыть</button></div></div>
+    <div class="modal-overlay" id="buy-modal"><div class="modal"><div style="font-size:24px;font-weight:800;margin-bottom:16px;text-align:center">💳 Пополнение</div><div style="margin:15px 0"><div class="price-item" data-amount="100" data-price="5" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎100</span><span style="color:#ffd700;font-weight:700">5 USDT</span></div><div class="price-item" data-amount="250" data-price="20" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎250</span><span style="color:#ffd700;font-weight:700">20 USDT</span></div><div class="price-item" data-amount="500" data-price="35" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎500</span><span style="color:#ffd700;font-weight:700">35 USDT</span></div><div class="price-item" data-amount="750" data-price="50" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎750</span><span style="color:#ffd700;font-weight:700">50 USDT</span></div><div class="price-item" data-amount="1000" data-price="65" style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent"><span>💎1000</span><span style="color:#ffd700;font-weight:700">65 USDT</span></div></div><button class="modal-btn gold" id="confirm-purchase-btn" disabled>💳 Оплатить</button><button class="modal-btn red" id="close-buy-modal">🔙 Назад</button></div></div>
     <div class="modal-overlay" id="nickname-modal"><div class="modal"><div style="font-size:24px;font-weight:800;margin-bottom:16px;text-align:center">✏️ Смена никнейма</div><input type="text" id="nickname-input" placeholder="Введите новый никнейм..." maxlength="30"><button class="modal-btn gold" id="save-nickname-btn">💾 Сохранить</button><button class="modal-btn red" id="close-nickname-modal">❌ Отмена</button></div></div>
     <div class="modal-overlay" id="no-balance-modal"><div class="modal"><div style="font-size:24px;font-weight:800;margin-bottom:16px;text-align:center">😞 Мало средств</div><p style="text-align:center;margin-bottom:18px;opacity:0.7">Недостаточно баллов!</p><button class="modal-btn gold" id="go-buy-coins-btn">💳 Пополнить</button><button class="modal-btn red" id="close-no-balance-modal">❌ Закрыть</button></div></div>
 
@@ -290,7 +290,7 @@
             var b=document.getElementById('center-banner');
             b.innerHTML=text;b.className='center-banner '+type+' show';
             clearTimeout(b._timeout);
-            b._timeout=setTimeout(function(){b.className='center-banner '+type},2000);
+            b._timeout=setTimeout(function(){b.className='center-banner '+type},2200);
         }
 
         function animateBalanceChange(newBal){
@@ -298,40 +298,36 @@
             var el=document.getElementById('balance');el.innerText=balance;
             var container=document.getElementById('balance-container');
             container.classList.add('wave');
-            setTimeout(function(){container.classList.remove('wave')},400);
-            if(newBal>oldBal){
-                spawnFlyCoins(5,newBal-oldBal);
-            }
+            setTimeout(function(){container.classList.remove('wave')},600);
+            if(newBal>oldBal){spawnFlyCoins(6,newBal-oldBal)}
         }
 
         function spawnFlyCoins(count,amount){
             var rect=document.getElementById('balance-container').getBoundingClientRect();
-            var targetX=rect.left+rect.width/2;
-            var targetY=rect.top+rect.height/2;
+            var targetX=rect.left+rect.width/2;var targetY=rect.top+rect.height/2;
             for(var i=0;i<count;i++){
                 var c=document.createElement('div');
-                c.style.cssText='position:fixed;pointer-events:none;font-size:20px;z-index:300;left:'+(Math.random()*window.innerWidth)+'px;top:'+(Math.random()*window.innerHeight)+'px';
-                c.innerText='💎';
-                document.body.appendChild(c);
-                var dx=targetX-parseFloat(c.style.left);
-                var dy=targetY-parseFloat(c.style.top);
-                c.style.setProperty('--fx',dx+'px');
-                c.style.setProperty('--fy',dy+'px');
-                c.style.animation='flyToWallet 0.8s ease-in forwards';
-                setTimeout(function(){c.remove()},800);
+                c.style.cssText='position:fixed;pointer-events:none;font-size:22px;z-index:300;left:'+(Math.random()*window.innerWidth)+'px;top:'+(Math.random()*window.innerHeight*0.6)+'px';
+                c.innerText='💎';document.body.appendChild(c);
+                var dx=targetX-parseFloat(c.style.left);var dy=targetY-parseFloat(c.style.top);
+                c.style.setProperty('--fx',dx+'px');c.style.setProperty('--fy',dy+'px');
+                c.style.animation='flyToWallet 0.9s cubic-bezier(0.4,0,0.2,1) forwards';
+                setTimeout(function(){c.remove()},900);
             }
         }
 
-        function spawnWinCoins(count){count=count||8;for(var i=0;i<count;i++){var c=document.createElement('div');c.style.cssText='position:fixed;pointer-events:none;font-size:24px;animation:coinRain '+(1.5+Math.random()*2)+'s ease-in forwards;left:'+Math.random()*100+'%;top:-20px;z-index:50';c.innerText='💎';document.body.appendChild(c);setTimeout(function(){c.remove()},3500)}}
+        function spawnWinCoins(count){count=count||10;for(var i=0;i<count;i++){var c=document.createElement('div');c.style.cssText='position:fixed;pointer-events:none;font-size:'+(18+Math.random()*20)+'px;animation:fountainRain '+(1+Math.random()*1.5)+'s ease-out forwards;left:'+(30+Math.random()*40)+'%;bottom:40%;z-index:150';c.innerText='💎';document.body.appendChild(c);setTimeout(function(){c.remove()},2500)}}
 
         (function(){
             var container=document.createElement('div');
             container.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0';
             document.body.appendChild(container);
-            for(var i=0;i<15;i++){
+            for(var i=0;i<30;i++){
                 var p=document.createElement('div');
-                var size=2+Math.random()*4;
-                p.style.cssText='position:absolute;width:'+size+'px;height:'+size+'px;background:rgba(76,175,80,'+(0.1+Math.random()*0.3)+');border-radius:50%;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;animation:floatParticle '+(5+Math.random()*10)+'s ease-in-out infinite';
+                var size=2+Math.random()*5;
+                var colors=['rgba(76,175,80,','rgba(247,151,30,','rgba(255,210,0,'];
+                var col=colors[Math.floor(Math.random()*3)];
+                p.style.cssText='position:absolute;width:'+size+'px;height:'+size+'px;background:'+col+(0.08+Math.random()*0.2)+');border-radius:50%;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;animation:floatParticle '+(6+Math.random()*12)+'s ease-in-out infinite;animation-delay:'+(Math.random()*5)+'s';
                 container.appendChild(p);
             }
         })();
@@ -359,16 +355,22 @@
         document.getElementById('go-buy-coins-btn').addEventListener('click',function(){document.getElementById('no-balance-modal').classList.remove('active');document.getElementById('buy-modal').classList.add('active')});
         document.getElementById('close-no-balance-modal').addEventListener('click',function(){document.getElementById('no-balance-modal').classList.remove('active')});
 
-        document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){
-            var t=b.dataset.tab;
-            if(document.getElementById('tab-'+t).classList.contains('active')){
-                document.getElementById('tab-'+t).classList.remove('active');
-                void document.getElementById('tab-'+t).offsetWidth;
-                document.getElementById('tab-'+t).classList.add('active');
-            }
-            document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('active')});document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active')});b.classList.add('active');document.getElementById('tab-'+t).classList.add('active');
-            if(t==='profile'){loadProfile();loadAchievements()}if(t==='games')loadBalance();if(t==='shop')loadShop('all');if(t==='referral')loadReferral();
-        })});
+        function switchTab(t){
+            document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('active')});
+            document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active')});
+            var btn=document.querySelector('.tab-btn[data-tab="'+t+'"]');
+            if(btn)btn.classList.add('active');
+            var tab=document.getElementById('tab-'+t);
+            tab.classList.add('active');
+            void tab.offsetWidth;
+            if(t==='games'&&currentGame){backToMenu()}
+            if(t==='profile'){loadProfile();loadAchievements()}
+            if(t==='games')loadBalance();
+            if(t==='shop')loadShop('all');
+            if(t==='referral')loadReferral();
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){switchTab(b.dataset.tab)})});
 
         document.getElementById('get-coins-btn').addEventListener('click',function(){document.getElementById('coins-modal').classList.add('active')});
         document.getElementById('close-coins-modal').addEventListener('click',function(){document.getElementById('coins-modal').classList.remove('active')});
@@ -405,7 +407,7 @@
                 var xpHTML='';
                 if(isCurrentUserLevel&&expInfo&&expInfo.needed>0){
                     var pct=Math.min(100,Math.round(expInfo.progress/expInfo.needed*100));
-                    xpHTML='<div style="margin-top:10px;width:100%;display:flex;flex-direction:column;align-items:center"><div style="width:70%;max-width:160px;height:8px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#4CAF50,#ffd200);border-radius:10px;width:'+pct+'%;transition:width 0.5s"></div></div><div style="font-size:10px;opacity:0.6;margin-top:4px">'+expInfo.progress+' / '+expInfo.needed+' XP</div></div>'
+                    xpHTML='<div style="margin-top:10px;width:100%"><div style="width:70%;max-width:160px;height:8px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;margin:0 auto"><div style="height:100%;background:linear-gradient(90deg,#4CAF50,#ffd200);border-radius:10px;width:'+pct+'%;transition:width 0.6s"></div></div><div style="font-size:10px;opacity:0.6;margin-top:4px">'+expInfo.progress+' / '+expInfo.needed+' XP</div></div>'
                 }
                 slide.innerHTML=(isPassed?'<div style="position:absolute;top:8px;left:12px;font-size:12px;color:#4CAF50">✅</div>':'')+(isCurrentUserLevel?'<div style="position:absolute;top:8px;right:12px;font-size:9px;color:#4CAF50;font-weight:700;opacity:0.8">● ВЫ</div>':'')+'<div class="lvl-icon">'+levelIcons[i]+'</div><div class="lvl-num">'+i+'</div><div class="lvl-name">'+levelNames[i]+'</div>'+(levelBonuses[i]?'<div class="lvl-bonus">🎁 '+levelBonuses[i]+' при достижении</div>':'')+xpHTML+(!isCurrentUserLevel&&!isPassed?'<div class="lvl-xp">'+(i*i*500).toLocaleString()+' XP</div>':'');
                 track.appendChild(slide);
@@ -417,7 +419,7 @@
         function nextLevel(){if(currentLevelIndex<9)goToSlide(currentLevelIndex+1)}
         function prevLevel(){if(currentLevelIndex>0)goToSlide(currentLevelIndex-1)}
 
-        async function loadAchievements(){if(!userId)return;try{var r=await fetch(BOT_API_URL+'/api/get_achievements',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});var d=await r.json();if(d.success){var c=document.getElementById('achievements-list');var a=d.achievements;if(!a||a.length===0){c.innerHTML='<div style="text-align:center;opacity:0.4;padding:12px">Нет</div>';return}c.innerHTML=a.map(function(x){return'<div class="achievement-card '+(x.earned?'earned':'locked')+'"><div style="font-size:36px;min-width:48px;text-align:center">'+(x.earned?x.icon:'🔒')+'</div><div style="flex:1"><div style="font-size:14px;font-weight:700">'+x.name+'</div><div style="font-size:11px;opacity:0.5;margin-top:2px">'+x.desc+'</div><div style="font-size:11px;font-weight:700;margin-top:4px">'+(x.earned?'✅':x.progress+'/'+x.target)+'</div><div style="background:rgba(255,255,255,0.08);border-radius:6px;height:5px;margin-top:5px;overflow:hidden"><div style="background:linear-gradient(90deg,#4CAF50,#ffd200);height:100%;border-radius:6px;width:'+(x.earned?100:Math.min(100,Math.round(x.progress/x.target*100)))+'%"></div></div></div></div>'}).join('')}}catch(e){}}
+        async function loadAchievements(){if(!userId)return;try{var r=await fetch(BOT_API_URL+'/api/get_achievements',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});var d=await r.json();if(d.success){var c=document.getElementById('achievements-list');var a=d.achievements;if(!a||a.length===0){c.innerHTML='<div style="text-align:center;opacity:0.4;padding:12px">Нет</div>';return}c.innerHTML=a.map(function(x){return'<div class="achievement-card '+(x.earned?'earned':'locked')+'"><div style="font-size:36px;min-width:48px;text-align:center">'+(x.earned?x.icon:'🔒')+'</div><div style="flex:1"><div style="font-size:14px;font-weight:700">'+x.name+'</div><div style="font-size:11px;opacity:0.5;margin-top:2px">'+x.desc+'</div><div style="font-size:11px;font-weight:700;margin-top:4px">'+(x.earned?'✅':x.progress+'/'+x.target)+'</div><div style="background:rgba(255,255,255,0.06);border-radius:6px;height:5px;margin-top:5px;overflow:hidden"><div style="background:linear-gradient(90deg,#4CAF50,#ffd200);height:100%;border-radius:6px;width:'+(x.earned?100:Math.min(100,Math.round(x.progress/x.target*100)))+'%"></div></div></div></div>'}).join('')}}catch(e){}}
         async function loadProfile(){if(!userId)return;document.getElementById('profile-id').innerText='ID: '+userId;try{var r=await fetch(BOT_API_URL+'/api/get_profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});var d=await r.json();if(d.success){userProfile=d.profile;renderProfile(userProfile)}}catch(e){}}
         function renderProfile(p){
             document.getElementById('profile-balance').innerText=p.balance;document.getElementById('profile-games').innerText=p.total_games;document.getElementById('profile-wins').innerText=p.wins;document.getElementById('profile-winrate').innerText=p.winrate+'%';document.getElementById('winrate-fill').style.width=p.winrate+'%';
@@ -451,7 +453,7 @@
         var slotSpinning=false;
         function spinSlotsFromLever(){
             document.getElementById('slot-lever').classList.add('pulling');
-            setTimeout(function(){document.getElementById('slot-lever').classList.remove('pulling')},600);
+            setTimeout(function(){document.getElementById('slot-lever').classList.remove('pulling')},700);
             spinSlots();
         }
         function spinSlots(){
@@ -466,7 +468,7 @@
                 var isJackpot=a===b&&b===c&&a==='7️⃣';
                 var isWin=(a===b&&b===c)||(a===b||b===c||a===c);
                 var win=isJackpot||isWin;var wa=win?Math.floor(currentBet*(isJackpot?5:1.5)):0;
-                if(win){r1.classList.add('win-anim');r2.classList.add('win-anim');r3.classList.add('win-anim');spawnWinCoins(isJackpot?15:8)}
+                if(win){r1.classList.add('win-anim');r2.classList.add('win-anim');r3.classList.add('win-anim');spawnWinCoins(isJackpot?20:12)}
                 showCenterBanner(win?(isJackpot?'7️⃣7️⃣7️⃣ ДЖЕКПОТ! +'+wa+' 💎':'🎉 ВЫИГРЫШ! +'+wa+' 💎'):'😞 ПРОИГРЫШ',win?'win':'lose');
                 sendGameResult('slots',currentBet,win,wa,{}).then(function(){afterGame(win);slotSpinning=false})
             }},fi);
@@ -475,8 +477,8 @@
         var crb=null,rouletteSpinning=false,rNumbers=[],cdb=null,diceSpinning=false,bjd=[],ph=[],dh=[],ga=false,bowlingBet=null,bowlingLock=false,bowlingStartY=0,dartsBet=null,dartsLock=false,dartSwingActive=false,dartSwingPos=0,dartSwingDir=1,dartSwingAnimFrame;
 
         function buildRouletteRing(){var ring=document.getElementById('roulette-ring'),reds=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];rNumbers=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];var slices=[];rNumbers.forEach(function(num,i){var color=num===0?'#27ae60':reds.includes(num)?'#e74c3c':'#2c3e50';slices.push(color+' '+i*(360/37)+'deg '+(i+1)*(360/37)+'deg')});ring.style.background='conic-gradient('+slices.join(',')+')'}
-        async function spinRoulette(){if(!crb){showCenterBanner('❌ Сделайте ставку!','bet-warn');return}if(balance<currentBet||currentBet===0){showNoBalance();return}if(rouletteSpinning)return;rouletteSpinning=true;buildRouletteRing();var ring=document.getElementById('roulette-ring'),ball=document.getElementById('roulette-ball-anim'),rr=document.getElementById('roulette-result-display'),sb=document.getElementById('roulette-spin-btn');sb.disabled=true;var n=Math.floor(Math.random()*37),idx=rNumbers.indexOf(n),extra=360*4,sliceDeg=360/37,wheelAngle=-(idx*sliceDeg+sliceDeg/2)-extra;ring.style.transition='transform 5s cubic-bezier(0.17,0.89,0.32,1.25)';ball.style.transition='all 5s cubic-bezier(0.17,0.89,0.32,1.25)';ring.style.transform='rotate('+wheelAngle+'deg)';ball.style.transform='rotate('+(-wheelAngle)+'deg)';rr.innerHTML='🎡';setTimeout(function(){var col='';if(n===0)col='green';else if([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n))col='red';else col='black';var p=n!==0&&n%2===0?'even':'odd';var win=false,wa=0;if(crb==='red'&&col==='red'){win=true;wa=Math.floor(currentBet*1.5)}else if(crb==='black'&&col==='black'){win=true;wa=Math.floor(currentBet*1.5)}else if(crb==='green'&&n===0){win=true;wa=Math.floor(currentBet*35)}else if(crb==='even'&&p==='even'){win=true;wa=Math.floor(currentBet*1.5)}else if(crb==='odd'&&p==='odd'){win=true;wa=Math.floor(currentBet*1.5)}if(win)spawnWinCoins(6);var colorEmoji=col==='red'?'🔴':col==='black'?'⚫':'🟢';rr.innerHTML=colorEmoji+' '+n;showCenterBanner(win?'🎉 ВЫИГРЫШ! +'+wa+' 💎':'😞 ПРОИГРЫШ ('+n+')',win?'win':'lose');sendGameResult('roulette',currentBet,win,wa,{}).then(function(){afterGame(win);sb.disabled=false;rouletteSpinning=false})},5200)}
-        async function rollDice(){if(!cdb){showCenterBanner('❌ Сделайте ставку!','bet-warn');return}if(balance<currentBet||currentBet===0){showNoBalance();return}if(diceSpinning)return;diceSpinning=true;var d1El=document.getElementById('dice1'),d2El=document.getElementById('dice2'),sb=document.getElementById('dice-spin-btn');sb.disabled=true;d1El.style.animation='dice-roll 0.8s ease-out';d2El.style.animation='dice-roll 0.8s ease-out';var df=['⚀','⚁','⚂','⚃','⚄','⚅'];var c=0;var iv=setInterval(function(){d1El.innerText=df[Math.floor(Math.random()*6)];d2El.innerText=df[Math.floor(Math.random()*6)];c++;if(c>=12)clearInterval(iv)},60);setTimeout(function(){d1El.style.animation='';d2El.style.animation='';var d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,t=d1+d2;d1El.innerText=df[d1-1];d2El.innerText=df[d2-1];var win=false,wa=0;if(cdb==='over'&&t>7){win=true;wa=Math.floor(currentBet*2)}else if(cdb==='under'&&t<7){win=true;wa=Math.floor(currentBet*2)}if(win){d1El.style.transform='scale(1.2)';d2El.style.transform='scale(1.2)';setTimeout(function(){d1El.style.transform='';d2El.style.transform=''},300);spawnWinCoins(6)}showCenterBanner(win?'🎉 ВЫИГРЫШ! +'+wa+' 💎':'😞 ПРОИГРЫШ ('+t+')',win?'win':'lose');sendGameResult('dice',currentBet,win,wa,{}).then(function(){afterGame(win);sb.disabled=false;diceSpinning=false})},800)}
+        async function spinRoulette(){if(!crb){showCenterBanner('❌ Сделайте ставку!','bet-warn');return}if(balance<currentBet||currentBet===0){showNoBalance();return}if(rouletteSpinning)return;rouletteSpinning=true;buildRouletteRing();var ring=document.getElementById('roulette-ring'),ball=document.getElementById('roulette-ball-anim'),rr=document.getElementById('roulette-result-display'),sb=document.getElementById('roulette-spin-btn');sb.disabled=true;var n=Math.floor(Math.random()*37),idx=rNumbers.indexOf(n),extra=360*4,sliceDeg=360/37,wheelAngle=-(idx*sliceDeg+sliceDeg/2)-extra;ring.style.transition='transform 5s cubic-bezier(0.17,0.89,0.32,1.25)';ball.style.transition='all 5s cubic-bezier(0.17,0.89,0.32,1.25)';ring.style.transform='rotate('+wheelAngle+'deg)';ball.style.transform='rotate('+(-wheelAngle)+'deg)';rr.innerHTML='🎡';setTimeout(function(){var col='';if(n===0)col='green';else if([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n))col='red';else col='black';var p=n!==0&&n%2===0?'even':'odd';var win=false,wa=0;if(crb==='red'&&col==='red'){win=true;wa=Math.floor(currentBet*1.5)}else if(crb==='black'&&col==='black'){win=true;wa=Math.floor(currentBet*1.5)}else if(crb==='green'&&n===0){win=true;wa=Math.floor(currentBet*35)}else if(crb==='even'&&p==='even'){win=true;wa=Math.floor(currentBet*1.5)}else if(crb==='odd'&&p==='odd'){win=true;wa=Math.floor(currentBet*1.5)}if(win)spawnWinCoins(8);var colorEmoji=col==='red'?'🔴':col==='black'?'⚫':'🟢';rr.innerHTML=colorEmoji+' '+n;showCenterBanner(win?'🎉 ВЫИГРЫШ! +'+wa+' 💎':'😞 ПРОИГРЫШ ('+n+')',win?'win':'lose');sendGameResult('roulette',currentBet,win,wa,{}).then(function(){afterGame(win);sb.disabled=false;rouletteSpinning=false})},5200)}
+        async function rollDice(){if(!cdb){showCenterBanner('❌ Сделайте ставку!','bet-warn');return}if(balance<currentBet||currentBet===0){showNoBalance();return}if(diceSpinning)return;diceSpinning=true;var d1El=document.getElementById('dice1'),d2El=document.getElementById('dice2'),sb=document.getElementById('dice-spin-btn');sb.disabled=true;d1El.style.animation='dice-roll 0.8s ease-out';d2El.style.animation='dice-roll 0.8s ease-out';var df=['⚀','⚁','⚂','⚃','⚄','⚅'];var c=0;var iv=setInterval(function(){d1El.innerText=df[Math.floor(Math.random()*6)];d2El.innerText=df[Math.floor(Math.random()*6)];c++;if(c>=12)clearInterval(iv)},60);setTimeout(function(){d1El.style.animation='';d2El.style.animation='';var d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,t=d1+d2;d1El.innerText=df[d1-1];d2El.innerText=df[d2-1];var win=false,wa=0;if(cdb==='over'&&t>7){win=true;wa=Math.floor(currentBet*2)}else if(cdb==='under'&&t<7){win=true;wa=Math.floor(currentBet*2)}if(win){d1El.style.transform='scale(1.2)';d2El.style.transform='scale(1.2)';setTimeout(function(){d1El.style.transform='';d2El.style.transform=''},300);spawnWinCoins(8)}showCenterBanner(win?'🎉 ВЫИГРЫШ! +'+wa+' 💎':'😞 ПРОИГРЫШ ('+t+')',win?'win':'lose');sendGameResult('dice',currentBet,win,wa,{}).then(function(){afterGame(win);sb.disabled=false;diceSpinning=false})},800)}
 
         function cn(v){if(v===11)return'A';if(v===10)return['K','Q','J','10'][Math.floor(Math.random()*4)];return String(v)}
         function rc(){var pc=document.getElementById('player-cards'),dc=document.getElementById('dealer-cards');pc.innerHTML=ph.map(function(v,i){return'<span class="card-slot'+(i===ph.length-1?' new-card':'')+'" style="animation-delay:'+i*0.2+'s">'+cardSuits[i%4]+cn(v)+'</span>'}).join('');dc.innerHTML=dh.map(function(v,i){return'<span class="card-slot dealer-card" style="animation-delay:'+i*0.2+'s">'+cardSuits[i%4]+cn(v)+'</span>'}).join('');document.getElementById('player-sum').innerText=ph.reduce(function(a,b){return a+b},0);document.getElementById('dealer-sum').innerText=dh.reduce(function(a,b){return a+b},0)}
@@ -495,12 +497,12 @@
         var bowlingBallEl=document.getElementById('bowling-ball-el');
         bowlingBallEl.addEventListener('pointerdown',function(e){if(bowlingLock)return;bowlingStartY=e.clientY;bowlingBallEl.setPointerCapture(e.pointerId)});
         bowlingBallEl.addEventListener('pointermove',function(e){if(bowlingLock||bowlingStartY===0)return;var dy=bowlingStartY-e.clientY;if(dy>0)bowlingBallEl.style.transform='translateY(-'+Math.min(dy,200)+'px)'});
-        bowlingBallEl.addEventListener('pointerup',function(e){if(bowlingLock||bowlingStartY===0)return;if(!bowlingBet||currentBet===0){showCenterBanner('❌ Сделайте ставку!','bet-warn');bowlingStartY=0;bowlingBallEl.style.transform='translateY(0)';return}var dy=bowlingStartY-e.clientY;bowlingStartY=0;if(dy<30){bowlingBallEl.style.transform='translateY(0)';return}bowlingLock=true;var power=Math.min(dy/200,1);document.getElementById('swipe-arrow').style.display='none';document.getElementById('swipe-hint').style.display='none';bowlingBallEl.classList.add('swiped');bowlingBallEl.style.transform='translateY(-'+(220+power*30)+'px)';setTimeout(function(){var v=Math.floor(Math.random()*6)+1,win=(bowlingBet==='over'&&v>3)||(bowlingBet==='under'&&v<4),wa=win?Math.floor(currentBet*1.5):0;if(win){document.querySelectorAll('#bowling-pins .pin-el').forEach(function(p,i){setTimeout(function(){p.classList.add('fallen');p.style.setProperty('--fx',(-12+Math.random()*24)+'px');p.style.setProperty('--fy',(-8+Math.random()*16)+'px');p.style.setProperty('--fr',(-40+Math.random()*80)+'deg')},i*40)});spawnWinCoins(5)}showCenterBanner(win?'🎉 ВЫИГРЫШ! +'+wa+' 💎 ('+v+')':'😞 ПРОИГРЫШ ('+v+')',win?'win':'lose');sendGameResult('bowling',currentBet,win,wa,{}).then(function(){setTimeout(function(){resetBowlingPins();bowlingLock=false;afterGame(win)},1500)})},900)});
+        bowlingBallEl.addEventListener('pointerup',function(e){if(bowlingLock||bowlingStartY===0)return;if(!bowlingBet||currentBet===0){showCenterBanner('❌ Сделайте ставку!','bet-warn');bowlingStartY=0;bowlingBallEl.style.transform='translateY(0)';return}var dy=bowlingStartY-e.clientY;bowlingStartY=0;if(dy<30){bowlingBallEl.style.transform='translateY(0)';return}bowlingLock=true;var power=Math.min(dy/200,1);document.getElementById('swipe-arrow').style.display='none';document.getElementById('swipe-hint').style.display='none';bowlingBallEl.classList.add('swiped');bowlingBallEl.style.transform='translateY(-'+(220+power*30)+'px)';setTimeout(function(){var v=Math.floor(Math.random()*6)+1,win=(bowlingBet==='over'&&v>3)||(bowlingBet==='under'&&v<4),wa=win?Math.floor(currentBet*1.5):0;if(win){document.querySelectorAll('#bowling-pins .pin-el').forEach(function(p,i){setTimeout(function(){p.classList.add('fallen');p.style.setProperty('--fx',(-12+Math.random()*24)+'px');p.style.setProperty('--fy',(-8+Math.random()*16)+'px');p.style.setProperty('--fr',(-40+Math.random()*80)+'deg')},i*40)});spawnWinCoins(6)}showCenterBanner(win?'🎉 ВЫИГРЫШ! +'+wa+' 💎 ('+v+')':'😞 ПРОИГРЫШ ('+v+')',win?'win':'lose');sendGameResult('bowling',currentBet,win,wa,{}).then(function(){setTimeout(function(){resetBowlingPins();bowlingLock=false;afterGame(win)},1500)})},900)});
 
         document.querySelectorAll('[data-darts]').forEach(function(b){b.addEventListener('click',function(){dartsBet=b.dataset.darts;document.querySelectorAll('[data-darts]').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')})});
         function startDartSwing(){if(!dartSwingActive)return;dartSwingPos+=dartSwingDir*2.5;if(Math.abs(dartSwingPos)>40)dartSwingDir*=-1;document.getElementById('dartboard-swing').style.transform='translateX('+dartSwingPos+'px)';document.getElementById('accuracy-bar').style.width=(100-Math.abs(dartSwingPos)/40*100)+'%';dartSwingAnimFrame=requestAnimationFrame(startDartSwing)}
         function initDarts(){if(dartsLock)return;if(dartSwingActive){dartSwingActive=false;cancelAnimationFrame(dartSwingAnimFrame)}document.getElementById('tap-hint').style.display='';document.getElementById('dart-arrow').style.display='none';document.getElementById('hit-effect').style.display='none';dartSwingPos=0;dartSwingDir=1;dartSwingActive=true;startDartSwing()}
-        document.getElementById('darts-scene-el').addEventListener('click',function(e){if(dartsLock||!dartSwingActive)return;if(!dartsBet||currentBet===0){showCenterBanner('❌ Сделайте ставку!','bet-warn');return}dartSwingActive=false;dartsLock=true;cancelAnimationFrame(dartSwingAnimFrame);var v=Math.floor(Math.random()*6)+1,isEven=v%2===0,win=(dartsBet==='even'&&isEven)||(dartsBet==='odd'&&!isEven),wa=win?Math.floor(currentBet*1.5):0;var dart=document.getElementById('dart-arrow'),hit=document.getElementById('hit-effect'),board=document.getElementById('dartboard-swing');document.getElementById('tap-hint').style.display='none';dart.style.display='block';dart.style.transition='all 0.1s ease-out';dart.style.left=(50+dartSwingPos/40*8)+'%';dart.style.top='58%';dart.style.transform='rotate(-25deg)';setTimeout(function(){dart.style.top='52%';dart.style.left=(50+dartSwingPos/40*4)+'%';dart.style.transform='rotate(-10deg)'},120);setTimeout(function(){dart.style.top='49%';dart.style.left=(50+dartSwingPos/40*1.5)+'%';dart.style.transform='rotate(0deg)'},240);setTimeout(function(){if(win){dart.style.display='none';hit.style.display='block';hit.style.left=(50+dartSwingPos/40*1.5)+'%';hit.style.top='49%';hit.style.animation='none';hit.offsetHeight;hit.style.animation='hitPop 0.5s ease-out forwards';board.style.boxShadow='0 0 60px rgba(255,215,0,0.8)';setTimeout(function(){board.style.boxShadow=''},700);spawnWinCoins(6)}else{dart.style.transition='all 0.4s ease-in';dart.style.top='22%';dart.style.left='78%';dart.style.transform='rotate(70deg)'}showCenterBanner(win?'🎯 В яблочко! +'+wa+' 💎 ('+v+')':'💨 Мимо ('+v+')',win?'win':'lose');sendGameResult('darts',currentBet,win,wa,{}).then(function(){setTimeout(function(){dart.style.display='none';hit.style.display='none';dart.style.transition='none';dart.style.top='58%';dart.style.left='50%';dart.style.transform='rotate(-25deg)';board.style.transform='translateX(0)';document.getElementById('accuracy-bar').style.width='0%';dartsLock=false;afterGame(win)},1000)})},450)});
+        document.getElementById('darts-scene-el').addEventListener('click',function(e){if(dartsLock||!dartSwingActive)return;if(!dartsBet||currentBet===0){showCenterBanner('❌ Сделайте ставку!','bet-warn');return}dartSwingActive=false;dartsLock=true;cancelAnimationFrame(dartSwingAnimFrame);var v=Math.floor(Math.random()*6)+1,isEven=v%2===0,win=(dartsBet==='even'&&isEven)||(dartsBet==='odd'&&!isEven),wa=win?Math.floor(currentBet*1.5):0;var dart=document.getElementById('dart-arrow'),hit=document.getElementById('hit-effect'),board=document.getElementById('dartboard-swing');document.getElementById('tap-hint').style.display='none';dart.style.display='block';dart.style.transition='all 0.1s ease-out';dart.style.left=(50+dartSwingPos/40*8)+'%';dart.style.top='58%';dart.style.transform='rotate(-25deg)';setTimeout(function(){dart.style.top='52%';dart.style.left=(50+dartSwingPos/40*4)+'%';dart.style.transform='rotate(-10deg)'},120);setTimeout(function(){dart.style.top='49%';dart.style.left=(50+dartSwingPos/40*1.5)+'%';dart.style.transform='rotate(0deg)'},240);setTimeout(function(){if(win){dart.style.display='none';hit.style.display='block';hit.style.left=(50+dartSwingPos/40*1.5)+'%';hit.style.top='49%';hit.style.animation='none';hit.offsetHeight;hit.style.animation='hitPop 0.5s ease-out forwards';board.style.boxShadow='0 0 60px rgba(255,215,0,0.8)';setTimeout(function(){board.style.boxShadow=''},700);spawnWinCoins(8)}else{dart.style.transition='all 0.4s ease-in';dart.style.top='22%';dart.style.left='78%';dart.style.transform='rotate(70deg)'}showCenterBanner(win?'🎯 В яблочко! +'+wa+' 💎 ('+v+')':'💨 Мимо ('+v+')',win?'win':'lose');sendGameResult('darts',currentBet,win,wa,{}).then(function(){setTimeout(function(){dart.style.display='none';hit.style.display='none';dart.style.transition='none';dart.style.top='58%';dart.style.left='50%';dart.style.transform='rotate(-25deg)';board.style.transform='translateX(0)';document.getElementById('accuracy-bar').style.width='0%';dartsLock=false;afterGame(win)},1000)})},450)});
 
         document.querySelectorAll('.game-card').forEach(function(c){c.addEventListener('click',function(){var g=c.dataset.game;showGame(g);if(g==='darts')initDarts()})});
         document.querySelectorAll('[data-roulette]').forEach(function(b){b.addEventListener('click',function(){crb=b.dataset.roulette;document.querySelectorAll('[data-roulette]').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')})});
@@ -510,14 +512,14 @@
 
         var refLink='';
         async function loadReferral(){if(!userId)return;document.getElementById('my-promo-id').innerText=userId||'—';try{var r=await fetch(BOT_API_URL+'/api/get_referral_link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId})});var d=await r.json();if(d.success){refLink=d.link;document.getElementById('ref-count').innerText=d.count}}catch(e){}}
-        function copyPromoCode(){if(userId){var shareText='🎮 Играй в Game Bar Casino!\nЗарабатывай баллы и получай бонусы!\n\n👉 https://t.me/GamesAsino_bot/GamesAsino\n\n🎁 Введи мой ID-промокод: '+userId+'\n(скопируй и вставь в разделе Друзья)';navigator.clipboard.writeText(shareText).then(function(){tg.showAlert('✅ Ссылка скопирована! Отправь другу.')}).catch(function(){tg.showAlert('📋 Твой ID: '+userId)})}}
-        function shareGame(){var shareText='🎮 Играй в Game Bar Casino!\nЗарабатывай баллы и получай бонусы!\n\n👉 https://t.me/GamesAsino_bot/GamesAsino\n\n🎁 Введи мой ID-промокод: '+userId;tg.openLink('https://t.me/share/url?url='+encodeURIComponent('https://t.me/GamesAsino_bot/GamesAsino')+'&text='+encodeURIComponent(shareText))}
-        async function applyPromoCode(){if(!userId)return;var promoInput=document.getElementById('promo-input').value.trim();if(!promoInput){tg.showAlert('❌ Введи ID друга!');return}var refId=parseInt(promoInput);if(!refId||refId===userId){tg.showAlert('❌ Неверный ID!');return}var btn=document.querySelector('#promo-input + .shop-buy-btn');if(btn){btn.disabled=true;btn.innerText='⏳'}try{var r=await fetch(BOT_API_URL+'/api/referral_join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,ref_id:refId})});var d=await r.json();if(d.success){tg.showAlert('🎉 +25 баллов!');document.getElementById('promo-input').value='';await loadBalance();await loadReferral();if(currentShopCategory)await loadShopSilent(currentShopCategory)}else{tg.showAlert(d.error||'❌ Ошибка')}}catch(e){tg.showAlert('❌ Ошибка')}if(btn){btn.disabled=false;btn.innerText='🎟️ Активировать'}}
+        function copyPromoCode(){if(userId){var shareText='🎮 Играй в Game Bar Casino!\nЗарабатывай баллы и получай бонусы!\n\n👉 https://t.me/GamesAsino_bot/GamesAsino\n\n🎁 Введи мой ID-промокод: '+userId+'\n(скопируй и вставь в разделе Друзья)\n💰 +25 баллов тебе и другу!';navigator.clipboard.writeText(shareText).then(function(){tg.showAlert('✅ Ссылка скопирована! Отправь другу.')}).catch(function(){tg.showAlert('📋 Твой ID: '+userId)})}}
+        function shareGame(){var shareText='🎮 Играй в Game Bar Casino!\nЗарабатывай баллы и получай бонусы!\n\n👉 https://t.me/GamesAsino_bot/GamesAsino\n\n🎁 Введи мой ID-промокод: '+userId+'\n💰 +25 баллов тебе и другу!';tg.openLink('https://t.me/share/url?url='+encodeURIComponent('https://t.me/GamesAsino_bot/GamesAsino')+'&text='+encodeURIComponent(shareText))}
+        async function applyPromoCode(){if(!userId)return;var promoInput=document.getElementById('promo-input').value.trim();if(!promoInput){tg.showAlert('❌ Введи ID друга!');return}var refId=parseInt(promoInput);if(!refId||refId===userId){tg.showAlert('❌ Неверный ID!');return}var btn=document.querySelector('#promo-input + .shop-buy-btn');if(btn){btn.disabled=true;btn.innerText='⏳'}try{var r=await fetch(BOT_API_URL+'/api/referral_join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,ref_id:refId})});var d=await r.json();if(d.success){tg.showAlert('🎉 +25 баллов!');document.getElementById('promo-input').value='';await loadBalance();await loadReferral();if(currentShopCategory)await loadShopSilent(currentShopCategory)}else{tg.showAlert(d.error||'❌ Ошибка')}}catch(e){tg.showAlert('❌ Ошибка')}if(btn){btn.disabled=false;btn.innerText='🎟️ Активировать (+25)'}}
 
         var shopItems=[],currentShopCategory='all';
         async function loadShop(c){if(!userId)return;currentShopCategory=c||'all';document.querySelectorAll('.shop-cat-btn').forEach(function(b){b.classList.remove('active')});var ab=document.querySelector('.shop-cat-btn[data-cat="'+currentShopCategory+'"]');if(ab)ab.classList.add('active');try{var r=await fetch(BOT_API_URL+'/api/shop/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,category:currentShopCategory})});var d=await r.json();if(d.success){shopItems=d.items;renderShopItems(shopItems)}}catch(e){}}
         async function loadShopSilent(c){if(!userId)return;currentShopCategory=c||'all';document.querySelectorAll('.shop-cat-btn').forEach(function(b){b.classList.remove('active')});var ab=document.querySelector('.shop-cat-btn[data-cat="'+currentShopCategory+'"]');if(ab)ab.classList.add('active');try{var r=await fetch(BOT_API_URL+'/api/shop/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,category:currentShopCategory})});var d=await r.json();if(d.success){shopItems=d.items;document.getElementById('shop-items').innerHTML=generateShopHTML(shopItems)}}catch(e){}}
-        function generateShopHTML(items){if(!items||items.length===0)return'<div class="no-items">😔 Товаров пока нет</div>';return items.map(function(item){var actionBtn='',ownedClass='',activeBadge='';if(item.type==='avatar'){if(item.active){ownedClass='owned';actionBtn='<button class="shop-buy-btn" style="background:linear-gradient(180deg,#4CAF50,#2E7D32)" disabled>✅ Выбрана</button>'}else if(item.owned){actionBtn='<button class="shop-buy-btn" onclick="activateAvatar(\''+item.id+'\')" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);box-shadow:none">☑️ Выбрать</button>'}else{actionBtn='<button class="shop-buy-btn" onclick="buyShopItem(\''+item.id+'\')">💎 '+item.price+'</button>'}}else if(item.owned){ownedClass='owned';actionBtn='<button class="shop-buy-btn" disabled>✅ Куплено</button>'}else{actionBtn='<button class="shop-buy-btn" onclick="buyShopItem(\''+item.id+'\')">💎 '+item.price+'</button>'}if(item.active&&item.type==='boost')activeBadge='<span class="active-boost-badge">⚡ АКТИВЕН</span>';if(item.id==='nickname_change'&&item.owned)actionBtn='<button class="shop-buy-btn" onclick="buyShopItem(\''+item.id+'\')">💎 '+item.price+' (ещё)</button>';return'<div class="shop-item-card '+ownedClass+'">'+activeBadge+'<div class="shop-item-icon">'+(item.emoji||'🎁')+'</div><div class="shop-item-info"><div class="shop-item-name">'+item.name+'</div><div class="shop-item-desc">'+item.desc+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">'+(!item.owned?'<div class="shop-item-price">💎 '+item.price+'</div>':'')+actionBtn+'</div></div>'}).join('')}
+        function generateShopHTML(items){if(!items||items.length===0)return'<div class="no-items">😔 Товаров пока нет</div>';return items.map(function(item){var actionBtn='',ownedClass='',activeBadge='';if(item.type==='avatar'){if(item.active){ownedClass='owned';actionBtn='<button class="shop-buy-btn" style="background:linear-gradient(180deg,#4CAF50,#2E7D32)" disabled>✅ Выбрана</button>'}else if(item.owned){actionBtn='<button class="shop-buy-btn" onclick="activateAvatar(\''+item.id+'\')" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);box-shadow:none">☑️ Выбрать</button>'}else{actionBtn='<button class="shop-buy-btn" onclick="buyShopItem(\''+item.id+'\')">💎 '+item.price+'</button>'}}else if(item.owned){ownedClass='owned';actionBtn='<button class="shop-buy-btn" disabled>✅ Куплено</button>'}else{actionBtn='<button class="shop-buy-btn" onclick="buyShopItem(\''+item.id+'\')">💎 '+item.price+'</button>'}if(item.active&&item.type==='boost')activeBadge='<span class="active-boost-badge">⚡ АКТИВЕН</span>';if(item.id==='nickname_change'&&item.owned)actionBtn='<button class="shop-buy-btn" onclick="buyShopItem(\''+item.id+'\')">💎 '+item.price+' (ещё)</button>';return'<div class="shop-item-card '+ownedClass+'">'+activeBadge+'<div class="shop-item-icon">'+(item.emoji||'🎁')+'</div><div class="shop-item-info"><div class="shop-item-name">'+item.name+'</div><div class="shop-item-desc">'+item.desc+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">'+(!item.owned?'<div class="shop-item-price">💎 '+item.price+'</div>':'')+actionBtn+'</div></div>'}).join('')}
         function renderShopItems(items){document.getElementById('shop-items').innerHTML=generateShopHTML(items)}
         async function buyShopItem(itemId){if(!userId)return;var item=shopItems.find(function(i){return i.id===itemId});if(!item)return;if(balance<item.price){document.getElementById('no-balance-modal').classList.add('active');return}var allBtns=document.querySelectorAll('.shop-buy-btn');var btn=null;for(var i=0;i<allBtns.length;i++){var b=allBtns[i];if(b.getAttribute('onclick')&&b.getAttribute('onclick').indexOf(itemId)!==-1&&!b.disabled){btn=b;break}}if(!btn)return;btn.disabled=true;btn.innerText='⏳';try{var r=await fetch(BOT_API_URL+'/api/shop/buy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,item_id:itemId})});var d=await r.json();if(d.success){animateBalanceChange(d.new_balance);await loadShopSilent(currentShopCategory);tg.showAlert(d.message);if(itemId==='nickname_change')setTimeout(function(){document.getElementById('nickname-input').value=currentDisplayName||'';document.getElementById('nickname-modal').classList.add('active')},300)}else tg.showAlert(d.error||'❌ Ошибка')}catch(e){}finally{btn.disabled=false;btn.innerText='💎 '+item.price}}
         async function activateAvatar(itemId){if(!userId)return;var item=shopItems.find(function(i){return i.id===itemId});if(!item||!item.emoji)return;selectedAvatar=item.emoji;try{var r=await fetch(BOT_API_URL+'/api/save_profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:userId,avatar_emoji:item.emoji})});var d=await r.json();if(d.success){document.getElementById('profile-avatar-display').innerText=item.emoji;await loadShopSilent(currentShopCategory);tg.showAlert('✅ Аватарка установлена!')}}catch(e){}}
