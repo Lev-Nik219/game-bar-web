@@ -25,8 +25,7 @@
         @keyframes floatParticle{0%,100%{transform:translateY(0) translateX(0);opacity:0}25%{transform:translateY(-50px) translateX(30px);opacity:0.8}50%{transform:translateY(-100px) translateX(-15px);opacity:0.4}75%{transform:translateY(-50px) translateX(-35px);opacity:0.8}}
         @keyframes balanceWave{0%{transform:scale(1)}30%{transform:scale(1.1)}60%{transform:scale(0.95)}100%{transform:scale(1)}}
         @keyframes flyToWallet{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--fx),var(--fy)) scale(0.2)}}
-        @keyframes leverPull{0%{transform:rotate(0deg)}40%{transform:rotate(-30deg)}100%{transform:rotate(0deg)}}
-        @keyframes bannerIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5) rotate(-10deg)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.05) rotate(2deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+        @keyframes leverPull{0%{transform:rotate(0deg)}30%{transform:rotate(-35deg)}60%{transform:rotate(-35deg)}100%{transform:rotate(0deg)}}
         @keyframes bannerOut{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(0.5) rotate(10deg)}}
         @keyframes tabSlideIn{0%{opacity:0;transform:translateY(40px) scale(0.9);filter:blur(10px)}60%{opacity:1;transform:translateY(-5px) scale(1.02);filter:blur(0)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
         
@@ -73,12 +72,12 @@
         .reel::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.12),transparent);pointer-events:none}
         .reel.spinning{filter:blur(4px)}
         .reel.win-anim{animation:popIn 0.6s ease;border-color:#ffd700;box-shadow:0 0 40px rgba(255,215,0,0.7),0 0 80px rgba(255,215,0,0.3)}
-        
-        .slot-lever-container{display:flex;flex-direction:column;align-items:center;margin:10px 0}
-        .slot-lever{width:44px;height:90px;background:linear-gradient(180deg,#e74c3c,#8B0000);border-radius:22px 22px 10px 10px;cursor:pointer;box-shadow:0 8px 0 #5a0000,0 12px 20px rgba(0,0,0,0.5);position:relative;transition:all 0.1s;top:0}
-        .slot-lever::after{content:'';position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:32px;height:32px;background:radial-gradient(circle at 40% 40%,#ff6b6b,#c0392b);border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,0.5),inset 0 2px 4px rgba(255,255,255,0.3)}
-        .slot-lever:active{top:10px;box-shadow:0 2px 0 #5a0000,0 4px 8px rgba(0,0,0,0.4)}
-        .slot-lever.pulling{animation:leverPull 0.7s cubic-bezier(0.4,0,0.2,1)}
+                
+        .slot-lever-container{display:flex;flex-direction:column;align-items:center;margin:15px 0;position:relative}
+        .slot-lever{width:24px;height:100px;background:linear-gradient(90deg,#8B0000,#c0392b,#8B0000);border-radius:4px 4px 12px 12px;cursor:pointer;box-shadow:0 0 0 3px #5a0000,0 8px 0 #3a0000,0 12px 20px rgba(0,0,0,0.5);position:relative;transition:all 0.1s;top:0;transform-origin:bottom center}
+        .slot-lever::after{content:'';position:absolute;top:-22px;left:50%;transform:translateX(-50%);width:38px;height:38px;background:radial-gradient(circle at 40% 35%,#ff4444,#c0392b 60%,#8B0000 100%);border-radius:50%;box-shadow:0 6px 15px rgba(0,0,0,0.6),inset 0 3px 8px rgba(255,255,255,0.3),inset 0 -3px 8px rgba(0,0,0,0.4)}
+        .slot-lever:active{top:12px;box-shadow:0 0 0 3px #5a0000,0 2px 0 #3a0000,0 4px 10px rgba(0,0,0,0.4)}
+        .slot-lever.pulling{animation:leverPull 0.8s cubic-bezier(0.25,0.1,0.25,1)}
         
         .spin-btn{background:linear-gradient(180deg,#ff9d00,#e65100);border:none;color:white;font-weight:900;padding:18px 40px;border-radius:50px;font-size:18px;cursor:pointer;margin:14px 5px;box-shadow:0 8px 0 #bf360c,0 12px 30px rgba(247,151,30,0.5),inset 0 2px 0 rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:2px;transition:all 0.1s;position:relative;top:0}
         .spin-btn:active{top:4px;box-shadow:0 4px 0 #bf360c,0 8px 20px rgba(247,151,30,0.5),inset 0 2px 0 rgba(255,255,255,0.2)}
@@ -452,8 +451,9 @@
 
         var slotSpinning=false;
         function spinSlotsFromLever(){
-            document.getElementById('slot-lever').classList.add('pulling');
-            setTimeout(function(){document.getElementById('slot-lever').classList.remove('pulling')},700);
+            var lever=document.getElementById('slot-lever');
+            lever.classList.add('pulling');
+            setTimeout(function(){lever.classList.remove('pulling')},800);
             spinSlots();
         }
         function spinSlots(){
